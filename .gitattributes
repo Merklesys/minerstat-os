@@ -1,1 +1,1 @@
-linguist-language=NodeJs
+*.js linguist-language=node
