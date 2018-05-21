@@ -1,20 +1,12 @@
-# Minerstat.com [Linux] -  v0.8
+![minerstat logo](https://cdn.rawgit.com/minerstat/minerstat-asic/master/docs/logo_full.svg)
 
-![Version](https://img.shields.io/github/release/coinscrow/minerstat-linux.svg)
-![Latest](https://img.shields.io/github/last-commit/coinscrow/minerstat-linux.svg)
+# minerstat OS
 
-NOTICE: IT HAS BEEN DESIGNED TO WORK WITH minerstat OS! 
+**minerstat OS** minerstat OS is the most advanced open source crypto mining OS available. It will automatically configure and optimize itself to mine with your AMD and/or NVIDIA cards. You only need to download, flash it, set your token in the config file and boot it!
 
-# First Steps
+This software **only works with [my.minerstat.com](https://my.minerstat.com) interface**, it's **not in sync** with our old system
 
-1) Register a new account on https://minerstat.com
-2) Create a new worker (Node, Linux , AMD/Nvidia)
-3) Mofify your configs in Config Editor -> Save
-4) Download minerstat OS https://distro.minerstat.com
-
-More info: https://distro.minerstat.com/doc.html
-
-# Commands
+## Commands
 
 ```
 miner     | show miner screen.
@@ -29,11 +21,13 @@ mupdate   | update miners, clients. (Auto update only starts on boot)
 
 mreconf   | simulate first boot: configure DHCP, creating fake dummy for NVIDIA (ideal, if overclocking not work)
 
+mclock    | Set clocks to match with the online inferface.
+
 mhelp     | List all available commands.
 
 ```
 
-# Informations
+## Informations
 
 You can see mining process by type `miner` to the terminal.
 
@@ -42,10 +36,17 @@ You can see mining process by type `miner` to the terminal.
 **Ctrl + C** command quit from the process / close minerstat.
 
 
-### Support
-Noticed something?
-Have you got any idea to make it better?
 
-Feel free to write us a message: **hello @ minerstat.com**
 
-> © 2017-2018 - https://minerstat.com - Mining Monitor
+/*
+
+
+***© minerstat OÜ*** in 2018
+
+
+***Contact:*** app [ @ ] minerstat.com 
+
+
+***Mail:*** Sepapaja tn 6, Lasnamäe district, Tallinn city, Harju county, 15551, Estonia
+
+*/
