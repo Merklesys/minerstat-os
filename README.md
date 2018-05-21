@@ -2,7 +2,7 @@
 
 # minerstat OS
 
-**minerstat OS** minerstat OS is the most advanced open source crypto mining OS available. It will automatically configure and optimize itself to mine with your AMD and/or NVIDIA cards. You only need to download, flash it, set your token in the config file and boot it!
+**minerstat OS** minerstat OS is the most advanced ***open source*** crypto mining OS available. It will automatically configure and optimize itself to mine with your ***AMD or NVIDIA*** cards. ***You only need to download, flash it, set your token in the config file and boot it!***
 
 This software **only works with [my.minerstat.com](https://my.minerstat.com) interface**, it's **not in sync** with our old system
 
@@ -36,10 +36,7 @@ You can see mining process by type `miner` to the terminal.
 **Ctrl + C** command quit from the process / close minerstat.
 
 
-
-
-/*
-
+## 
 
 ***© minerstat OÜ*** in 2018
 
@@ -49,4 +46,4 @@ You can see mining process by type `miner` to the terminal.
 
 ***Mail:*** Sepapaja tn 6, Lasnamäe district, Tallinn city, Harju county, 15551, Estonia
 
-*/
+## 
