@@ -3,11 +3,9 @@ var pump = require('pump');
 var fs = require('fs');
 var parse = require('parse-spawn-args').parse
 var exec = require('child_process').exec;
-var http = require('http');
 const https = require('https');
 var needle = require('needle');
 var main = require('./start.js');
-const telNet = require('net');
 
 function getDateTime() {
     var date = new Date();
@@ -24,7 +22,6 @@ module.exports = {
     	START MINER
     */
     start: function() {
-        console.log(colors.cyan(getDateTime() + " STARTING MINER: " + global.client));
         var execFile, args;
         if (global.client.indexOf("ccminer") > -1) {
             args = parse(global.chunk);
@@ -82,6 +79,8 @@ module.exports = {
     	REMOTE COMMAND
     */
     remotecommand: function() {
+    const https = require('https');
+    var needle = require('needle');
         needle.get('https://minerstat.com/control.php?worker=' + global.accesskey + '.' + global.worker + '&miner=' + global.client + '&os=linux&ver=4&cpu=NO&algo=' + global.isalgo + '&best=' + global.algo_bestalgo + '&client=' + global.client, function(error, response) {
             var command = response.body + "";
             if (command !== "") {
@@ -188,6 +187,8 @@ module.exports = {
     	FETCH INFO
     */
     fetch: function() {
+    const telNet = require('net');
+    var http = require('http');
         // ETHMINER
         if (global.client.indexOf("ethminer") > -1) {
             // INTEGRATED TO THE CLIENT

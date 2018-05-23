@@ -11,6 +11,10 @@ global.timeout;
 global.gputype;
 global.configtype = "simple";
 global.isalgo = "NO";
+global.cpuDefault;
+global.minerType;
+global.minerOverclock;
+global.minerCpu;
 var tools = require('./tools.js');
 var monitor = require('./monitor.js');
 var settings = require("./config.js");
@@ -63,13 +67,14 @@ process.on('uncaughtException', function(err) {
 process.on('unhandledRejection', (reason, p) => {});
 
 function header() {
-    console.log(colors.cyan("¸„.-•~¹°”ˆ˜¨¨˜ˆ”°¹~•-.„¸¸„.-•~¹°”ˆ˜¨¨˜ˆ”°¹~•-.„¸¸„.-•~¹°”ˆ˜¨¨˜ˆ”°"));
-    console.log(colors.cyan("------------------------ minerstat OS ---------------------------"));
-    console.log(colors.cyan("¨˜ˆ”°¹~•-.„¸¸„.-•~¹°”ˆ˜¨¨˜ˆ”°¹~•-.„¸¸„.-•~¹°”ˆ˜¨¨˜ˆ”°¹~•-.„¸¸„.-•"));
-    console.log('');
-    let input_text = "minerstAt";
-    let text = "/*\n" + ascii_text_generator(input_text, "2") + "\n*/";
-    console.log(text);
+    const logo = require('asciiart-logo');
+    console.log(logo({
+        name: 'minerstat',
+        font: 'Train',
+        lineChars: 15,
+        padding: 5,
+        margin: 2
+    }).emptyLine().right('version 1.0').emptyLine().wrap('Manage your mining operation of any size from anywhere').render());
 }
 
 function getDateTime() {
@@ -84,12 +89,12 @@ function getDateTime() {
 }
 module.exports = {
     boot: function() {
-    var tools = require('./tools.js');
+        var tools = require('./tools.js');
         tools.start();
     },
     main: function() {
-    var tools = require('./tools.js');
-    var monitor = require('./monitor.js');
+        var tools = require('./tools.js');
+        var monitor = require('./monitor.js');
         tools.killall();
         monitor.detect();
         global.sync;
@@ -103,9 +108,14 @@ module.exports = {
         // GET DEFAULT CLIENT AND SEND STATUS TO THE SERVER
         const https = require('https');
         var needle = require('needle');
-        needle.get('https://minerstat.com/getresponse.php?action=getminer&token=' + global.accesskey + '&worker=' + global.worker, function(error, response) {
+        needle.get('https://api.minerstat.com/v2/node/gpu/' + global.accesskey + '/' + global.worker, function(error, response) {
             if (error === null) {
-                global.client = response.body;
+                console.log(response.body);
+                global.client = response.body.default;
+                global.cpuDefault = response.body.cpuDefault;
+                global.minerType = response.body.type;
+                global.minerOverclock = response.body.overclock;
+                global.minerCpu = response.body.cpu;
             } else {
                 clearInterval(global.timeout);
                 clearInterval(global.hwmonitor);
@@ -146,13 +156,13 @@ module.exports = {
                 global.configtype = "simple";
                 var request = require('request');
                 request.get({
-                    url: 'http://minerstat.com/control.php?worker=' + global.accesskey + '.' + global.worker + '&miner=' + response.body + '&os=linux&ver=4&cpu=NO',
+                    url: 'https://api.minerstat.com/v2/set_node_config.php?token=' + global.accesskey + '&worker=' + global.worker + '&miner=' + global.client.toLowerCase() + '&os=linux&ver=4&cpu=NO',
                     form: {
-                        mes: "kflFDKME"
+                        dump: "minerstatOSInit"
                     }
                 }, function(error, response, body) {
                     console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
-                    console.log(colors.green(getDateTime() + " MINERSTAT.COM: Waiting for the first sync.. (60 sec)"));
+                    console.log(colors.green(getDateTime() + " MINERSTAT.COM: Waiting for the first sync.. (30 sec)"));
                     console.log(colors.magenta(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
                 });
                 dlconf();
@@ -193,7 +203,8 @@ module.exports = {
             if (global.client.indexOf("zm-zec") > -1) {
                 global.file = "clients/" + global.client + "/start.bash";
             }
-            needle.get('https://minerstat.com/getconfig.php?action=' + global.configtype + '&token=' + global.accesskey + '&worker=' + global.worker + '&db=' + global.db + '&best=' + global.algo_bestalgo + '&bestdual=' + global.algo_bestdual + '&dualnow=' + global.algo_checkdual + '&dualon=' + global.algo_dual + '&ccalgo=' + global.algo_cc, function(error, response) {
+            console.log(colors.cyan(getDateTime() + " STARTING MINER: " + global.client));
+            needle.get('https://api.minerstat.com/v2/conf/gpu/' + global.accesskey + '/' + global.worker + '/' + global.client.toLowerCase(), function(error, response) {
                 global.chunk = response.body;
                 if (global.client != "ewbf-zec" && global.client != "ethminer" && global.client != "zm-zec" && global.client != "bminer" && global.client.indexOf("ccminer") === -1) {
                     var writeStream = fs.createWriteStream(global.path + "/" + global.file);
@@ -213,7 +224,8 @@ module.exports = {
                     tools.killall();
                     tools.autoupdate();
                 }
-                console.log(colors.cyan(getDateTime() + " GPU TYPE: " + global.gputype));
+                console.log(colors.magenta(getDateTime() + " ONLINE CONFIG GPU TYPE: " + global.minerType));
+                console.log(colors.magenta(getDateTime() + " LOCAL GPU TYPE: " + global.gputype));
                 console.log("*** Hardware monitor is running in the background.. ***");
             });
         }
@@ -221,7 +233,7 @@ module.exports = {
         	CALLBACK's
          */
         function callBackSync() {
-        // WHEN MINER INFO FETCHED, FETCH HARDWARE INFO
+            // WHEN MINER INFO FETCHED, FETCH HARDWARE INFO
             if (global.gputype === "nvidia") {
                 monitor.HWnvidia();
             }
@@ -231,27 +243,28 @@ module.exports = {
         }
 
         function callBackHardware(hwdatas) {
-        // WHEN HARDWARE INFO FETCHED SEND BOTH RESPONSE TO THE SERVER
-                var sync = global.sync;
-                var res_data = global.res_data;
-                if (sync.toString() === "true") { // IS HASHING?
-                    // SEND LOG TO SERVER                         
-                    var request = require('request');
-                    request.post({
-                        url: 'https://minerstat.com/getstat.php?token=' + global.accesskey + '&worker=' + global.worker + '&miner=' + global.client,
-                        form: {
-                            mes: res_data
-                        }
-                    }, function(error, response, body) {
-                        console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
-                        console.log(colors.green(getDateTime() + " MINERSTAT.COM: Package Sent [" + global.worker + "]"));
-                        console.log(colors.magenta(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
-                    });
-                } else {
+            // WHEN HARDWARE INFO FETCHED SEND BOTH RESPONSE TO THE SERVER
+            var sync = global.sync;
+            var res_data = global.res_data;
+            if (sync.toString() === "true") { // IS HASHING?
+                // SEND LOG TO SERVER                         
+                var request = require('request');
+                request.post({
+                    url: 'https://api.minerstat.com/v2/set_node_config.php?token=' + global.accesskey + '&worker=' + global.worker + '&miner=' + global.client.toLowerCase() + '&ver=4&cpuu=' + global.minerCpu + '&cpud=HASH' + '&os=linux&currentcpu=' + global.cpuDefault.toLowerCase(),
+                    form: {
+                        minerData: res_data,
+                        hwData: hwdatas
+                    }
+                }, function(error, response, body) {
                     console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
-                    console.log(colors.red(getDateTime() + " MINERSTAT.COM: Package Error  [" + global.worker + "]"));
+                    console.log(colors.green(getDateTime() + " MINERSTAT.COM: Package Sent [" + global.worker + "]"));
                     console.log(colors.magenta(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
-                }          
+                });
+            } else {
+                console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
+                console.log(colors.red(getDateTime() + " MINERSTAT.COM: Package Error  [" + global.worker + "]"));
+                console.log(colors.magenta(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
+            }
         }
         /*
         	START LOOP 
@@ -259,7 +272,7 @@ module.exports = {
         */
         (function() {
             global.timeout = setInterval(function() {
-            var tools = require('./tools.js');
+                var tools = require('./tools.js');
                 global.sync_num++;
                 tools.remotecommand();
                 tools.fetch();
