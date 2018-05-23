@@ -61,26 +61,34 @@ module.exports = {
             execFile = "zm";
         }
         if (execFile != undefined) {
-        require("child_process").spawn('clients/' + global.client + '/' + execFile, args, {
-            cwd: process.cwd(),
-            detached: false,
-            stdio: "inherit"
-        });
+            if (args != "") {
+                require("child_process").spawn('clients/' + global.client + '/' + execFile, args, {
+                    cwd: process.cwd(),
+                    detached: false,
+                    stdio: "inherit"
+                });
+            } else {
+                require("child_process").spawn('clients/' + global.client + '/' + execFile, {
+                    cwd: process.cwd(),
+                    detached: false,
+                    stdio: "inherit"
+                });
+            }
         }
     },
     /*
     	AUTO UPDATE
     */
     autoupdate: function() {
-    var main = require('./start.js');
+        var main = require('./start.js');
         main.boot();
     },
     /*
     	REMOTE COMMAND
     */
     remotecommand: function() {
-    const https = require('https');
-    var needle = require('needle');
+        const https = require('https');
+        var needle = require('needle');
         needle.get('https://minerstat.com/control.php?worker=' + global.accesskey + '.' + global.worker + '&miner=' + global.client + '&os=linux&ver=4&cpu=NO&algo=' + global.isalgo + '&best=' + global.algo_bestalgo + '&client=' + global.client, function(error, response) {
             var command = response.body + "";
             if (command !== "") {
@@ -180,15 +188,15 @@ module.exports = {
     	START
     */
     restart: function() {
-    var main = require('./start.js');
+        var main = require('./start.js');
         main.main();
     },
     /*
     	FETCH INFO
     */
     fetch: function() {
-    const telNet = require('net');
-    var http = require('http');
+        const telNet = require('net');
+        var http = require('http');
         // ETHMINER
         if (global.client.indexOf("ethminer") > -1) {
             // INTEGRATED TO THE CLIENT
@@ -319,7 +327,7 @@ module.exports = {
         var _flagCheck = setInterval(function() {
             if (global.sync === true) {
                 clearInterval(_flagCheck);
-            var main = require('./start.js');
+                var main = require('./start.js');
                 main.callBackSync();
             }
         }, 2000); // interval set at 2000 milliseconds

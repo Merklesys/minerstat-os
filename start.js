@@ -6,6 +6,7 @@ global.path = __dirname;
 var colors = require('colors');
 var pump = require('pump');
 var fs = require('fs');
+var exec = require('child_process').exec;
 let ascii_text_generator = require('ascii-text-generator');
 global.timeout;
 global.gputype;
@@ -67,14 +68,9 @@ process.on('uncaughtException', function(err) {
 process.on('unhandledRejection', (reason, p) => {});
 
 function header() {
-    const logo = require('asciiart-logo');
-    console.log(logo({
-        name: 'minerstat',
-        font: 'Train',
-        lineChars: 15,
-        padding: 5,
-        margin: 2
-    }).emptyLine().right('version 1.0').emptyLine().wrap('Manage your mining operation of any size from anywhere').render());
+    var queryNeo = exec("neofetch", function(error, stdout, stderr) {
+        console.log(stdout);
+    });
 }
 
 function getDateTime() {
