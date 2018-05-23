@@ -1,11 +1,9 @@
 /*
-	TERMINATE
+	USER => mstop
 */
 "use strict";
-
 const fkill = require('fkill');
 var exec = require('child_process').exec;
-
 try {
     fkill('bminer').then(() => {});
     fkill('zm').then(() => {});
@@ -15,11 +13,7 @@ try {
     fkill('miner').then(() => {});
     fkill('sgminer').then(() => {});
     fkill('nsgpucnminer').then(() => {});
-} catch (e) {
-
-}
-
-var query = exec("killall node",
-    function(error, stdout, stderr) {
-        console.log("Terminated");
-    });
+} catch (e) {}
+var query = exec("killall node", function(error, stdout, stderr) {
+    console.log("Terminated");
+});
