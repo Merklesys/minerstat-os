@@ -1,11 +1,7 @@
 var colors = require('colors');
 var pump = require('pump');
 var fs = require('fs');
-var parse = require('parse-spawn-args').parse
-var exec = require('child_process').exec;
 const https = require('https');
-var needle = require('needle');
-var main = require('./start.js');
 
 function getDateTime() {
     var date = new Date();
@@ -23,6 +19,7 @@ module.exports = {
     */
     start: function() {
         var execFile, args;
+        var parse = require('parse-spawn-args').parse
         if (global.client.indexOf("ccminer") > -1) {
             args = parse(global.chunk);
             execFile = "ccminer";
@@ -51,7 +48,7 @@ module.exports = {
             args = parse(global.chunk);
             execFile = "ethminer";
         }
-        if (global.client == "sgminer-gm") {
+        if (global.client.indexOf("sgminer") > -1) {
             var larg = "-c sgminer.conf --gpu-reorder --api-listen";
             args = parse(larg);
             execFile = "sgminer";
@@ -60,20 +57,27 @@ module.exports = {
             args = parse(global.chunk);
             execFile = "zm";
         }
-        if (execFile != undefined) {
+        const execa = require('execa');
+        try {
             if (args != "") {
-                require("child_process").spawn('clients/' + global.client + '/' + execFile, args, {
+                execa.shell('clients/' + global.client + '/' + execFile, args, {
                     cwd: process.cwd(),
                     detached: false,
                     stdio: "inherit"
+                }).then(result => {
+                    console.log("MINER => Closed");
                 });
             } else {
-                require("child_process").spawn('clients/' + global.client + '/' + execFile, {
+                execa.shell('clients/' + global.client + '/' + execFile, {
                     cwd: process.cwd(),
                     detached: false,
                     stdio: "inherit"
+                }).then(result => {
+                    console.log("MINER => Closed");
                 });
             }
+        } catch (err) {
+            console.log(err);
         }
     },
     /*
@@ -86,72 +90,21 @@ module.exports = {
     /*
     	REMOTE COMMAND
     */
-    remotecommand: function() {
-        const https = require('https');
-        var needle = require('needle');
-        needle.get('https://minerstat.com/control.php?worker=' + global.accesskey + '.' + global.worker + '&miner=' + global.client + '&os=linux&ver=4&cpu=NO&algo=' + global.isalgo + '&best=' + global.algo_bestalgo + '&client=' + global.client, function(error, response) {
-            var command = response.body + "";
-            if (command !== "") {
-                console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
-                console.log(colors.red("REMOTE COMMAND: " + command));
-                console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
-            }
-            if (global.configtype === "algo") {
-                var request = require('request');
-                request.get({
-                    url: 'https://minerstat.com/profitswitch_api.php?token=' + global.accesskey + '&worker=' + global.worker,
-                    form: {
-                        mes: "kflFDKME"
-                    }
-                }, function(error, response, body) {
-                    var main = require('./start.js');
-                    var json_string = response.body;
-                    if (json_string.indexOf("ok") > -1) {
-                        var json_parse = JSON.parse(json_string);
-                        var algo_status = json_parse.response.status;
-                        var algo_bestalgo = json_parse.response.bestalgo;
-                        var algo_dualmode = json_parse.response.dualmode;
-                        var algo_client = json_parse.response.client;
-                        var algo_bestdual = json_parse.response.bestdual;
-                        var algo_revenue = json_parse.response.revenue;
-                        var algo_gputype = json_parse.response.gputype;
-                        var algo_checkdual = json_parse.response.checkdual;
-                        var algo_db = json_parse.response.db;
-                        var algo_ccalgo = json_parse.response.ccalgo;
-                        console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
-                        console.log(colors.magenta(getDateTime() + " |ALGO| Best Coin Now [" + algo_bestalgo + "]"));
-                        console.log(colors.magenta(getDateTime() + " |ALGO| Current Profit [$" + algo_revenue + "]"));
-                        console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
-                        if (global.algo_checkdual != algo_checkdual) {
-                            clearInterval(global.timeout);
-                            clearInterval(global.hwmonitor);
-                            main.main();
-                        }
-                        if (global.algo_checkdual === "YES") {
-                            if (global.algo_bestalgo != algo_bestalgo) {
-                                clearInterval(global.timeout);
-                                clearInterval(global.hwmonitor);
-                                main.main();;
-                            }
-                            if (global.algo_bestdual != algo_bestdual) {
-                                clearInterval(global.timeout);
-                                clearInterval(global.hwmonitor);
-                                main.main();
-                            }
-                        } else {
-                            if (global.algo_bestalgo != algo_bestalgo) {
-                                clearInterval(global.timeout);
-                                clearInterval(global.hwmonitor);
-                                main.main();
-                            }
-                        }
-                    }
-                });
-            }
+    remotecommand: function(command) {
+        if (command !== "") {
+            console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
+            console.log(colors.red("REMOTE COMMAND: " + command));
+            console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
+            var exec = require('child_process').exec;
             if (command === "RESTARTNODE") {
                 clearInterval(global.timeout);
                 clearInterval(global.hwmonitor);
                 var main = require('./start.js');
+                main.killall();
+                var sleep = require('sleep');
+                sleep.sleep(2);
+                main.killall();
+                sleep.sleep(3);
                 main.main();
             }
             if (command === "DOWNLOADWATTS") {
@@ -165,7 +118,7 @@ module.exports = {
                     console.log("System going to reboot now..");
                 });
             }
-        });
+        }
     },
     /*
     	KILL ALL RUNNING MINER
@@ -182,7 +135,7 @@ module.exports = {
             fkill('sgminer').then(() => {});
             fkill('nsgpucnminer').then(() => {});
             fkill('zm').then(() => {});
-        } catch (e) {}
+        } catch (err) {}
     },
     /*
     	START
@@ -325,7 +278,8 @@ module.exports = {
         }
         // LOOP UNTIL SYNC DONE
         var _flagCheck = setInterval(function() {
-            if (global.sync === true) {
+            var sync = global.sync;
+            if (sync.toString() === "true") { // IS HASHING?
                 clearInterval(_flagCheck);
                 var main = require('./start.js');
                 main.callBackSync();

@@ -1,4 +1,3 @@
-var main = require('./start.js');
 module.exports = {
     /*
     	DETECT VIDEO CARD TYPE
@@ -77,5 +76,6 @@ function isfinished(hwdatar, typ) {
     /*
     	SEND DATA TO ENDPOINT
     */
+    var main = require('./start.js');
     main.callBackHardware(hwdatas);
 } 

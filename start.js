@@ -7,7 +7,6 @@ var colors = require('colors');
 var pump = require('pump');
 var fs = require('fs');
 var exec = require('child_process').exec;
-let ascii_text_generator = require('ascii-text-generator');
 global.timeout;
 global.gputype;
 global.configtype = "simple";
@@ -19,7 +18,7 @@ global.minerCpu;
 var tools = require('./tools.js');
 var monitor = require('./monitor.js');
 var settings = require("./config.js");
-// THIS FUNCTION ONLY FOR MINERSTAT OS
+// CONFIG PROTECTION
 if (global.accesskey === "CHANGEIT" || global.accesskey === "") {
     var readlineSync = require('readline-sync');
     console.log("-*- If you see Segmentation fault error:");
@@ -67,12 +66,6 @@ process.on('uncaughtException', function(err) {
 })
 process.on('unhandledRejection', (reason, p) => {});
 
-function header() {
-    var queryNeo = exec("neofetch", function(error, stdout, stderr) {
-        console.log(stdout);
-    });
-}
-
 function getDateTime() {
     var date = new Date();
     var hour = date.getHours();
@@ -84,14 +77,64 @@ function getDateTime() {
     return hour + ":" + min + ":" + sec;
 }
 module.exports = {
+    callBackSync: function() {
+        // WHEN MINER INFO FETCHED, FETCH HARDWARE INFO
+        if (global.gputype === "nvidia") {
+            monitor.HWnvidia();
+        }
+        if (global.gputype === "amd") {
+            monitor.HWamd();
+        }
+    },
+    callBackHardware: function(hwdatas) {
+        // WHEN HARDWARE INFO FETCHED SEND BOTH RESPONSE TO THE SERVER
+        var sync = global.sync;
+        var res_data = global.res_data;
+        console.log(res_data);
+        // SEND LOG TO SERVER                         
+        var request = require('request');
+        request.post({
+            url: 'https://api.minerstat.com/v2/set_node_config.php?token=' + global.accesskey + '&worker=' + global.worker + '&miner=' + global.client.toLowerCase() + '&ver=4&cpuu=' + global.minerCpu + '&cpud=HASH' + '&os=linux&currentcpu=' + global.cpuDefault.toLowerCase(),
+            form: {
+                minerData: res_data,
+                hwData: hwdatas
+            }
+        }, function(error, response, body) {
+            if (error == null)  {
+                // Process Remote Commands
+                var tools = require('./tools.js');
+                tools.remotecommand(body);
+                // Display Sync Status
+                var sync = global.sync;
+                if (sync.toString() === "true") {
+                    console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
+                    console.log(colors.green(getDateTime() + " MINERSTAT.COM: Package Sent [" + global.worker + "]"));
+                    console.log(colors.magenta(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
+                } else {
+                    console.log(colors.red("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
+                    console.log(colors.red(getDateTime() + " MINERSTAT.COM: Package Error  [" + global.worker + "]"));
+                    console.log(colors.red(getDateTime() + " REASON => " + global.client + " not hashing!"));
+                    console.log(colors.red(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
+                }
+            } else {
+                console.log(colors.red("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
+                console.log(colors.red(getDateTime() + " MINERSTAT.COM: CONNECTION LOST  [" + global.worker + "]"));
+                console.log(colors.red(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
+            }
+        });
+    },
     boot: function() {
         var tools = require('./tools.js');
         tools.start();
     },
+    killall: function() {
+        var tools = require('./tools.js');
+        tools.killall();
+    },
     main: function() {
         var tools = require('./tools.js');
         var monitor = require('./monitor.js');
-        tools.killall();
+        //tools.killall();
         monitor.detect();
         global.sync;
         global.res_data;
@@ -99,7 +142,6 @@ module.exports = {
         global.sync = new Boolean(false);
         global.sync_num = 0;
         global.res_data = "";
-        header();
         console.log(colors.cyan(getDateTime() + " WORKER: " + global.worker));
         // GET DEFAULT CLIENT AND SEND STATUS TO THE SERVER
         const https = require('https');
@@ -118,51 +160,19 @@ module.exports = {
                 console.log(colors.red(getDateTime() + " Waiting for connection.."));
                 tools.restart();
             }
-            if (response.body === "algo") {
-                global.configtype = "algo";
-                global.isalgo = "YES";
-                var request = require('request');
-                request.get({
-                    url: 'https://minerstat.com/profitswitch_api.php?token=' + global.accesskey + '&worker=' + global.worker,
-                    form: {
-                        mes: "kflFDKME"
-                    }
-                }, function(error, response, body) {
-                    var json_string = response.body;
-                    if (json_string.indexOf("ok") > -1) {
-                        console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
-                        console.log(colors.magenta(getDateTime() + " |ALGO| Profit Switch started"));
-                        console.log(colors.magenta(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
-                        var json_parse = JSON.parse(json_string);
-                        global.algo_status = json_parse.response.status;
-                        global.algo_bestalgo = json_parse.response.bestalgo;
-                        global.algo_dualmode = json_parse.response.dualmode;
-                        global.algo_client = json_parse.response.client;
-                        global.client = json_parse.response.client;
-                        global.algo_bestdual = json_parse.response.bestdual;
-                        global.algo_revenue = json_parse.response.revenue;
-                        global.algo_gputype = json_parse.response.gputype;
-                        global.algo_checkdual = json_parse.response.checkdual;
-                        global.algo_db = json_parse.response.db;
-                        global.algo_ccalgo = json_parse.response.ccalgo;
-                        dlconf();
-                    }
-                });
-            } else {
-                global.configtype = "simple";
-                var request = require('request');
-                request.get({
-                    url: 'https://api.minerstat.com/v2/set_node_config.php?token=' + global.accesskey + '&worker=' + global.worker + '&miner=' + global.client.toLowerCase() + '&os=linux&ver=4&cpu=NO',
-                    form: {
-                        dump: "minerstatOSInit"
-                    }
-                }, function(error, response, body) {
-                    console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
-                    console.log(colors.green(getDateTime() + " MINERSTAT.COM: Waiting for the first sync.. (30 sec)"));
-                    console.log(colors.magenta(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
-                });
-                dlconf();
-            }
+            global.configtype = "simple";
+            var request = require('request');
+            request.get({
+                url: 'https://api.minerstat.com/v2/set_node_config.php?token=' + global.accesskey + '&worker=' + global.worker + '&miner=' + global.client.toLowerCase() + '&os=linux&ver=4&cpu=NO',
+                form: {
+                    dump: "minerstatOSInit"
+                }
+            }, function(error, response, body) {
+                console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
+                console.log(colors.green(getDateTime() + " MINERSTAT.COM: Waiting for the first sync.. (30 sec)"));
+                console.log(colors.magenta(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
+            });
+            dlconf();
         });
         if (global.reboot === "yes") {
             var childp = require('child_process').exec;
@@ -212,55 +222,18 @@ module.exports = {
                     writeStream.write("" + str);
                     writeStream.end();
                     writeStream.on('finish', function() {
-                        tools.killall();
+                        //tools.killall();
                         tools.autoupdate();
                     });
                 } else {
                     console.log(global.chunk);
-                    tools.killall();
+                    //tools.killall();
                     tools.autoupdate();
                 }
                 console.log(colors.magenta(getDateTime() + " ONLINE CONFIG GPU TYPE: " + global.minerType));
                 console.log(colors.magenta(getDateTime() + " LOCAL GPU TYPE: " + global.gputype));
                 console.log("*** Hardware monitor is running in the background.. ***");
             });
-        }
-        /*
-        	CALLBACK's
-         */
-        function callBackSync() {
-            // WHEN MINER INFO FETCHED, FETCH HARDWARE INFO
-            if (global.gputype === "nvidia") {
-                monitor.HWnvidia();
-            }
-            if (global.gputype === "amd") {
-                monitor.HWamd();
-            }
-        }
-
-        function callBackHardware(hwdatas) {
-            // WHEN HARDWARE INFO FETCHED SEND BOTH RESPONSE TO THE SERVER
-            var sync = global.sync;
-            var res_data = global.res_data;
-            if (sync.toString() === "true") { // IS HASHING?
-                // SEND LOG TO SERVER                         
-                var request = require('request');
-                request.post({
-                    url: 'https://api.minerstat.com/v2/set_node_config.php?token=' + global.accesskey + '&worker=' + global.worker + '&miner=' + global.client.toLowerCase() + '&ver=4&cpuu=' + global.minerCpu + '&cpud=HASH' + '&os=linux&currentcpu=' + global.cpuDefault.toLowerCase(),
-                    form: {
-                        minerData: res_data,
-                        hwData: hwdatas
-                    }
-                }, function(error, response, body) {
-                    console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
-                    console.log(colors.green(getDateTime() + " MINERSTAT.COM: Package Sent [" + global.worker + "]"));
-                    console.log(colors.magenta(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
-                });
-            } else {
-                console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
-                console.log(colors.red(getDateTime() + " MINERSTAT.COM: Package Error  [" + global.worker + "]"));
-                console.log(colors.magenta(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
-            }
         }
         /*
         	START LOOP 
@@ -270,7 +243,6 @@ module.exports = {
             global.timeout = setInterval(function() {
                 var tools = require('./tools.js');
                 global.sync_num++;
-                tools.remotecommand();
                 tools.fetch();
             }, 30000);
         })();
