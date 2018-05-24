@@ -90,11 +90,11 @@ module.exports = {
         // WHEN HARDWARE INFO FETCHED SEND BOTH RESPONSE TO THE SERVER
         var sync = global.sync;
         var res_data = global.res_data;
-        console.log(res_data);
+        //console.log(res_data);         //SHOW SYNC OUTPUT
         // SEND LOG TO SERVER                         
         var request = require('request');
         request.post({
-            url: 'https://api.minerstat.com/v2/set_node_config.php?token=' + global.accesskey + '&worker=' + global.worker + '&miner=' + global.client.toLowerCase() + '&ver=4&cpuu=' + global.minerCpu + '&cpud=HASH' + '&os=linux&currentcpu=' + global.cpuDefault.toLowerCase(),
+            url: 'https://api.minerstat.com/v2/set_node_config.php?token=' + global.accesskey + '&worker=' + global.worker + '&miner=' + global.client.toLowerCase() + '&ver=4&cpuu=' + global.minerCpu + '&cpud=HASH' + '&os=linux&currentcpu=' + global.cpuDefault.toLowerCase() + '&hwType=' + global.minerType,
             form: {
                 minerData: res_data,
                 hwData: hwdatas
