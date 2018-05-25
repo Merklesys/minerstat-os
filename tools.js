@@ -17,50 +17,51 @@ module.exports = {
     /*
     	START MINER
     */
-    start: function() {
+    start: function(miner) {
         var execFile, args;
+        console.log(colors.cyan(getDateTime() + " STARTING MINER: " + miner));
         var parse = require('parse-spawn-args').parse
-        if (global.client.indexOf("ccminer") > -1) {
+        if (miner.indexOf("ccminer") > -1) {
             args = parse(global.chunk);
             execFile = "ccminer";
         }
-        if (global.client == "claymore-eth") {
+        if (miner == "claymore-eth") {
             args = "";
             execFile = "ethdcrminer64";
         }
-        if (global.client == "claymore-zec") {
+        if (miner == "claymore-zec") {
             args = "";
             execFile = "zecminer64";
         }
-        if (global.client == "claymore-xmr") {
+        if (miner == "claymore-xmr") {
             args = "";
             execFile = "nsgpucnminer";
         }
-        if (global.client == "ewbf-zec") {
+        if (miner == "ewbf-zec") {
             args = parse(global.chunk);
             execFile = "miner";
         }
-        if (global.client == "bminer") {
+        if (miner == "bminer") {
             args = parse(global.chunk);
             execFile = "bminer";
         }
-        if (global.client == "ethminer") {
+        if (miner == "ethminer") {
             args = parse(global.chunk);
             execFile = "ethminer";
         }
-        if (global.client.indexOf("sgminer") > -1) {
+        if (miner.indexOf("sgminer") > -1) {
             var larg = "-c sgminer.conf --gpu-reorder --api-listen";
             args = parse(larg);
             execFile = "sgminer";
         }
-        if (global.client == "zm-zec") {
+        if (miner == "zm-zec") {
             args = parse(global.chunk);
             execFile = "zm";
         }
         const execa = require('execa');
         try {
             if (args != "") {
-                execa.shell('clients/' + global.client + '/' + execFile, args, {
+                execa.shell('clients/' + miner + '/' + execFile, args, {
                     cwd: process.cwd(),
                     detached: false,
                     stdio: "inherit"
@@ -68,7 +69,7 @@ module.exports = {
                     console.log("MINER => Closed");
                 });
             } else {
-                execa.shell('clients/' + global.client + '/' + execFile, {
+                execa.shell('clients/' + miner + '/' + execFile, {
                     cwd: process.cwd(),
                     detached: false,
                     stdio: "inherit"
@@ -83,9 +84,9 @@ module.exports = {
     /*
     	AUTO UPDATE
     */
-    autoupdate: function() {
+    autoupdate: function(miner) {
         var main = require('./start.js');
-        main.boot();
+        main.boot(miner);
     },
     /*
     	REMOTE COMMAND
@@ -147,17 +148,17 @@ module.exports = {
     /*
     	FETCH INFO
     */
-    fetch: function() {
+    fetch: function(gpuMiner, isCpu, cpuMiner) {
         const telNet = require('net');
         var http = require('http');
         // ETHMINER
-        if (global.client.indexOf("ethminer") > -1) {
+        if (gpuMiner.indexOf("ethminer") > -1) {
             // INTEGRATED TO THE CLIENT
             // START WITH --token ACCESKEY --worker WORKERNAME 
             global.sync = new Boolean(true);
         }
         // BMINER
-        if (global.client.indexOf("bminer") > -1) {
+        if (gpuMiner.indexOf("bminer") > -1) {
             var options = {
                 host: '127.0.0.1',
                 port: 1880,
@@ -179,7 +180,7 @@ module.exports = {
             });
         }
         // CLAYMORE miner's
-        if (global.client.indexOf("claymore") > -1) {
+        if (gpuMiner.indexOf("claymore") > -1) {
             var options = {
                 host: '127.0.0.1',
                 port: 3333,
@@ -201,7 +202,7 @@ module.exports = {
             });
         }
         // CCMINER with all fork's
-        if (global.client.indexOf("ccminer") > -1) {
+        if (gpuMiner.indexOf("ccminer") > -1) {
             const ccminerClient = telNet.createConnection({
                 port: 3333
             }, () => {
@@ -220,7 +221,7 @@ module.exports = {
             ccminerClient.on('end', () => {});
         }
         // EWBF
-        if (global.client.indexOf("ewbf") > -1) {
+        if (gpuMiner.indexOf("ewbf") > -1) {
             const ewbfClient = telNet.createConnection({
                 port: 42000
             }, () => {
@@ -239,7 +240,7 @@ module.exports = {
             ewbfClient.on('end', () => {});
         }
         // DSTM-ZEC
-        if (global.client.indexOf("zm-zec") > -1) {
+        if (gpuMiner.indexOf("zm-zec") > -1) {
             const dstmClient = telNet.createConnection({
                 port: 2222
             }, () => {
@@ -258,7 +259,7 @@ module.exports = {
             dstmClient.on('end', () => {});
         }
         // SGMINER with all fork's
-        if (global.client.indexOf("sgminer") > -1) {
+        if (gpuMiner.indexOf("sgminer") > -1) {
             const sgminerClient = telNet.createConnection({
                 port: 4028
             }, () => {
