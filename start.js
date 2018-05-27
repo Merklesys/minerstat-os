@@ -107,6 +107,7 @@ module.exports = {
                 hwData: hwdatas
             }
         }, function(error, response, body) {
+            console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
             if (error == null)  {
                 // Process Remote Commands
                 var tools = require('./tools.js');
@@ -114,7 +115,6 @@ module.exports = {
                 // Display GPU Sync Status
                 var sync = gpuSyncDone;
                 var cpuSync = cpuSyncDone;
-                console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
                 if (sync.toString() === "true") {
                     console.log(colors.green(getDateTime() + " API: " + global.client + " Updated  [" + global.worker + "]"));
                 } else {
