@@ -28,16 +28,16 @@ module.exports = {
     /*
     	AMDMEMINFO - AMD
     */
-    HWamd: function() {
+    HWamd: function(gpuSyncDone, cpuSyncDone) {
         var exec = require('child_process').exec;
         var query = exec(global.path + "/bin/amdcovc", function(error, stdout, stderr) {
-            isfinished(stdout, "amd");
+            isfinished(stdout, "amd", gpuSyncDone, cpuSyncDone);
         });
     },
     /*
     	NVIDIA-SMI - NVIDIA
     */
-    HWnvidia: function() {
+    HWnvidia: function(gpuSyncDone, cpuSyncDone) {
         var lstart = -1;
         var response_start = -1;
         var exec = require('child_process').exec;
@@ -55,14 +55,14 @@ module.exports = {
                     hwg.push(datar);
                     response_start++;
                     if (response_start == (response - 1)) {
-                        isfinished(hwg, "nvidia");
+                        isfinished(hwg, "nvidia", gpuSyncDone, cpuSyncDone);
                     }
                 });
             } // END WHILE
         }); // END FETCH
     } // END HWNvidia
 } // END MODULE.EXPORT
-function isfinished(hwdatar, typ) {
+function isfinished(hwdatar, typ, gpuSyncDone, cpuSyncDone) {
     if (typ === "nvidia") {
         // ARRAY to JSON
         var hwdatas = JSON.stringify(hwdatar);
@@ -77,5 +77,5 @@ function isfinished(hwdatar, typ) {
     	SEND DATA TO ENDPOINT
     */
     var main = require('./start.js');
-    main.callBackHardware(hwdatas);
+    main.callBackHardware(hwdatas, gpuSyncDone, cpuSyncDone);
 } 

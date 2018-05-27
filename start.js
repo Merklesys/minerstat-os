@@ -19,6 +19,7 @@ global.minerOverclock;
 global.minerCpu;
 global.dlGpuFinished;
 global.dlCpuFinished;
+global.chunkCpu;
 var tools = require('./tools.js');
 var monitor = require('./monitor.js');
 var settings = require("./config.js");
@@ -81,19 +82,20 @@ function getDateTime() {
     return hour + ":" + min + ":" + sec;
 }
 module.exports = {
-    callBackSync: function() {
+    callBackSync: function(gpuSyncDone, cpuSyncDone) {
         // WHEN MINER INFO FETCHED, FETCH HARDWARE INFO
         if (global.gputype === "nvidia") {
-            monitor.HWnvidia();
+            monitor.HWnvidia(gpuSyncDone, cpuSyncDone);
         }
         if (global.gputype === "amd") {
-            monitor.HWamd();
+            monitor.HWamd(gpuSyncDone, cpuSyncDone);
         }
     },
-    callBackHardware: function(hwdatas) {
+    callBackHardware: function(hwdatas, gpuSyncDone, cpuSyncDone) {
         // WHEN HARDWARE INFO FETCHED SEND BOTH RESPONSE TO THE SERVER
         var sync = global.sync;
         var res_data = global.res_data;
+        var cpu_data = global.cpu_data;
         //console.log(res_data);         //SHOW SYNC OUTPUT
         // SEND LOG TO SERVER                         
         var request = require('request');
@@ -101,6 +103,7 @@ module.exports = {
             url: 'https://api.minerstat.com/v2/set_node_config.php?token=' + global.accesskey + '&worker=' + global.worker + '&miner=' + global.client.toLowerCase() + '&ver=4&cpuu=' + global.minerCpu + '&cpud=HASH' + '&os=linux&currentcpu=' + global.cpuDefault.toLowerCase() + '&hwType=' + global.minerType,
             form: {
                 minerData: res_data,
+                cpuData: cpu_data,
                 hwData: hwdatas
             }
         }, function(error, response, body) {
@@ -108,28 +111,33 @@ module.exports = {
                 // Process Remote Commands
                 var tools = require('./tools.js');
                 tools.remotecommand(body);
-                // Display Sync Status
-                var sync = global.sync;
+                // Display GPU Sync Status
+                var sync = gpuSyncDone;
+                var cpuSync = cpuSyncDone;
+                console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
                 if (sync.toString() === "true") {
-                    console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
-                    console.log(colors.green(getDateTime() + " MINERSTAT.COM: Package Sent [" + global.worker + "]"));
-                    console.log(colors.magenta(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
+                    console.log(colors.green(getDateTime() + " API: " + global.client + " Updated  [" + global.worker + "]"));
                 } else {
-                    console.log(colors.red("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
-                    console.log(colors.red(getDateTime() + " MINERSTAT.COM: Package Error  [" + global.worker + "]"));
+                    console.log(colors.red(getDateTime() + " API: ERROR  [" + global.worker + "]"));
                     console.log(colors.red(getDateTime() + " REASON => " + global.client + " not hashing!"));
-                    console.log(colors.red(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
+                }
+                if (global.minerCpu.toString() === "true") {
+                    if (cpuSync.toString() === "true") {
+                        console.log(colors.green(getDateTime() + " API: " + global.cpuDefault.toLowerCase() + " Updated  [" + global.worker + "]"));
+                    } else {
+                        console.log(colors.red(getDateTime() + " API: ERROR  [" + global.worker + "]"));
+                        console.log(colors.red(getDateTime() + " REASON => " + global.cpuDefault.toLowerCase() + " not hashing!"));
+                    }
                 }
             } else {
-                console.log(colors.red("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
                 console.log(colors.red(getDateTime() + " MINERSTAT.COM: CONNECTION LOST  [" + global.worker + "]"));
-                console.log(colors.red(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
             }
+            console.log(colors.magenta(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
         });
     },
-    boot: function(miner) {
+    boot: function(miner, startArgs) {
         var tools = require('./tools.js');
-        tools.start(miner);
+        tools.start(miner, startArgs);
     },
     killall: function() {
         var tools = require('./tools.js');
@@ -141,11 +149,15 @@ module.exports = {
         //tools.killall();
         monitor.detect();
         global.sync;
+        global.cpuSync;
         global.res_data;
+        global.cpu_data;
         global.sync_num;
         global.sync = new Boolean(false);
+        global.cpuSync = new Boolean(false);
         global.sync_num = 0;
         global.res_data = "";
+        global.cpu_data = "";
         global.dlGpuFinished = false;
         global.dlCpuFinished = false;
         console.log(colors.cyan(getDateTime() + " WORKER: " + global.worker));
@@ -329,7 +341,7 @@ module.exports = {
             });
         }
         //// GET CONFIG TO YOUR DEFAULT MINER
-        function dlconf(miner, clientType) {
+        async function dlconf(miner, clientType) {
             if (miner.indexOf("bminer") > -1) {
                 global.file = "clients/" + miner + "/start.bash";
             }
@@ -352,11 +364,14 @@ module.exports = {
                 global.file = "clients/" + miner + "/start.bash";
             }
             needle.get('https://api.minerstat.com/v2/conf/gpu/' + global.accesskey + '/' + global.worker + '/' + miner.toLowerCase(), function(error, response) {
-                global.chunk = response.body;
-                if (miner != "ewbf-zec" && miner != "ethminer" && miner != "zm-zec" && miner != "bminer" && miner.indexOf("ccminer") === -1) {
+                if (clientType == "cpu") {
+                    global.chunkCpu = response.body;
+                } else {
+                    global.chunk = response.body;
+                }
+                if (miner != "ewbf-zec" && miner != "ethminer" && miner != "zm-zec" && miner != "bminer" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
                     var writeStream = fs.createWriteStream(global.path + "/" + global.file);
-                    console.log(global.chunk);
-                    var str = global.chunk;
+                    var str = response.body;
                     if (miner.indexOf("sgminer") > -1) {
                         str = JSON.stringify(str);
                     }
@@ -364,22 +379,22 @@ module.exports = {
                     writeStream.end();
                     writeStream.on('finish', function() {
                         //tools.killall();
-                        tools.autoupdate(miner);
+                        tools.autoupdate(miner, response.body);
                     });
                 } else {
-                    console.log(global.chunk);
+                    //console.log(response.body);
                     //tools.killall();
-                    tools.autoupdate(miner);
+                    tools.autoupdate(miner, response.body);
                 }
                 if (clientType == "gpu") {
+                    console.log(colors.magenta(getDateTime() + " ONLINE CONFIG GPU TYPE: " + global.minerType));
+                    console.log(colors.magenta(getDateTime() + " LOCAL GPU TYPE: " + global.gputype));
+                    console.log("*** Hardware monitor is running in the background.. ***");
                     global.dlGpuFinished = true;
                 }
                 if (clientType == "cpu") {
                     global.dlCpuFinished = true;
                 }
-                console.log(colors.magenta(getDateTime() + " ONLINE CONFIG GPU TYPE: " + global.minerType));
-                console.log(colors.magenta(getDateTime() + " LOCAL GPU TYPE: " + global.gputype));
-                console.log("*** Hardware monitor is running in the background.. ***");
             });
         }
         /*

@@ -17,12 +17,13 @@ module.exports = {
     /*
     	START MINER
     */
-    start: function(miner) {
+    start: async function(miner, startArgs) {
         var execFile, args;
         console.log(colors.cyan(getDateTime() + " STARTING MINER: " + miner));
+        console.log(colors.white(getDateTime() + " " + miner + " => " + startArgs));
         var parse = require('parse-spawn-args').parse
         if (miner.indexOf("ccminer") > -1) {
-            args = parse(global.chunk);
+            args = parse(startArgs);
             execFile = "ccminer";
         }
         if (miner == "claymore-eth") {
@@ -38,15 +39,15 @@ module.exports = {
             execFile = "nsgpucnminer";
         }
         if (miner == "ewbf-zec") {
-            args = parse(global.chunk);
+            args = parse(startArgs);
             execFile = "miner";
         }
         if (miner == "bminer") {
-            args = parse(global.chunk);
+            args = parse(startArgs);
             execFile = "bminer";
         }
         if (miner == "ethminer") {
-            args = parse(global.chunk);
+            args = parse(startArgs);
             execFile = "ethminer";
         }
         if (miner.indexOf("sgminer") > -1) {
@@ -55,26 +56,38 @@ module.exports = {
             execFile = "sgminer";
         }
         if (miner == "zm-zec") {
-            args = parse(global.chunk);
+            args = parse(startArgs);
             execFile = "zm";
+        }
+        if (miner == "cpuminer-opt") {
+            args = parse(startArgs);
+            execFile = "cpuminer";
         }
         const execa = require('execa');
         try {
-            if (args != "") {
-                execa.shell('clients/' + miner + '/' + execFile, args, {
-                    cwd: process.cwd(),
-                    detached: false,
-                    stdio: "inherit"
-                }).then(result => {
-                    console.log("MINER => Closed");
-                });
+            if (miner.indexOf("cpu") == -1) {
+                if (args != "") {
+                    execa.shell('clients/' + miner + '/' + execFile, args, {
+                        cwd: process.cwd(),
+                        detached: false,
+                        stdio: "inherit"
+                    }).then(result => {
+                        console.log("MINER => Closed");
+                    });
+                } else {
+                    execa.shell('clients/' + miner + '/' + execFile, {
+                        cwd: process.cwd(),
+                        detached: false,
+                        stdio: "inherit"
+                    }).then(result => {
+                        console.log("MINER => Closed");
+                    });
+                }
             } else {
-                execa.shell('clients/' + miner + '/' + execFile, {
+                require("child_process").spawn('clients/' + miner + '/' + execFile, args, {
                     cwd: process.cwd(),
                     detached: false,
                     stdio: "inherit"
-                }).then(result => {
-                    console.log("MINER => Closed");
                 });
             }
         } catch (err) {
@@ -84,9 +97,9 @@ module.exports = {
     /*
     	AUTO UPDATE
     */
-    autoupdate: function(miner) {
+    autoupdate: function(miner, startArgs) {
         var main = require('./start.js');
-        main.boot(miner);
+        main.boot(miner, startArgs);
     },
     /*
     	REMOTE COMMAND
@@ -129,6 +142,7 @@ module.exports = {
         try {
             fkill('bminer').then(() => {});
             fkill('ccminer').then(() => {});
+            fkill('cpuminer').then(() => {});
             fkill('zecminer64').then(() => {});
             fkill('ethminer').then(() => {});
             fkill('ethdcrminer64').then(() => {});
@@ -149,13 +163,17 @@ module.exports = {
     	FETCH INFO
     */
     fetch: function(gpuMiner, isCpu, cpuMiner) {
+        var gpuSyncDone = false;
+        var cpuSyncDone = false;
+        global.sync = false;
+        global.cpuSync = false;
         const telNet = require('net');
         var http = require('http');
         // ETHMINER
         if (gpuMiner.indexOf("ethminer") > -1) {
             // INTEGRATED TO THE CLIENT
             // START WITH --token ACCESKEY --worker WORKERNAME 
-            global.sync = new Boolean(true);
+            gpuSyncDone = true;
         }
         // BMINER
         if (gpuMiner.indexOf("bminer") > -1) {
@@ -168,15 +186,18 @@ module.exports = {
                 res_data = '';
                 response.on('data', function(chunk) {
                     global.res_data += chunk;
-                    global.status = new Boolean(true);
+                    gpuSyncDone = true;
+                    global.sync = true;
                 });
                 response.on('end', function() {
-                    global.sync = new Boolean(true);
+                    gpuSyncDone = true;
+                    global.sync = true;
                 });
             });
             req.on('error', function(err) {
                 console.log(colors.red(getDateTime() + " MINERSTAT.COM: Package Error. " + err.message));
-                global.sync = new Boolean(false);
+                gpuSyncDone = false;
+                global.sync = true;
             });
         }
         // CLAYMORE miner's
@@ -190,15 +211,18 @@ module.exports = {
                 res_data = '';
                 response.on('data', function(chunk) {
                     global.res_data += chunk;
-                    global.status = new Boolean(true);
+                    gpuSyncDone = true;
+                    global.sync = true;
                 });
                 response.on('end', function() {
-                    global.sync = new Boolean(true);
+                    gpuSyncDone = true;
+                    global.sync = true;
                 });
             });
             req.on('error', function(err) {
                 console.log(colors.red(getDateTime() + " MINERSTAT.COM: Package Error. " + err.message));
-                global.sync = new Boolean(false);
+                gpuSyncDone = false;
+                global.sync = true;
             });
         }
         // CCMINER with all fork's
@@ -211,14 +235,15 @@ module.exports = {
             ccminerClient.on('data', (data) => {
                 console.log(data.toString());
                 global.res_data = data.toString();
-                if (data.toString() === "") {
-                    global.sync = new Boolean(false);
-                } else {
-                    global.sync = new Boolean(true);
-                }
+                gpuSyncDone = true;
+                global.sync = true;
                 ccminerClient.end();
             });
-            ccminerClient.on('end', () => {});
+            ccminerClient.on('error', () => {
+                gpuSyncDone = false;
+                global.sync = true;
+            });
+            ccminerClient.on('end', () => { global.sync = true; });
         }
         // EWBF
         if (gpuMiner.indexOf("ewbf") > -1) {
@@ -230,14 +255,15 @@ module.exports = {
             ewbfClient.on('data', (data) => {
                 console.log(data.toString());
                 global.res_data = data.toString();
-                if (data.toString() === "") {
-                    global.sync = new Boolean(false);
-                } else {
-                    global.sync = new Boolean(true);
-                }
+                gpuSyncDone = true;
+                global.sync = true;
                 ewbfClient.end();
             });
-            ewbfClient.on('end', () => {});
+            ewbfClient.on('error', () => {
+                gpuSyncDone = false;
+                global.sync = true;
+            });
+            ewbfClient.on('end', () => { global.sync = true; });
         }
         // DSTM-ZEC
         if (gpuMiner.indexOf("zm-zec") > -1) {
@@ -249,14 +275,15 @@ module.exports = {
             dstmClient.on('data', (data) => {
                 console.log(data.toString());
                 global.res_data = data.toString();
-                if (data.toString() === "") {
-                    global.sync = new Boolean(false);
-                } else {
-                    global.sync = new Boolean(true);
-                }
+                gpuSyncDone = true;
+                global.sync = true;
                 dstmClient.end();
             });
-            dstmClient.on('end', () => {});
+            dstmClient.on('error', () => {
+                gpuSyncDone = false;
+                global.sync = true;
+            });
+            dstmClient.on('end', () => { global.sync = true; });
         }
         // SGMINER with all fork's
         if (gpuMiner.indexOf("sgminer") > -1) {
@@ -268,22 +295,52 @@ module.exports = {
             sgminerClient.on('data', (data) => {
                 console.log(data.toString());
                 global.res_data = data.toString();
-                if (data.toString() === "") {
-                    global.sync = new Boolean(false);
-                } else {
-                    global.sync = new Boolean(true);
-                }
+                gpuSyncDone = true;
+                global.sync = true;
                 sgminerClient.end();
             });
-            sgminerClient.on('end', () => {});
+            sgminerClient.on('error', () => {
+                gpuSyncDone = false;
+                global.sync = true;
+            });
+            sgminerClient.on('end', () => { global.sync = true; });
+        }
+        // CPUMINER
+        if (isCpu.toString() == "true") {
+                const cpuminerClient = telNet.createConnection({
+                    port: 4048
+                }, () => {
+                    cpuminerClient.write("summary");
+                });
+                cpuminerClient.on('data', (data) => {
+                    console.log(data.toString());
+                    global.cpu_data = data.toString();
+                    cpuSyncDone = true;
+                    global.cpuSync = true;
+                    cpuminerClient.end();
+                });
+                cpuminerClient.on('error', () => {
+                    cpuSyncDone = false;
+                    global.cpuSync = true;
+                });
+                cpuminerClient.on('end', () => { global.cpuSync = true; });
         }
         // LOOP UNTIL SYNC DONE
         var _flagCheck = setInterval(function() {
             var sync = global.sync;
-            if (sync.toString() === "true") { // IS HASHING?
-                clearInterval(_flagCheck);
-                var main = require('./start.js');
-                main.callBackSync();
+            var cpuSync = global.cpuSync;
+            if (isCpu.toString() == "true") {
+                if (sync.toString() === "true" && cpuSync.toString() === "true") { // IS HASHING?
+                    clearInterval(_flagCheck);
+                    var main = require('./start.js');
+                    main.callBackSync(gpuSyncDone, cpuSyncDone);
+                }
+            } else {
+                if (sync.toString() === "true") { // IS HASHING?
+                    clearInterval(_flagCheck);
+                    var main = require('./start.js');
+                    main.callBackSync(gpuSyncDone, cpuSyncDone);
+                }
             }
         }, 2000); // interval set at 2000 milliseconds
     }
