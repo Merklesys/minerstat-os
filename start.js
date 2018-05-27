@@ -193,7 +193,7 @@ module.exports = {
                 fs.readdirSync(dir_path).forEach(function(entry) {
                     var entry_path = path.join(dir_path, entry);
                     if (fs.lstatSync(entry_path).isDirectory()) {
-                        rimraf(entry_path);
+                        deleteFolder(entry_path);
                     } else {
                         fs.unlinkSync(entry_path);
                     }
