@@ -20,14 +20,14 @@ sudo chvt 1
 echo ""
 
 #echo "-------- OVERCLOCKING ---------------------------"
-#cd /home/minerstat/minerstat-linux/bin
+#cd /home/minerstat/minerstat-os/bin
 #sudo sh overclock.sh
 
 echo " "
 echo "-------- AUTO CONFIGURE NETWORK ADAPTERS --------"
 if [ "$NETBOT" != "NO" ]
 then
-cd /home/minerstat/minerstat-linux/bin
+cd /home/minerstat/minerstat-os/bin
 sudo sh dhcp.sh
 else
 echo "If you don't have connection set DHCP=YES parameter on the USB."
@@ -45,12 +45,12 @@ done
 echo ""
 echo "-------- AUTO UPDATE MINERSTAT ------------------"
 echo ""
-cd /home/minerstat/minerstat-linux
+cd /home/minerstat/minerstat-os
 sudo sh git.sh
 echo ""
 
 echo "-------- RUNNING JOBS ---------------------------"
-cd /home/minerstat/minerstat-linux/bin
+cd /home/minerstat/minerstat-os/bin
 sudo sh jobs.sh
 echo ""
 

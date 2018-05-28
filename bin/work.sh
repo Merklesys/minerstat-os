@@ -2,8 +2,8 @@ if ! screen -list | grep -q "dummy"; then
 
 screen -A -m -d -S dummy sleep 22176000
 screen -A -m -d -S listener sudo sh /media/storage/distro/init.sh
-sudo chmod 777 /home/minerstat/minerstat-linux/bin/OhGodAnETHlargementPill-r2
-screen -A -m -d -S ethboost sudo /home/minerstat/minerstat-linux/bin/OhGodAnETHlargementPill-r2
+sudo chmod 777 /home/minerstat/minerstat-os/bin/OhGodAnETHlargementPill-r2
+screen -A -m -d -S ethboost sudo /home/minerstat/minerstat-os/bin/OhGodAnETHlargementPill-r2
 
 sudo find /var/log -type f -delete
 
@@ -25,7 +25,7 @@ echo " "
 echo "-------- CONFIGURE NETWORK ADAPTERS --------------"
 if [ "$NETBOT" != "NO" ]
 then
-cd /home/minerstat/minerstat-linux/bin
+cd /home/minerstat/minerstat-os/bin
 sudo sh dhcp.sh
 else
 echo "If you don't have connection set EVERYBOOT=YES parameter on the USB."
@@ -43,17 +43,17 @@ done
 echo ""
 echo "-------- AUTO UPDATE MINERSTAT ------------------"
 echo ""
-cd /home/minerstat/minerstat-linux
+cd /home/minerstat/minerstat-os
 sudo sh git.sh
 echo ""
-sudo chmod -R 777 /home/minerstat/minerstat-linux/*
+sudo chmod -R 777 /home/minerstat/minerstat-os/*
 
 echo "-------- OVERCLOCKING ---------------------------"
-cd /home/minerstat/minerstat-linux/bin
+cd /home/minerstat/minerstat-os/bin
 sudo sh overclock.sh
 
 echo "-------- RUNNING JOBS ---------------------------"
-cd /home/minerstat/minerstat-linux/bin
+cd /home/minerstat/minerstat-os/bin
 sudo sh jobs.sh
 echo ""
 
@@ -61,8 +61,8 @@ cd /media/storage/distro
 sudo sh expand.sh
 
 echo "-------- INITALIZING MINERSTAT CLIENT -----------"
-cd /home/minerstat/minerstat-linux
-screen -A -m -d -S minerstat-console sh /home/minerstat/minerstat-linux/start.sh;
+cd /home/minerstat/minerstat-os
+screen -A -m -d -S minerstat-console sh /home/minerstat/minerstat-os/start.sh;
 echo ""
 echo "Minerstat has been started in the background.."
 echo "Waiting for console output.."
