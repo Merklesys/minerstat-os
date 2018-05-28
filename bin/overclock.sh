@@ -1,6 +1,5 @@
 #!/bin/bash
 echo "*-*-* Overclocking in progress *-*-*"
-#cd /home/minerstat/minerstat-linux/bin/
 
 DEVICE=$(sudo lshw -short | grep AMD | wc -l)
 if [ "$DEVICE" -gt "0" ]; then
@@ -39,12 +38,11 @@ echo "WORKER: $WORKER"
 echo "--------------------------"
 
 sudo rm doclock.sh
-
 sleep 1
 
 if [ ! -z "$DONVIDIA" ]; then
 
-wget -qO doclock.sh "https://minerstat.com/getclock.php?type=nvidia&token=$TOKEN&worker=$WORKER"
+wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=nvidia&token=$TOKEN&worker=$WORKER"
 sleep 3
 sudo sh doclock.sh
 
@@ -52,7 +50,7 @@ fi
 
 if [ ! -z "$DOAMD" ]; then
 
-wget -qO doclock.sh "https://minerstat.com/getclock.php?type=amd&token=$TOKEN&worker=$WORKER&nums=$DIVIDE"
+wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=amd&token=$TOKEN&worker=$WORKER&nums=$DIVIDE"
 sleep 3
 sudo sh doclock.sh
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 exec 2>/dev/null
-echo "*** AMD Overclocking Tool @coinscrow ***"
-echo "*** Special thanks to: matszpk for amdcovc ***"
+echo "*** AMD Overclocking ***"
+echo "*** Special thanks to: matszpk, OhGodACompany ***"
 
 if [ ! $1 ]; then
 echo ""
@@ -28,11 +28,15 @@ VDDC=$5
 if [ "$CORECLOCK" != "skip" ]
 then
 sudo ./amdcovc coreclk:$GPUID=$CORECLOCK | grep "Setting core clock"
+sleep 0.5
+sudo ./amdcovc ccoreclk:$GPUID=$CORECLOCK | grep "Setting current core"
 fi
 
 if [ "$MEMCLOCK" != "skip" ]
 then
 sudo ./amdcovc memclk:$GPUID=$MEMCLOCK | grep "Setting memory clock"
+sleep 0.5
+sudo ./amdcovc cmemclk:$GPUID=$MEMCLOCK | grep "Setting current memory"
 fi
 
 if [ "$FANSPEED" != "skip" ]

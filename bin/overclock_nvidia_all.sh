@@ -1,6 +1,6 @@
 #!/bin/bash
 exec 2>/dev/null
-echo "*** Nvidia Overclocking Tool @coinscrow ***"
+echo "*** Nvidia Overclocking ***"
 
 if [ ! $1 ]; then
 echo ""
