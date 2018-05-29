@@ -34,10 +34,10 @@ echo "Remote IP: $STR4"
 echo ""
 
 #SEND INFO
-wget -qO- "https://minerstat.com/getstatus.php?token=$TOKEN&worker=$WORKER&space=$STR1&cpu=$STR2&localip=$STR3&remoteip=$STR4&freemem=$STR5" ; echo
+wget -qO- "https://api.minerstat.com/v2/set_os_status.php?token=$TOKEN&worker=$WORKER&space=$STR1&cpu=$STR2&localip=$STR3&remoteip=$STR4&freemem=$STR5" ; echo
 
 echo "-*- MINERSTAT LISTENER -*-"
-RESPONSE="$(wget -qO- "https://minerstat.com/listener.php?token=$TOKEN&worker=$WORKER" ; echo)"
+RESPONSE="$(wget -qO- "https://api.minerstat.com/v2/os_listener.php?token=$TOKEN&worker=$WORKER" ; echo)"
 
 echo "RESPONSE: $RESPONSE"
 
