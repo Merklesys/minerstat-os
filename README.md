@@ -23,6 +23,10 @@ mreconf   | simulate first boot: configure DHCP, creating fake dummy for NVIDIA 
 
 mclock    | Set clocks to match with the online inferface.
 
+mreboot   | Reboot
+
+mshutdown | Power off
+
 mhelp     | List all available commands.
 
 ```
