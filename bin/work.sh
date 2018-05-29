@@ -1,7 +1,7 @@
 if ! screen -list | grep -q "dummy"; then
 
 screen -A -m -d -S dummy sleep 22176000
-screen -A -m -d -S listener sudo sh /media/storage/distro/init.sh
+screen -A -m -d -S listener sudo sh /home/minerstat/minerstat-os/core/init.sh
 
 sudo find /var/log -type f -delete
 
