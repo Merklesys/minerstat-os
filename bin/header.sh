@@ -1,5 +1,7 @@
 #! /usr/bin/bash
 
+if [ ! $1 ]; then
+
 while true; do
 	output=$(neofetch)
 	sleep 0.5;
@@ -17,3 +19,21 @@ while true; do
     exit
     fi
 done
+
+else
+
+while true; do
+	output=$(neofetch)
+	sleep 0.5;
+	clear
+	echo
+	echo
+	echo
+	echo
+	echo
+	echo
+	echo "$output"
+    sleep 4
+done
+
+fi

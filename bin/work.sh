@@ -55,6 +55,9 @@ cd /home/minerstat/minerstat-os/bin
 sudo sh jobs.sh
 echo ""
 
+sleep 1
+sudo chvt 1
+
 cd /media/storage/distro
 sudo sh expand.sh
 
