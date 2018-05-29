@@ -1,6 +1,6 @@
 #!/bin/bash
 echo ""
-echo "*** Auto DHCP Configuration @coinscrow ***"
+echo "*** Auto DHCP Configuration ***"
 echo ""
 
 INTERFACE="$(sudo cat /proc/net/dev | tail -n1 | awk -F '\\:' '{print $1}')"
