@@ -42,6 +42,9 @@ sleep 1
 
 if [ ! -z "$DONVIDIA" ]; then
 
+sudo chmod 777 /home/minerstat/minerstat-os/bin/OhGodAnETHlargementPill-r2
+screen -A -m -d -S ethboost sudo /home/minerstat/minerstat-os/bin/OhGodAnETHlargementPill-r2
+
 wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=nvidia&token=$TOKEN&worker=$WORKER"
 sleep 3
 sudo sh doclock.sh
