@@ -23,6 +23,7 @@ global.chunkCpu;
 var tools = require('./tools.js');
 var monitor = require('./monitor.js');
 var settings = require("./config.js");
+const chalk = require('chalk');
 // CONFIG PROTECTION
 if (global.accesskey === "CHANGEIT" || global.accesskey === "") {
     var readlineSync = require('readline-sync');
@@ -44,9 +45,9 @@ if (global.accesskey === "CHANGEIT" || global.accesskey === "") {
     global.accesskey = qtoken;
     global.worker = qworker;
     global.reboot = "yes";
-    console.log(colors.cyan('Installation Done!'));
-    console.log(colors.cyan('Please remove your HDMI cables and press ENTER to REBOOT.'));
-    console.log(colors.cyan(''));
+    console.log(chalk.gray('Installation Done!'));
+    console.log(chalk.gray('Please remove your HDMI cables and press ENTER to REBOOT.'));
+    console.log(chalk.gray(''));
     var rreboot = readlineSync.question('Press Enter to REBOOT the System');
 }
 /*
@@ -107,7 +108,7 @@ module.exports = {
                 hwData: hwdatas
             }
         }, function(error, response, body) {
-            console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
+            console.log(chalk.gray("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
             if (error == null)  {
                 // Process Remote Commands
                 var tools = require('./tools.js');
@@ -116,23 +117,23 @@ module.exports = {
                 var sync = gpuSyncDone;
                 var cpuSync = cpuSyncDone;
                 if (sync.toString() === "true") {
-                    console.log(colors.green(getDateTime() + " API: " + global.client + " Updated  [" + global.worker + "]"));
+                    console.log(chalk.green.bold(getDateTime() + " minerstat: " + global.client + " Updated  [" + global.worker + "]"));
                 } else {
-                    console.log(colors.red(getDateTime() + " API: ERROR  [" + global.worker + "]"));
-                    console.log(colors.red(getDateTime() + " REASON => " + global.client + " not hashing!"));
+                    console.log(chalk.hex('#ff9970').bold(getDateTime() + " minerstat: ERROR  [" + global.worker + "]"));
+                    console.log(chalk.hex('#ff9970').bold(getDateTime() + " REASON => " + global.client + " not hashing!"));
                 }
                 if (global.minerCpu.toString() === "true") {
                     if (cpuSync.toString() === "true") {
-                        console.log(colors.green(getDateTime() + " API: " + global.cpuDefault.toLowerCase() + " Updated  [" + global.worker + "]"));
+                        console.log(chalk.green.bold(getDateTime() + " minerstat: " + global.cpuDefault.toLowerCase() + " Updated  [" + global.worker + "]"));
                     } else {
-                        console.log(colors.red(getDateTime() + " API: ERROR  [" + global.worker + "]"));
-                        console.log(colors.red(getDateTime() + " REASON => " + global.cpuDefault.toLowerCase() + " not hashing!"));
+                        console.log(chalk.hex('#ff9970').bold(getDateTime() + " minerstat: ERROR  [" + global.worker + "]"));
+                        console.log(chalk.hex('#ff9970').bold(getDateTime() + " REASON => " + global.cpuDefault.toLowerCase() + " not hashing!"));
                     }
                 }
             } else {
-                console.log(colors.red(getDateTime() + " MINERSTAT.COM: CONNECTION LOST  [" + global.worker + "]"));
+                console.log(chalk.hex('#ff9970').bold(getDateTime() + " MINERSTAT.COM: CONNECTION LOST  [" + global.worker + "]"));
             }
-            console.log(colors.magenta(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
+            console.log(chalk.gray(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
         });
     },
     boot: function(miner, startArgs) {
@@ -160,8 +161,9 @@ module.exports = {
         global.cpu_data = "";
         global.dlGpuFinished = false;
         global.dlCpuFinished = false;
-        console.log(colors.cyan(getDateTime() + " WORKER: " + global.worker));
+        console.log(chalk.gray(getDateTime() + " WORKER: " + global.worker));
         // GET DEFAULT CLIENT AND SEND STATUS TO THE SERVER
+        sleep.sleep(1);
         const https = require('https');
         var needle = require('needle');
         needle.get('https://api.minerstat.com/v2/node/gpu/' + global.accesskey + '/' + global.worker, function(error, response) {
@@ -174,24 +176,26 @@ module.exports = {
                 global.minerCpu = response.body.cpu;
                 // Download miner if needed
                 downloadMiners(response.body.default, response.body.cpu, response.body.cpuDefault);
+                // Poke server
+                global.configtype = "simple";
+                var request = require('request');
+                request.get({
+                    url: 'https://api.minerstat.com/v2/set_node_config.php?token=' + global.accesskey + '&worker=' + global.worker + '&miner=' + global.client.toLowerCase() + '&os=linux&ver=4&cpu=NO',
+                    form: {
+                        dump: "minerstatOSInit"
+                    }
+                }, function(error, response, body) {
+                    console.log(chalk.gray("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
+                    console.log(chalk.green.bold(getDateTime() + " MINERSTAT.COM: Waiting for the first sync.. (30 sec)"));
+                    console.log(chalk.gray(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
+                });
             } else {
                 clearInterval(global.timeout);
                 clearInterval(global.hwmonitor);
-                console.log(colors.red(getDateTime() + " Waiting for connection.."));
+                console.log(chalk.hex('#ff9970').bold(getDateTime() + " Waiting for connection.."));
+                sleep.sleep(10);
                 tools.restart();
             }
-            global.configtype = "simple";
-            var request = require('request');
-            request.get({
-                url: 'https://api.minerstat.com/v2/set_node_config.php?token=' + global.accesskey + '&worker=' + global.worker + '&miner=' + global.client.toLowerCase() + '&os=linux&ver=4&cpu=NO',
-                form: {
-                    dump: "minerstatOSInit"
-                }
-            }, function(error, response, body) {
-                console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
-                console.log(colors.green(getDateTime() + " MINERSTAT.COM: Waiting for the first sync.. (30 sec)"));
-                console.log(colors.magenta(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
-            });
         });
         if (global.reboot === "yes") {
             var childp = require('child_process').exec;
@@ -322,13 +326,13 @@ module.exports = {
         async function downloadCore(miner, clientType, serverVersion) {
             var miner = miner;
             const download = require('download');
-            console.log(colors.cyan(getDateTime() + " Downloading: " + miner));
+            console.log(chalk.gray(getDateTime() + " Downloading: " + miner));
             download('http://static.minerstat.farm/miners/linux/' + miner + '.zip', global.path + '/').then(() => {
                 const decompress = require('decompress');
-                console.log(colors.green(getDateTime() + " Download complete: " + miner));
-                console.log(colors.cyan(getDateTime() + " Decompressing: " + miner));
+                console.log(chalk.green.bold(getDateTime() + " Download complete: " + miner));
+                console.log(chalk.gray(getDateTime() + " Decompressing: " + miner));
                 decompress(miner + '.zip', global.path + '/clients/' + miner).then(files => {
-                    console.log(colors.green(getDateTime() + " Decompressing complete: " + miner));
+                    console.log(chalk.green.bold(getDateTime() + " Decompressing complete: " + miner));
                     // Remove .zip
                     deleteFile(miner + ".zip");
                     // Store version  
@@ -387,8 +391,8 @@ module.exports = {
                     tools.autoupdate(miner, response.body);
                 }
                 if (clientType == "gpu") {
-                    console.log(colors.magenta(getDateTime() + " ONLINE CONFIG GPU TYPE: " + global.minerType));
-                    console.log(colors.magenta(getDateTime() + " LOCAL GPU TYPE: " + global.gputype));
+                    console.log(chalk.gray(getDateTime() + " ONLINE CONFIG GPU TYPE: " + global.minerType));
+                    console.log(chalk.gray(getDateTime() + " LOCAL GPU TYPE: " + global.gputype));
                     console.log("*** Hardware monitor is running in the background.. ***");
                     global.dlGpuFinished = true;
                 }

@@ -1,4 +1,5 @@
 var colors = require('colors');
+const chalk = require('chalk');
 var pump = require('pump');
 var fs = require('fs');
 const https = require('https');
@@ -19,8 +20,8 @@ module.exports = {
     */
     start: async function(miner, startArgs) {
         var execFile, args;
-        console.log(colors.cyan(getDateTime() + " STARTING MINER: " + miner));
-        console.log(colors.white(getDateTime() + " " + miner + " => " + startArgs));
+        console.log(chalk.gray.bold(getDateTime() + " STARTING MINER: " + miner));
+        console.log(chalk.white(getDateTime() + " " + miner + " => " + startArgs));
         var parse = require('parse-spawn-args').parse
         if (miner.indexOf("ccminer") > -1) {
             args = parse(startArgs);
@@ -106,9 +107,9 @@ module.exports = {
     */
     remotecommand: function(command) {
         if (command !== "") {
-            console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
-            console.log(colors.red("REMOTE COMMAND: " + command));
-            console.log(colors.magenta("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
+            console.log(chalk.gray.bold("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
+            console.log(chalk.hex('#ff8656')("REMOTE COMMAND: " + command));
+            console.log(chalk.gray.bold("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
             var exec = require('child_process').exec;
             if (command === "RESTARTNODE") {
                 clearInterval(global.timeout);
@@ -195,7 +196,7 @@ module.exports = {
                 });
             });
             req.on('error', function(err) {
-                console.log(colors.red(getDateTime() + " MINERSTAT.COM: Package Error. " + err.message));
+                console.log(chalk.hex('#ff8656')(getDateTime() + " MINERSTAT.COM: Package Error. " + err.message));
                 gpuSyncDone = false;
                 global.sync = true;
             });
@@ -220,7 +221,7 @@ module.exports = {
                 });
             });
             req.on('error', function(err) {
-                console.log(colors.red(getDateTime() + " MINERSTAT.COM: Package Error. " + err.message));
+                console.log(chalk.hex('#ff8656')(getDateTime() + " MINERSTAT.COM: Package Error. " + err.message));
                 gpuSyncDone = false;
                 global.sync = true;
             });
