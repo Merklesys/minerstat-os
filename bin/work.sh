@@ -10,6 +10,18 @@ cd /home/minerstat/shellinabox
 
 NETBOT="$(cat /media/storage/network.txt | grep 'EVERYBOOT=' | tail -n 1 | sed 's/EVERYBOOT=//g')"
 
+NVIDIA="$(nvidia-smi -L)"
+
+if [ ! -z "$NVIDIA" ]; then
+
+if echo "$NVIDIA" | grep -iq "^GPU 0:" ;then
+
+sudo chmod 777 /home/minerstat/minerstat-os/bin/OhGodAnETHlargementPill-r2
+screen -A -m -d -S ethboost sudo /home/minerstat/minerstat-os/bin/OhGodAnETHlargementPill-r2
+
+fi
+fi
+
 echo ""
 echo "-------- INITIALIZING FAKE DUMMY PLUG -------------"
 echo "Please wait.."
@@ -31,6 +43,7 @@ fi
 
 sleep 2
 
+echo " "
 echo "-------- WAITING FOR CONNECTION -----------------"
 echo ""
 
@@ -46,10 +59,12 @@ sudo sh git.sh
 echo ""
 sudo chmod -R 777 /home/minerstat/minerstat-os/*
 
+echo " "
 echo "-------- OVERCLOCKING ---------------------------"
 cd /home/minerstat/minerstat-os/bin
 sudo sh overclock.sh
 
+echo " "
 echo "-------- RUNNING JOBS ---------------------------"
 cd /home/minerstat/minerstat-os/bin
 sudo sh jobs.sh
@@ -61,6 +76,7 @@ sudo chvt 1
 cd /media/storage/distro
 sudo sh expand.sh
 
+echo " "
 echo "-------- INITALIZING MINERSTAT CLIENT -----------"
 cd /home/minerstat/minerstat-os
 screen -A -m -d -S minerstat-console sh /home/minerstat/minerstat-os/start.sh;

@@ -1,6 +1,5 @@
 #!/bin/bash
 exec 2>/dev/null
-echo "*** Nvidia Overclocking ***"
 
 if [ ! $1 ]; then
 echo ""
@@ -61,11 +60,6 @@ if [ "$COREOFFSET" != "skip" ]
 then
 sudo nvidia-settings -c :0 -a '[gpu:'"$GPUID"']/GPUGraphicsClockOffset['"$PLEVEL"']='"$COREOFFSET"''
 fi
-
-
-echo ""
-echo "*** https://minerstat.com ***"
-echo ""
 
 sleep 2
 sudo chvt 1

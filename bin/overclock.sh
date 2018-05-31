@@ -1,11 +1,18 @@
 #!/bin/bash
 echo "*-*-* Overclocking in progress *-*-*"
 
-DEVICE=$(sudo lshw -short | grep AMD | wc -l)
+AMDDEVICE=$(sudo lshw -short | grep AMD | wc -l)
 if [ "$DEVICE" -gt "0" ]; then
-DIVIDE=$((DEVICE / 2))
+AMDDIVIDE=$((AMDDEVICE / 2))
 else
-DIVIDE="0"
+AMDDIVIDE="0"
+fi
+
+NVIDIADEVICE=$(sudo lshw -short | grep NVIDIA | wc -l)
+if [ "$DEVICE" -gt "0" ]; then
+NVIDIADIVIDE=$((NVIDIADEVICE / 2))
+else
+NVIDIADIVIDE="0"
 fi
 
 NVIDIA="$(nvidia-smi -L)"
@@ -42,10 +49,7 @@ sleep 1
 
 if [ ! -z "$DONVIDIA" ]; then
 
-sudo chmod 777 /home/minerstat/minerstat-os/bin/OhGodAnETHlargementPill-r2
-screen -A -m -d -S ethboost sudo /home/minerstat/minerstat-os/bin/OhGodAnETHlargementPill-r2
-
-wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=nvidia&token=$TOKEN&worker=$WORKER"
+wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=nvidia&token=$TOKEN&worker=$WORKER&nums=$NVIDIADIVIDE"
 sleep 3
 sudo sh doclock.sh
 
@@ -53,7 +57,7 @@ fi
 
 if [ ! -z "$DOAMD" ]; then
 
-wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=amd&token=$TOKEN&worker=$WORKER&nums=$DIVIDE"
+wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=amd&token=$TOKEN&worker=$WORKER&nums=$AMDDIVIDE"
 sleep 3
 sudo sh doclock.sh
 

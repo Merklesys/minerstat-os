@@ -1,6 +1,5 @@
 #!/bin/bash
 exec 2>/dev/null
-echo "*** Nvidia Overclocking ***"
 
 if [ ! $1 ]; then
 echo ""
@@ -62,9 +61,6 @@ then
 sudo nvidia-settings -c :0 -a 'GPUGraphicsClockOffset['"$PLEVEL"']='"$COREOFFSET"'' | grep 'Attribute'
 fi
 
-echo ""
-echo "*** https://minerstat.com ***"
-echo ""
 
 sleep 2
 sudo chvt 1
