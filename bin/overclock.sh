@@ -2,14 +2,14 @@
 echo "*-*-* Overclocking in progress *-*-*"
 
 AMDDEVICE=$(sudo lshw -short | grep AMD | wc -l)
-if [ "$DEVICE" -gt "0" ]; then
+if [ "$AMDDEVICE" -gt "0" ]; then
 AMDDIVIDE=$((AMDDEVICE / 2))
 else
 AMDDIVIDE="0"
 fi
 
 NVIDIADEVICE=$(sudo lshw -short | grep NVIDIA | wc -l)
-if [ "$DEVICE" -gt "0" ]; then
+if [ "$NVIDIADEVICE" -gt "0" ]; then
 NVIDIADIVIDE=$((NVIDIADEVICE / 2))
 else
 NVIDIADIVIDE="0"
@@ -26,7 +26,7 @@ DONVIDIA="YES"
 fi
 fi
 
-if [ "$DIVIDE" -gt "0" ]; then
+if [ "$AMDDIVIDE" -gt "0" ]; then
 
 DOAMD="YES"
 
