@@ -1,9 +1,5 @@
 #! /usr/bin/bash
 
-#tmux \
-#    new-session 'sh bin/header.sh' \; \
-#    split-window 'sh launcher.sh' \; \
-#    resize-pane -U 12 \; \
-#    send-keys C-a M-3 \; 
+screen -A -m -d -S fakescreen sh /home/minerstat/minerstat-os/bin/fakescreen.sh
 
 sh launcher.sh
