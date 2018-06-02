@@ -14,10 +14,10 @@ then
 
 sleep 2
 
-sudo git commit - a - m "Init"
-sudo git merge --no - edit
+sudo git commit -a -m "Init"
+sudo git merge --no-edit
 sudo git add * -f
-sudo git commit - a - m "Fix done"
+sudo git commit -a -m "Fix done"
 
 fi
 

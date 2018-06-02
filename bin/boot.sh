@@ -11,7 +11,7 @@ echo ""
 echo "-------- INSTALLING FAKE DUMMY PLUG ------------"
 echo "Please wait.."
 sleep 1
-sudo update-grub
+#sudo update-grub
 sudo nvidia-xconfig -a --allow-empty-initial-configuration --cool-bits=28 --use-display-device="DFP-0" --connected-monitor="DFP-0" --enable-all-gpus
 sudo service gdm stop
 #screen -A -m -d -S display sudo X
