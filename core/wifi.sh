@@ -6,7 +6,7 @@ SSID=$(cat /media/storage/network.txt | grep 'WIFISSID="' | sed 's/WIFISSID="//g
 PASSWD=$(cat /media/storage/network.txt | grep 'WIFIPASS="' | sed 's/WIFIPASS="//g' | sed 's/"//g')
 
 echo ""
-echo "*** Connecting Wireless Network ***"
+echo "*** Connecting to Wireless Network ***"
 echo ""
 
 for dev in $INTERFACE; do
@@ -15,7 +15,7 @@ done
 
 if echo "$DEVICE" | grep "w" ;then
 
-	echo "Configuring Wifi Connection to: "$DEVICE
+	echo "Configuring Wifi Connection for: "$DEVICE
 	echo ""
 	echo ""
 	echo "SSID: $SSID"
