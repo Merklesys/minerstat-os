@@ -9,6 +9,7 @@ cd /home/minerstat/shellinabox
 ./shellinaboxd --port 4200 -b
 
 NETBOT="$(cat /media/storage/network.txt | grep 'EVERYBOOT=' | tail -n 1 | sed 's/EVERYBOOT=//g')"
+SSID=$(cat /media/storage/network.txt | grep 'WIFISSID="' | sed 's/WIFISSID="//g' | sed 's/"//g')
 
 NVIDIA="$(nvidia-smi -L)"
 
@@ -33,15 +34,26 @@ echo ""
 
 echo " "
 echo "-------- CONFIGURE NETWORK ADAPTERS --------------"
-if [ "$NETBOT" != "NO" ]
+
+if [ "$SSID" != "" ]
 then
-cd /home/minerstat/minerstat-os/bin
-sudo sh dhcp.sh
+
+	cd /home/minerstat/minerstat-os/core
+	sudo sh wifi.sh
+
 else
-echo "If you don't have connection set EVERYBOOT=YES parameter on the USB."
+
+	if [ "$NETBOT" != "NO" ]
+	then
+		cd /home/minerstat/minerstat-os/bin
+		sudo sh dhcp.sh
+	else
+		echo "If you don't have connection set EVERYBOOT=YES parameter on the USB."
+	fi
+
 fi
 
-sleep 2
+sleep 1
 
 echo " "
 echo "-------- WAITING FOR CONNECTION -----------------"
