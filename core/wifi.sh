@@ -3,7 +3,7 @@
 INTERFACE="$(ls /sys/class/net)"
 DEVICE=""
 SSID=$(cat /media/storage/network.txt | grep 'WIFISSID="' | sed 's/WIFISSID="//g' | sed 's/"//g')
-PASSWD=$(cat /media/storage/network.txt | grep 'WIFISSID="' | sed 's/WIFISSID="//g' | sed 's/"//g')
+PASSWD=$(cat /media/storage/network.txt | grep 'WIFIPASS="' | sed 's/WIFIPASS="//g' | sed 's/"//g')
 
 echo ""
 echo "*** Connecting Wireless Network ***"
