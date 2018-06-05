@@ -85,7 +85,7 @@ echo ""
 sleep 1
 sudo chvt 1
 
-cd /media/storage/distro
+cd /home/minerstat/minerstat-os/core
 sudo sh expand.sh
 
 echo " "

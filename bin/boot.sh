@@ -54,7 +54,7 @@ cd /home/minerstat/minerstat-os/bin
 sudo sh jobs.sh
 echo ""
 
-cd /media/storage/distro
+cd /home/minerstat/minerstat-os/core
 sudo sh expand.sh
 
 echo "-------- REBOOT IN 3 SEC -----------"
