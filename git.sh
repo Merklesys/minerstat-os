@@ -3,9 +3,9 @@
 exec 2> /home/minerstat/debug.txt
 git config --global user.email "dump@minerstat.com"
 git config --global user.name "minerstat"
-RESPONSE = "$(git pull --no-edit)"
+NETBOT="$(git pull --no-edit)"
 
-echo "$RESPONSE"
+echo $NETBOT
 
 sleep 1
 
