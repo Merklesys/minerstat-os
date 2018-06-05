@@ -22,7 +22,24 @@ if echo "$DEVICE" | grep "w" ;then
 
 	nmcli d wifi rescan
 	nmcli d wifi list
-	nmcli device wifi connect $SSID password $PASSWD
+	
+	
+	CONNECT=$(nmcli device wifi connect $SSID password $PASSWD)
+	
+	if echo "$CONNECT" | grep "failed" ;then
+	    echo ""
+	    echo "Adapter activation failed";
+	    echo "You should replug Wifi adapter to your system"
+	    sleep 10
+	    cd /home/minerstat/minerstat-os/core
+	    sudo sh wifi.sh
+	    echo ""
+		exit
+	else
+	
+	echo $CONNECT
+	
+	fi
 
 	echo ""
 	TEST="$(ping google.com -w 1 | grep '1 packets transmitted')"
