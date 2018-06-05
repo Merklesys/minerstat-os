@@ -180,7 +180,7 @@ module.exports = {
                 global.configtype = "simple";
                 var request = require('request');
                 request.get({
-                    url: 'https://api.minerstat.com/v2/set_node_config.php?token=' + global.accesskey + '&worker=' + global.worker + '&miner=' + global.client.toLowerCase() + '&os=linux&ver=4&cpu=NO',
+                    url: 'https://api.minerstat.com/v2/set_node_config.php?token=' + global.accesskey + '&worker=' + global.worker + '&miner=' + global.client.toLowerCase() + '&os=linux&ver=5&cpuu=' + global.minerCpu,
                     form: {
                         dump: "minerstatOSInit"
                     }
