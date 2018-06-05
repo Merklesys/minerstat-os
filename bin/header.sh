@@ -1,4 +1,5 @@
 #! /usr/bin/bash
+exec 2>/dev/null
 
 if [ ! $1 ]; then
 
