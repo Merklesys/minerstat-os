@@ -122,6 +122,21 @@ module.exports = {
                 sleep.sleep(3);
                 main.main();
             }
+            if (command === "RESTARTWATTS") {
+                var queryWattRes = exec("cd " + global.path + "/bin; sudo sh " + global.path + "/bin/overclock.sh", function(error, stdout, stderr) {
+                    console.log("Apply new OverClock Settings !");
+                    console.log(stdout + " " + stderr);
+                    clearInterval(global.timeout);
+                    clearInterval(global.hwmonitor);
+                    var main = require('./start.js');
+                    main.killall();
+                    var sleep = require('sleep');
+                    sleep.sleep(2);
+                    main.killall();
+                    sleep.sleep(3);
+                    main.main();
+                });
+            }
             if (command === "DOWNLOADWATTS") {
                 var queryWatt = exec("cd " + global.path + "/bin; sudo sh " + global.path + "/bin/overclock.sh", function(error, stdout, stderr) {
                     console.log("Apply new OverClock Settings !");
