@@ -373,7 +373,7 @@ module.exports = {
                 } else {
                     global.chunk = response.body;
                 }
-                if (miner != "ewbf-zec" && miner != "ethminer" && miner != "zm-zec" && miner != "bminer" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
+                if (miner != "ewbf-zec" && miner != "ewbf-zhash" && miner != "ethminer" && miner != "zm-zec" && miner != "bminer" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
                     var writeStream = fs.createWriteStream(global.path + "/" + global.file);
                     var str = response.body;
                     if (miner.indexOf("sgminer") > -1) {

@@ -39,7 +39,7 @@ module.exports = {
             args = "";
             execFile = "nsgpucnminer";
         }
-        if (miner == "ewbf-zec") {
+        if (miner == "ewbf-zec" || miner == "ewbf-zhash") {
             args = parse(startArgs);
             execFile = "miner";
         }
