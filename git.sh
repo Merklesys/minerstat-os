@@ -1,5 +1,8 @@
 #! /usr/bin/bash
 
+cd /home/minerstat/minerstat-os/
+chmod -R 777 *
+
 exec 2> /home/minerstat/debug.txt
 git config --global user.email "dump@minerstat.com"
 git config --global user.name "minerstat"
