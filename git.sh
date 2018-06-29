@@ -19,6 +19,9 @@ sudo git merge --no-edit
 sudo git add * -f
 sudo git commit -a -m "Fix done"
 
+cd /home/minerstat/minerstat-os/
+chmod -R 777 *
+
 fi
 
 sudo rm /home/minerstat/debug.txt

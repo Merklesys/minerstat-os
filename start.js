@@ -289,6 +289,13 @@ module.exports = {
                 }
             });
         }
+        // Function for add permissions to run files
+        function applyChmod() {
+            var chmodQuery = require('child_process').exec;
+            var setChmod = chmodQuery("cd /home/minerstat/minerstat-os/; chmod -R 777 *", function(error, stdout, stderr) {
+                console.log("System going to reboot now..");
+            });
+        }
         // Callback downloadMiners(<#gpuMiner#>, <#isCpu#>, <#cpuMiner#>)
         function callbackVersion(dlGpu, isCpu, dlCpu, callbackType, gpuMiner, cpuMiner, gpuServerVersion, cpuServerVersion) {
             if (callbackType == "gpu") {
@@ -297,6 +304,7 @@ module.exports = {
                     sleep.sleep(2);
                     downloadCore(gpuMiner.toLowerCase(), "gpu", gpuServerVersion);
                 } else {
+                    applyChmod();
                     dlconf(gpuMiner.toLowerCase(), "gpu");
                 }
             }
@@ -307,6 +315,7 @@ module.exports = {
                         sleep.sleep(2);
                         downloadCore(cpuMiner.toLowerCase(), "cpu", cpuServerVersion);
                     } else {
+                        applyChmod();
                         dlconf(cpuMiner.toLowerCase(), "cpu");
                     }
                 }
