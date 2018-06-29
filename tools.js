@@ -44,8 +44,9 @@ module.exports = {
             execFile = "miner";
         }
         if (miner == "bminer") {
-            args = parse(startArgs);
-            execFile = "bminer";
+            //args = parse(startArgs);
+            args = "";
+            execFile = "start.bash";
         }
         if (miner == "ethminer") {
             args = parse(startArgs);

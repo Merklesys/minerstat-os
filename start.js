@@ -58,7 +58,7 @@ process.on('SIGINT', function() {
     tools.killall();
     var childz;
     var execz = require('child_process').exec;
-    childz = execz("minestat-stop", function(error, stdout, stderr) {});
+    childz = execz("mstop", function(error, stdout, stderr) {});
     process.exit();
 });
 process.on('uncaughtException', function(err) {
@@ -349,7 +349,7 @@ module.exports = {
                         fs.writeFile('clients/' + miner + '/msVersion.txt', '' + serverVersion.trim(), function(err) {});
                     } catch (error) {}
                     // Start miner
-                    dlconf(miner, clientType);
+                    applyChmod(miner, clientType);
                 });
             });
         }
@@ -385,9 +385,13 @@ module.exports = {
                 } else {
                     global.chunk = response.body;
                 }
-                if (miner != "ewbf-zec" && miner != "ewbf-zhash" && miner != "xmr-stak" && miner != "ethminer" && miner != "zm-zec" && miner != "bminer" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
+                if (miner != "ewbf-zec" && miner != "ewbf-zhash" && miner != "xmr-stak" && miner != "ethminer" && miner != "zm-zec" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
                     var writeStream = fs.createWriteStream(global.path + "/" + global.file);
-                    var str = response.body;
+                    var dump = "";
+                    if (miner.indexOf("bminer") > -1) {
+                    dump = "cd /home/minerstat/minerstat-os/clients/bminer/; ./bminer ";
+                    }
+                    var str = dump + response.body;
                     if (miner.indexOf("sgminer") > -1) {
                         str = JSON.stringify(str);
                     }
