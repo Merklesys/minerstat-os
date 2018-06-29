@@ -14,6 +14,7 @@ try {
     fkill('miner').then(() => {});
     fkill('sgminer').then(() => {});
     fkill('nsgpucnminer').then(() => {});
+    fkill('xmr-stak').then(() => {});
 } catch (e) {}
 var query = exec("killall node", function(error, stdout, stderr) {
     console.log("Terminated");

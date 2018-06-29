@@ -64,6 +64,10 @@ module.exports = {
             args = parse(startArgs);
             execFile = "cpuminer";
         }
+        if (miner == "xmr-stak") {
+            args = "";
+            execFile = "xmr-stak";
+        }
         const execa = require('execa');
         try {
             if (miner.indexOf("cpu") == -1) {
@@ -166,6 +170,7 @@ module.exports = {
             fkill('sgminer').then(() => {});
             fkill('nsgpucnminer').then(() => {});
             fkill('zm').then(() => {});
+            fkill('xmr-stak').then(() => {});
         } catch (err) {}
     },
     /*
@@ -197,6 +202,31 @@ module.exports = {
                 host: '127.0.0.1',
                 port: 1880,
                 path: '/api/status'
+            };
+            var req = http.get(options, function(response) {
+                res_data = '';
+                response.on('data', function(chunk) {
+                    global.res_data += chunk;
+                    gpuSyncDone = true;
+                    global.sync = true;
+                });
+                response.on('end', function() {
+                    gpuSyncDone = true;
+                    global.sync = true;
+                });
+            });
+            req.on('error', function(err) {
+                console.log(chalk.hex('#ff8656')(getDateTime() + " MINERSTAT.COM: Package Error. " + err.message));
+                gpuSyncDone = false;
+                global.sync = true;
+            });
+        }
+        // XMR-STAK
+        if (gpuMiner.indexOf("xmr-stak") > -1) {
+            var options = {
+                host: '127.0.0.1',
+                port: 2222,
+                path: 'api.json'
             };
             var req = http.get(options, function(response) {
                 res_data = '';

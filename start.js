@@ -367,13 +367,16 @@ module.exports = {
             if (miner.indexOf("zm-zec") > -1) {
                 global.file = "clients/" + miner + "/start.bash";
             }
+            if (miner.indexOf("xmr-stak") > -1) {
+                global.file = "clients/" + miner + "/pools.txt";
+            }
             needle.get('https://api.minerstat.com/v2/conf/gpu/' + global.accesskey + '/' + global.worker + '/' + miner.toLowerCase(), function(error, response) {
                 if (clientType == "cpu") {
                     global.chunkCpu = response.body;
                 } else {
                     global.chunk = response.body;
                 }
-                if (miner != "ewbf-zec" && miner != "ewbf-zhash" && miner != "ethminer" && miner != "zm-zec" && miner != "bminer" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
+                if (miner != "ewbf-zec" && miner != "ewbf-zhash" && miner != "xmr-stak" && miner != "ethminer" && miner != "zm-zec" && miner != "bminer" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
                     var writeStream = fs.createWriteStream(global.path + "/" + global.file);
                     var str = response.body;
                     if (miner.indexOf("sgminer") > -1) {
