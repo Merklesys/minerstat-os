@@ -27,6 +27,8 @@ mreboot   | Reboot
 
 mshutdown | Power off
 
+mlang     | Set temporary keyboard layout e.g. - mlang de
+
 mhelp     | List all available commands.
 
 ```
