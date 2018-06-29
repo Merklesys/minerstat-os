@@ -292,7 +292,7 @@ module.exports = {
         // Function for add permissions to run files
         function applyChmod(minerName, minerType) {
             var chmodQuery = require('child_process').exec;
-            var setChmod = chmodQuery("cd /home/minerstat/minerstat-os/; chmod -R 777 *", function(error, stdout, stderr) {
+            var setChmod = chmodQuery("cd /home/minerstat/minerstat-os/; sudo chmod -R 777 *", function(error, stdout, stderr) {
                 console.log("New permissions applied to the downloaded files => 0777");
                 dlconf(minerName, minerType);
             });
