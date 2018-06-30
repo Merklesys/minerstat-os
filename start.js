@@ -234,7 +234,7 @@ module.exports = {
             }, function(error, response, body) {
                 var parseData = JSON.parse(body);
                 gpuServerVersion = parseData[gpuMiner.toLowerCase()];
-                if (isCpu.toString() == "true") {
+                if (isCpu.toString() == "true" || isCpu.toString() == "True") {
                     cpuServerVersion = parseData[cpuMiner.toLowerCase()];
                 }
                 // main Miner Check's
@@ -262,7 +262,7 @@ module.exports = {
                     callbackVersion(dlGpu, false, false, "gpu", gpuMiner, cpuMiner, gpuServerVersion, cpuServerVersion);
                 }
                 // cpu Miner Check's
-                if (isCpu.toString() == "true") {
+                if (isCpu.toString() == "true" || isCpu.toString() == "True") {
                     var dir = 'clients/' + cpuMiner.toLowerCase() + '/msVersion.txt';
                     if (fs.existsSync(dir)) {
                         fs.readFile(dir, 'utf8', function(err, data) {
@@ -306,11 +306,10 @@ module.exports = {
                     downloadCore(gpuMiner.toLowerCase(), "gpu", gpuServerVersion);
                 } else {
                     applyChmod(gpuMiner.toLowerCase(), "gpu");
-                    
                 }
             }
             if (callbackType == "cpu") {
-                if (isCpu.toString() == "true") {
+                if (isCpu.toString() == "true" || isCpu.toString() == "True") {
                     if (dlCpu == true) {
                         deleteFolder('clients/' + cpuMiner.toLowerCase() + '/');
                         sleep.sleep(2);
@@ -385,13 +384,9 @@ module.exports = {
                 } else {
                     global.chunk = response.body;
                 }
-                if (miner != "ewbf-zec" && miner != "ewbf-zhash" && miner != "xmr-stak" && miner != "ethminer" && miner != "zm-zec" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
+                if (miner != "ewbf-zec" && miner != "bminer" && miner != "ewbf-zhash" && miner != "xmr-stak" && miner != "ethminer" && miner != "zm-zec" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
                     var writeStream = fs.createWriteStream(global.path + "/" + global.file);
-                    var dump = "";
-                    if (miner.indexOf("bminer") > -1) {
-                    dump = "cd /home/minerstat/minerstat-os/clients/bminer/; ./bminer ";
-                    }
-                    var str = dump + response.body;
+                    var str = response.body;
                     if (miner.indexOf("sgminer") > -1) {
                         str = JSON.stringify(str);
                     }
