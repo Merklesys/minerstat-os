@@ -8,7 +8,7 @@ else
 AMDDIVIDE="0"
 fi
 
-NVIDIADEVICE=$(sudo lshw -short | grep NVIDIA | wc -l)
+NVIDIADEVICE=$(sudo lshw -short | grep GeForce | wc -l)
 if [ "$NVIDIADEVICE" -gt "0" ]; then
 NVIDIADIVIDE=$((NVIDIADEVICE / 2))
 else
