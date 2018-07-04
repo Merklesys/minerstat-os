@@ -165,7 +165,7 @@ module.exports = {
         const fkill = require('fkill');
         try {
             var killQuery = require('child_process').exec;
-            var killQueryProc = chmodQuery("sudo lsof -t -i:42000", function(error, stdout, stderr) { });
+            var killQueryProc = killQuery("sudo lsof -t -i:42000", function(error, stdout, stderr) { });
             fkill('bminer').then(() => {});
             fkill('ccminer').then(() => {});
             fkill('cpuminer').then(() => {});
