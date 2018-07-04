@@ -42,6 +42,8 @@ module.exports = {
         console.log(chalk.gray.bold(getDateTime() + " STARTING MINER: " + miner));
         console.log(chalk.white(getDateTime() + " " + miner + " => " + startArgs));
         var parse = require('parse-spawn-args').parse
+        var sleep = require('sleep');
+        sleep.sleep(2);
         if (miner.indexOf("ccminer") > -1) {
             args = startArgs;
             execFile = "ccminer";
@@ -162,6 +164,8 @@ module.exports = {
     killall: function() {
         const fkill = require('fkill');
         try {
+            var killQuery = require('child_process').exec;
+            var killQueryProc = chmodQuery("sudo lsof -t -i:42000", function(error, stdout, stderr) { });
             fkill('bminer').then(() => {});
             fkill('ccminer').then(() => {});
             fkill('cpuminer').then(() => {});
