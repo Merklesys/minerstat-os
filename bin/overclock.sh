@@ -1,19 +1,8 @@
 #!/bin/bash
 echo "*-*-* Overclocking in progress *-*-*"
 
-AMDDEVICE=$(sudo lshw -short | grep AMD | wc -l)
-NVIDIADEVICE=$(sudo lshw -short | grep NVIDIA | wc -l)
-
-if [ "$NVIDIADEVICE" -gt "0" ]; then
-	NVIDIADIVIDE=$((NVIDIADEVICE / 2))
-else
-	NVIDIADEVICER=$(sudo lshw -short | grep GeForce | wc -l)
-	if [ "$NVIDIADEVICER" -gt "0" ]; then
-	NVIDIADIVIDE=$((NVIDIADEVICE / 2))
-	else	
-	NVIDIADIVIDE="0"
-	fi
-fi
+AMDDEVICE=$(sudo lshw -C display | grep AMD | wc -l)
+NVIDIADEVICE=$(sudo lshw -C display | grep NVIDIA | wc -l)
 
 NVIDIA="$(nvidia-smi -L)"
 
@@ -27,7 +16,7 @@ if [ "$AMDDEVICE" -gt "0" ]; then
 	DOAMD="YES"
 fi
 
-echo "FOUND AMD: $AMDDEVICE || FOUND NVIDIA: $NVIDIADIVIDE"
+echo "FOUND AMD: $AMDDEVICE || FOUND NVIDIA: $NVIDIADEVICE"
 echo ""
 echo ""
 echo "--------------------------"
@@ -44,7 +33,7 @@ sudo rm doclock.sh
 sleep 1
 
 if [ ! -z "$DONVIDIA" ]; then
-	wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=nvidia&token=$TOKEN&worker=$WORKER&nums=$NVIDIADIVIDE"
+	wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=nvidia&token=$TOKEN&worker=$WORKER&nums=$NVIDIADEVICE"
 	sleep 3
 	sudo sh doclock.sh
 fi
