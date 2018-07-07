@@ -24,7 +24,7 @@ COREOFFSET=$4
 # TESING PERFORMANCE LEVEL
 
 QUERY="$(sudo nvidia-settings -c :0 -a [gpu:0]/GPUMemoryTransferRateOffset[3]=100)"
-sudo nvidia-settings -c :0 -a '[gpu:"$GPUID"]/GPUPowerMizerMode=1' | grep "Attribute"
+sudo nvidia-settings -c :0 -a GPUPowerMizerMode=1 | grep "Attribute"
 
 if echo "$QUERY" | grep "Attri" ;then
 PLEVEL=3
