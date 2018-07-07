@@ -34,7 +34,6 @@ sleep 1
 
 if [ ! -z "$DONVIDIA" ]; then	
 	sudo nvidia-smi -pm 1
-	sudo nvidia-settings -c :0 -a '[gpu:"$GPUID"]/GPUPowerMizerMode=1' | grep "Attribute"
 	wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=nvidia&token=$TOKEN&worker=$WORKER&nums=$NVIDIADEVICE"
 	sleep 3
 	sudo sh doclock.sh
