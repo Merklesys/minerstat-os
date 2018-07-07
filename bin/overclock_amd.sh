@@ -23,6 +23,17 @@ CORECLOCK=$3
 FANSPEED=$4
 VDDC=$5
 
+if [ "$VDDC" != "skip" ]
+then
+	UNDERVOLT=$(sudo ./ohgodatool -i $GPUID --mem-state 3 --vddci $VDDC)
+	if echo "$UNDERVOLT" | grep "exist" ;then
+		echo "Trying to set VDDC for Memory state (2)";
+		sudo ./ohgodatool -i $GPUID --mem-state 2 --vddci $VDDC
+	fi
+fi
+
+sleep 2
+
 if [ "$CORECLOCK" != "skip" ]
 then
 	sudo ./amdcovc coreclk:$GPUID=$CORECLOCK | grep "Setting core clock"
@@ -41,15 +52,6 @@ if [ "$FANSPEED" != "skip" ]
 then
 	sudo ./ohgodatool -i $GPUID --set-fanspeed $FANSPEED
 	sudo ./amdcovc fanspeed:$GPUID=$FANSPEED | grep "Setting"
-fi
-
-if [ "$VDDC" != "skip" ]
-then
-	UNDERVOLT=$(sudo ./ohgodatool -i $GPUID --mem-state 3 --vddci $VDDC)
-	if echo "$UNDERVOLT" | grep "exist" ;then
-		echo "Trying to set VDDC for Memory state (2)";
-		sudo ./ohgodatool -i $GPUID --mem-state 2 --vddci $VDDC
-	fi
 fi
 
 sleep 2
