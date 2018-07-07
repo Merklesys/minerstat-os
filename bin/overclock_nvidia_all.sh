@@ -21,10 +21,6 @@ FANSPEED=$2
 MEMORYOFFSET=$3
 COREOFFSET=$4
 
-sudo nvidia-smi -pm 1
-sudo nvidia-settings -c :0 -a GPUPowerMizerMode=1 | grep "Attribute"
-
-
 # TESING PERFORMANCE LEVEL
 
 QUERY="$(sudo nvidia-settings -c :0 -a [gpu:0]/GPUMemoryTransferRateOffset[3]=100)"
@@ -60,7 +56,6 @@ if [ "$COREOFFSET" != "skip" ]
 then
 sudo nvidia-settings -c :0 -a 'GPUGraphicsClockOffset['"$PLEVEL"']='"$COREOFFSET"'' | grep 'Attribute'
 fi
-
 
 sleep 2
 sudo chvt 1
