@@ -2,6 +2,13 @@
 	USER => mstop
 */
 "use strict";
+/*
+	CATCH ERROR's
+*/
+process.on('SIGINT', function() { });
+process.on('uncaughtException', function(err) { })
+process.on('unhandledRejection', (reason, p) => {});
+
 const fkill = require('fkill');
 var exec = require('child_process').exec;
 try {
