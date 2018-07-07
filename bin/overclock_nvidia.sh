@@ -23,9 +23,6 @@ FANSPEED=$3
 MEMORYOFFSET=$4
 COREOFFSET=$5
 
-sudo nvidia-smi -pm 1
-sudo nvidia-settings -c :0 -a '[gpu:"$GPUID"]/GPUPowerMizerMode=1' | grep "Attribute"
-
 # TESING PERFORMANCE LEVEL
 
 QUERY="$(sudo nvidia-settings -c :0 -a [gpu:"$GPUID"]/GPUMemoryTransferRateOffset[3]=100)"
