@@ -74,7 +74,9 @@ sudo chmod -R 777 /home/minerstat/minerstat-os/*
 echo " "
 echo "-------- OVERCLOCKING ---------------------------"
 cd /home/minerstat/minerstat-os/bin
-sudo sh overclock.sh
+echo "To run Overclock script manually type: mclock"
+echo "Adjusting clocks in the background.."
+sudo screen -A -m -d -S overclock sudo sh /home/minerstat/minerstat-os/bin/overclock.sh
 
 echo " "
 echo "-------- RUNNING JOBS ---------------------------"
