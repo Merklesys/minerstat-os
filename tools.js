@@ -165,7 +165,6 @@ module.exports = {
         const fkill = require('fkill');
         try {
             var killQuery = require('child_process').exec;
-            var killQueryProc = killQuery("sudo lsof -t -i:42000", function(error, stdout, stderr) { });
             fkill('bminer').then(() => {});
             fkill('ccminer').then(() => {});
             fkill('cpuminer').then(() => {});
@@ -177,6 +176,8 @@ module.exports = {
             fkill('nsgpucnminer').then(() => {});
             fkill('zm').then(() => {});
             fkill('xmr-stak').then(() => {});
+            var killQueryProc = killQuery("sudo lsof -t -i:42000", function(error, stdout, stderr) { });
+            var killQueryProcPort = killQuery("sudo ufw allow 42000", function(error, stdout, stderr) { });
         } catch (err) {}
     },
     /*
