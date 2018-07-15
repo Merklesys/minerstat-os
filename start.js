@@ -20,6 +20,7 @@ global.minerCpu;
 global.dlGpuFinished;
 global.dlCpuFinished;
 global.chunkCpu;
+global.watchnum;
 var tools = require('./tools.js');
 var monitor = require('./monitor.js');
 var settings = require("./config.js");
@@ -72,6 +73,16 @@ process.on('uncaughtException', function(err) {
 })
 process.on('unhandledRejection', (reason, p) => {});
 
+function restartNode() {
+   global.watchnum ++;
+   if (global.watchnum > 2) {
+      console.log(chalk.hex('#ff9970').bold(getDateTime() + " minerstat: Error detected  [" + global.worker + "]"));     
+      console.log(chalk.hex('#ff9970').bold(getDateTime() + " minerstat: Restarting..    [" + global.worker + "]"));                  
+      clearInterval(global.timeout);
+      clearInterval(global.hwmonitor);
+      tools.restart();
+   }
+}
 function getDateTime() {
     var date = new Date();
     var hour = date.getHours();
@@ -119,13 +130,16 @@ module.exports = {
                 if (sync.toString() === "true") {
                     console.log(chalk.green.bold(getDateTime() + " minerstat: " + global.client + " Updated  [" + global.worker + "]"));
                 } else {
+		    restartNode();
                     console.log(chalk.hex('#ff9970').bold(getDateTime() + " minerstat: ERROR  [" + global.worker + "]"));
                     console.log(chalk.hex('#ff9970').bold(getDateTime() + " REASON => " + global.client + " not hashing!"));
                 }
                 if (global.minerCpu.toString() === "true") {
+			global.watchnum = 0;
                     if (cpuSync.toString() === "true") {
                         console.log(chalk.green.bold(getDateTime() + " minerstat: " + global.cpuDefault.toLowerCase() + " Updated  [" + global.worker + "]"));
                     } else {
+			//restartNode();
                         console.log(chalk.hex('#ff9970').bold(getDateTime() + " minerstat: ERROR  [" + global.worker + "]"));
                         console.log(chalk.hex('#ff9970').bold(getDateTime() + " REASON => " + global.cpuDefault.toLowerCase() + " not hashing!"));
                     }
@@ -161,6 +175,7 @@ module.exports = {
         global.cpu_data = "";
         global.dlGpuFinished = false;
         global.dlCpuFinished = false;
+	global.watchnum = 0;
         console.log(chalk.gray(getDateTime() + " WORKER: " + global.worker));
         // GET DEFAULT CLIENT AND SEND STATUS TO THE SERVER
         sleep.sleep(1);
