@@ -25,10 +25,18 @@ VDDC=$5
 
 if [ "$VDDC" != "skip" ]
 then
+	echo "Trying to set VDDC for Memory state (3)";
 	UNDERVOLT=$(sudo ./ohgodatool -i $GPUID --mem-state 3 --vddci $VDDC)
 	if echo "$UNDERVOLT" | grep "exist" ;then
 		echo "Trying to set VDDC for Memory state (2)";
-		sudo ./ohgodatool -i $GPUID --mem-state 2 --vddci $VDDC
+		UNDERVOLTA=$(sudo ./ohgodatool -i $GPUID --mem-state 2 --vddci $VDDC)
+		if echo "$UNDERVOLTA" | grep "exist" ;then
+			echo "Trying to set VDDC for Memory state (1)";
+			UNDERVOLTB=$(sudo ./ohgodatool -i $GPUID --mem-state 1 --vddci $VDDC)
+			if echo "$UNDERVOLTB" | grep "exist" ;then
+				echo "Memory state 0 skipped.";
+			fi
+		fi
 	fi
 fi
 
