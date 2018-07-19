@@ -1,5 +1,5 @@
 #!/bin/bash
-exec 2>/dev/null
+#exec 2>/dev/null
 
 if [ ! $1 ]; then
 echo ""
@@ -26,11 +26,11 @@ CHECKV=$(sudo ./ohgodatool -i $GPUID --show-mem)
 
 if [ "$VDDC" != "skip" ]
 then	
-	for voltstate in {1..15}; do
+	for voltstate in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do
 		sudo ./ohgodatool -i $GPUID --volt-state $voltstate --vddc-table-set $VDDC
 	done
 	SUM=$(expr "$VDDC" + 25)
-	for memstate in {1..2}; do
+	for memstate in 1 2; do
 		if echo "$CHECKV" | grep "Memory state 3" ;then
 			sudo ./ohgodatool -i $GPUID --mem-state 3 --vddci $SUM
 		else
@@ -46,7 +46,7 @@ then
 	if [ "$CORECLOCK" != "skip" ]
 	then
 		echo "Setting up CoreStates and MemClocks GPU$gpuid"
-		for corestate in {4..7}; do
+		for corestate in 4 5 6 7; do
 		if echo "$CHECKV" | grep "Memory state 3" ;then
 			sudo ./ohgodatool -i $GPUID --core-state $corestate --core-clock $CORECLOCK --mem-state 3 --mem-clock $MEMCLOCK
 		else
