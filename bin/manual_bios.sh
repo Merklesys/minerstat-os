@@ -1,3 +1,4 @@
+#!/bin/bash
 core_clock=1145
 mem_clocks=(2160 2160 2160 2160 2160 2160)
 # set core/mem states from DPM state 4 upwards to $core_clock and values from mem_clocks()
