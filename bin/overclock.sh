@@ -37,6 +37,7 @@ sleep 1
 
 if [ "$BIOS" != "" ]
 then
+echo "Overwritting BIOS, Notice this requires a reboot (mreboot)"
 FORCE="yes"
 fi
 
