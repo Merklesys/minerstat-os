@@ -35,7 +35,7 @@ echo "--------------------------"
 sudo rm doclock.sh
 sleep 1
 
-if [ "$BIOS" == "bios" ]
+if [ "$BIOS" != "" ]
 then
 FORCE="yes"
 fi
