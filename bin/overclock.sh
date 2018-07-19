@@ -1,8 +1,11 @@
 #!/bin/bash
 echo "*-*-* Overclocking in progress *-*-*"
 
+BIOS=$1
+
 AMDDEVICE=$(sudo lshw -C display | grep AMD | wc -l)
 NVIDIADEVICE=$(sudo lshw -C display | grep NVIDIA | wc -l)
+FORCE="no"
 
 NVIDIA="$(nvidia-smi -L)"
 
@@ -32,9 +35,14 @@ echo "--------------------------"
 sudo rm doclock.sh
 sleep 1
 
+if [ "$BIOS" == "bios" ]
+then
+FORCE="yes"
+fi
+
 if [ ! -z "$DONVIDIA" ]; then	
 	sudo nvidia-smi -pm 1
-	wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=nvidia&token=$TOKEN&worker=$WORKER&nums=$NVIDIADEVICE"
+	wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=nvidia&token=$TOKEN&worker=$WORKER&nums=$NVIDIADEVICE&bios=$FORCE"
 	sleep 3
 	sudo sh doclock.sh
 	sleep 2
@@ -42,7 +50,7 @@ if [ ! -z "$DONVIDIA" ]; then
 fi
 
 if [ ! -z "$DOAMD" ]; then
-	wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=amd&token=$TOKEN&worker=$WORKER&nums=$AMDDEVICE"
+	wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=amd&token=$TOKEN&worker=$WORKER&nums=$AMDDEVICE&bios=$FORCE"
 	sleep 3
 	sudo sh doclock.sh
 	sudo chvt 1
