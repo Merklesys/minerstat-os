@@ -1,5 +1,4 @@
-#!/bin/bash
-exec 2>/dev/null
+#!/bin/bash       
 
 if [ ! $1 ]; then
 echo ""
@@ -21,48 +20,60 @@ GPUID=$1
 MEMCLOCK=$2
 CORECLOCK=$3
 FANSPEED=$4
-VDDC=$5
+VDDC=$5                                                                                                                                                                                                 
+                                                                                                           
+for gpuid in $GPUID; do                                                                                                                                                                                       
+echo "Setting up CoreStates and MemClocks GPU$gpuid"                                                                                                                                                               
+for corestate in 4 5 6 7; do                                                                                                                                                                                       
+sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state 2 --mem-clock $MEMCLOCK                                                                                                              
+done                                                                                                                                                                                                               
+echo manual > /sys/class/drm/card$gpuid/device/power_dpm_force_performance_level                                                                                                                                   
+echo 4 > /sys/class/drm/card$gpuid/device/pp_dpm_sclk                                                                                                                                                              
+done                                                                                                                                                                                                               
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+# set all voltage states from 1 upwards to xxx mV:                                                                                                                                                                 
+for gpuid in $GPUID; do                                                                                                                                                                                       
+echo "Setting up VDDC Voltage GPU$gpuid"                                                                                                                                                                           
+for voltstate in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do                                                                                                                                                           
+sudo ./ohgodatool -i $gpuid --volt-state $voltstate --vddc-table-set $VDDC                                                                                                                                         
+done                                                                                                                                                                                                               
+done                                                                                                                                                                                                               
 
-if [ "$VDDC" != "skip" ]
-then
-	echo "Trying to set VDDC for Memory state (3)";
-	UNDERVOLT=$(sudo ./ohgodatool -i $GPUID --mem-state 3 --vddci $VDDC)
-	if echo "$UNDERVOLT" | grep "exist" ;then
-		echo "Trying to set VDDC for Memory state (2)";
-		UNDERVOLTA=$(sudo ./ohgodatool -i $GPUID --mem-state 2 --vddci $VDDC)
-		if echo "$UNDERVOLTA" | grep "exist" ;then
-			echo "Trying to set VDDC for Memory state (1)";
-			UNDERVOLTB=$(sudo ./ohgodatool -i $GPUID --mem-state 1 --vddci $VDDC)
-			if echo "$UNDERVOLTB" | grep "exist" ;then
-				echo "Memory state 0 skipped.";
-			fi
-		fi
-	fi
-fi
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+# VDDCI Voltages          
+# VDDC Voltage + 50
+VDDCI=$(expr "$VDDC" + 50)                                                                                                                                                  
+for gpuid in $GPUID; do                                                                                                                                                                                       
+echo "Setting up VDDC Voltage GPU$gpuid"                                                                                                                                                                           
+for memstate in 1 2; do                                                                                                                                                                                            
+sudo ./ohgodatool -i $gpuid --mem-state $memstate --vddci $VDDCI                                                                                                                                                     
+done                                                                                                                                                                                                               
+done 
 
-sleep 2
+
+# Tables Edited: OK!
+# Now set the clocks as default
 
 if [ "$CORECLOCK" != "skip" ]
 then
+	if [ "$MEMCLOCK" != "skip" ]
+	then
+	# Core Clock
 	sudo ./amdcovc coreclk:$GPUID=$CORECLOCK | grep "Setting core clock"
 	sleep 0.5
 	sudo ./amdcovc ccoreclk:$GPUID=$CORECLOCK | grep "Setting current core"
-fi
-
-if [ "$MEMCLOCK" != "skip" ]
-then
+	# Memory Clock
 	sudo ./amdcovc memclk:$GPUID=$MEMCLOCK | grep "Setting memory clock"
 	sleep 0.5
 	sudo ./amdcovc cmemclk:$GPUID=$MEMCLOCK | grep "Setting current memory"
+	fi
 fi
+
 
 if [ "$FANSPEED" != "skip" ]
 then
 	sudo ./ohgodatool -i $GPUID --set-fanspeed $FANSPEED
 	sudo ./amdcovc fanspeed:$GPUID=$FANSPEED | grep "Setting"
 fi
-
-sleep 2
-sudo chvt 1
 
 fi
