@@ -1,57 +1,68 @@
 #!/bin/bash
-echo "*-*-* Overclocking in progress *-*-*"
+exec 2>/dev/null
 
-BIOS=$1
+if [ ! $1 ]; then
+echo ""
+echo "--- EXAMPLE ---"
+echo "./overclock_amd a b c d e"
+echo "a = GPUID"
+echo "b = Memory Clock"
+echo "c = Core Clock"
+echo "d = Fan Speed"
+echo "e = VDDC"
+echo ""
+echo "-- Full Example --"
+echo "./overclock_amd 0 1750 1100 80 1.11"
+echo ""
+fi
 
-AMDDEVICE=$(sudo lshw -C display | grep AMD | wc -l)
-NVIDIADEVICE=$(sudo lshw -C display | grep NVIDIA | wc -l)
-FORCE="no"
+if [ $1 ]; then
+GPUID=$1
+MEMCLOCK=$2
+CORECLOCK=$3
+FANSPEED=$4
+VDDC=$5
 
-NVIDIA="$(nvidia-smi -L)"
-
-if [ ! -z "$NVIDIA" ]; then
-	if echo "$NVIDIA" | grep -iq "^GPU 0:" ;then
-		DONVIDIA="YES"
+if [ "$VDDC" != "skip" ]
+then
+	echo "Trying to set VDDC for Memory state (3)";
+	UNDERVOLT=$(sudo ./ohgodatool -i $GPUID --mem-state 3 --vddci $VDDC)
+	if echo "$UNDERVOLT" | grep "exist" ;then
+		echo "Trying to set VDDC for Memory state (2)";
+		UNDERVOLTA=$(sudo ./ohgodatool -i $GPUID --mem-state 2 --vddci $VDDC)
+		if echo "$UNDERVOLTA" | grep "exist" ;then
+			echo "Trying to set VDDC for Memory state (1)";
+			UNDERVOLTB=$(sudo ./ohgodatool -i $GPUID --mem-state 1 --vddci $VDDC)
+			if echo "$UNDERVOLTB" | grep "exist" ;then
+				echo "Memory state 0 skipped.";
+			fi
+		fi
 	fi
 fi
 
-if [ "$AMDDEVICE" -gt "0" ]; then
-	DOAMD="YES"
-fi
+sleep 2
 
-echo "FOUND AMD: $AMDDEVICE || FOUND NVIDIA: $NVIDIADEVICE"
-echo ""
-echo ""
-echo "--------------------------"
-
-TOKEN="$(cat /home/minerstat/minerstat-os/config.js | grep 'global.accesskey' | sed 's/global.accesskey =//g' | sed 's/;//g')"
-WORKER="$(cat /home/minerstat/minerstat-os/config.js | grep 'global.worker' | sed 's/global.worker =//g' | sed 's/;//g')"
-
-echo "TOKEN: $TOKEN"
-echo "WORKER: $WORKER"
-
-echo "--------------------------"
-
-sudo rm doclock.sh
-sleep 1
-
-if [ "$BIOS" == "bios" ]
+if [ "$CORECLOCK" != "skip" ]
 then
-FORCE="yes"
+	sudo ./amdcovc coreclk:$GPUID=$CORECLOCK | grep "Setting core clock"
+	sleep 0.5
+	sudo ./amdcovc ccoreclk:$GPUID=$CORECLOCK | grep "Setting current core"
 fi
 
-if [ ! -z "$DONVIDIA" ]; then	
-	sudo nvidia-smi -pm 1
-	wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=nvidia&token=$TOKEN&worker=$WORKER&nums=$NVIDIADEVICE&bios=$FORCE"
-	sleep 3
-	sudo sh doclock.sh
-	sleep 2
-	sudo chvt 1
+if [ "$MEMCLOCK" != "skip" ]
+then
+	sudo ./amdcovc memclk:$GPUID=$MEMCLOCK | grep "Setting memory clock"
+	sleep 0.5
+	sudo ./amdcovc cmemclk:$GPUID=$MEMCLOCK | grep "Setting current memory"
 fi
 
-if [ ! -z "$DOAMD" ]; then
-	wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=amd&token=$TOKEN&worker=$WORKER&nums=$AMDDEVICE&bios=$FORCE"
-	sleep 3
-	sudo sh doclock.sh
-	sudo chvt 1
+if [ "$FANSPEED" != "skip" ]
+then
+	sudo ./ohgodatool -i $GPUID --set-fanspeed $FANSPEED
+	sudo ./amdcovc fanspeed:$GPUID=$FANSPEED | grep "Setting"
+fi
+
+sleep 2
+sudo chvt 1
+
 fi
