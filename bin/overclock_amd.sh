@@ -91,10 +91,4 @@ if [ $1 ]; then
 		sudo ./amdcovc fanspeed:$GPUID=$FANSPEED | grep "Setting"
 	fi
 	
-	if [ "$FANSPEED" == "0" ]
-	then
-		sudo ./ohgodatool -i $GPUID --set-fanspeed 70
-		sudo ./amdcovc fanspeed:$GPUID=70 | grep "Setting"
-	fi
-
 fi
