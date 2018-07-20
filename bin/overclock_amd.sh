@@ -1,4 +1,5 @@
-#!/bin/bash 
+#!/bin/bash
+exec 2>/dev/null
 
 if [ ! $1 ]; then
 	echo ""
@@ -71,7 +72,7 @@ if [ $1 ]; then
   	if echo "$OVERWRITE" | grep "memory state does not" ;then
 		OVERWRITEA=$(sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state 2 --mem-clock $MEMCLOCK)
   		if echo "$OVERWRITEA" | grep "memory state does not" ;then
-			OVERWRITEB=$(sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state 1 --mem-clock $MEMCLOCK) 		
+			sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state 1 --mem-clock $MEMCLOCK		
 		fi
 	fi
 	
