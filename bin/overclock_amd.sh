@@ -54,10 +54,12 @@ if [ $1 ]; then
 
 		if [ "$MEMSTATES" != "2" ]  
 		then
+			echo "MEMSTATE NOT Equals to 2";
 			for voltstate in 0 8 9 10 15; do  
 			sudo ./ohgodatool -i $gpuid --volt-state $voltstate --vddc-table-set $VDDC 
 			done
 		else
+			echo "MEMSTATE Equals to 2";
 			for voltstate in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do  
 			sudo ./ohgodatool -i $gpuid --volt-state $voltstate --vddc-table-set $VDDC 
 			done
@@ -93,10 +95,12 @@ if [ $1 ]; then
 		echo "Setting up CoreStates and MemClocks GPU$gpuid"
 	if [ "$MEMSTATES" != "2" ]  
 	then
+		echo "MEMSTATE NOT Equals to 2";
 		for corestate in 7; do
 			sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state $MEMSTATES --mem-clock $MEMCLOCK --set-fanspeed 70		
 		done
 	else
+		echo "MEMSTATE Equals to 2";
 		for corestate in 4 5 6 7; do
 		sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state $MEMSTATES --mem-clock $MEMCLOCK --set-fanspeed 70		
 		done
