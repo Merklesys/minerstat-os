@@ -26,6 +26,21 @@ if [ $1 ]; then
 	VDDC=$5
 	
 	MEMSTATES="3"
+	
+	CHECKMEM=$(sudo ./ohgodatool -i $gpuid --show-mem)
+  	if echo "$CHECKMEM" | grep "Memory state 1" ;then
+	MEMSTATES="1"
+	fi
+	
+	CHECKMEM=$(sudo ./ohgodatool -i $gpuid --show-mem)
+  	if echo "$CHECKMEM" | grep "Memory state 2" ;then
+	MEMSTATES="2"
+	fi
+	
+	CHECKMEM=$(sudo ./ohgodatool -i $gpuid --show-mem)
+  	if echo "$CHECKMEM" | grep "Memory state 3" ;then
+	MEMSTATES="3"
+	fi
 		
 	if [ "$VDDC" != "skip" ]  
 	then
@@ -67,15 +82,7 @@ if [ $1 ]; then
 		for gpuid in $GPUID; do 
 		echo "Setting up CoreStates and MemClocks GPU$gpuid"
 		for corestate in 4 5 6 7; do
-		
-	OVERWRITE=$(sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state 3 --mem-clock $MEMCLOCK)
-  	if echo "$OVERWRITE" | grep "memory state does not" ;then
-		OVERWRITEA=$(sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state 2 --mem-clock $MEMCLOCK)
-  		if echo "$OVERWRITEA" | grep "memory state does not" ;then
-			sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state 1 --mem-clock $MEMCLOCK		
-		fi
-	fi
-	
+			sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state $MEMSTATES --mem-clock $MEMCLOCK		
 		done
 		echo manual > /sys/class/drm/card$gpuid/device/power_dpm_force_performance_level 
 		echo 4 > /sys/class/drm/card$gpuid/device/pp_dpm_sclk  
