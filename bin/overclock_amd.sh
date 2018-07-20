@@ -59,7 +59,7 @@ if [ $1 ]; then
 		fi
 		if [ "$MEMSTATES" != "3" ]  
 		then
-			for voltstate in 8 9 10 15; do  
+			for voltstate in 0 8 9 10 15; do  
 			sudo ./ohgodatool -i $gpuid --volt-state $voltstate --vddc-table-set $VDDC 
 			done
 		fi
