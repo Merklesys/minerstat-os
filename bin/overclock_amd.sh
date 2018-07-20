@@ -25,7 +25,7 @@ if [ $1 ]; then
 	FANSPEED=$4
 	VDDC=$5
 	
-	MEMSTATES="3"
+	MEMSTATES="2"
 	
 	CHECKMEM=$(sudo ./ohgodatool -i $GPUID --show-mem)
   	if echo "$CHECKMEM" | grep "Memory state 1:" ;then
@@ -51,13 +51,13 @@ if [ $1 ]; then
 			# set all voltage states from 1 upwards to xxx mV:
 			for gpuid in $GPUID; do 
 			echo "Setting up VDDC Voltage GPU$gpuid"
-		if [ "$MEMSTATES" == "3" ]  
+		if [ "$MEMSTATES" == "2" ]  
 		then
 			for voltstate in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do  
 			sudo ./ohgodatool -i $gpuid --volt-state $voltstate --vddc-table-set $VDDC 
 			done
 		fi
-		if [ "$MEMSTATES" != "3" ]  
+		if [ "$MEMSTATES" != "2" ]  
 		then
 			for voltstate in 0 8 9 10 15; do  
 			sudo ./ohgodatool -i $gpuid --volt-state $voltstate --vddc-table-set $VDDC 
@@ -92,13 +92,13 @@ if [ $1 ]; then
 		# Set new clocks for bios 
 		for gpuid in $GPUID; do 
 		echo "Setting up CoreStates and MemClocks GPU$gpuid"
-	if [ "$MEMSTATES" == "3" ]  
+	if [ "$MEMSTATES" == "2" ]  
 	then
 		for corestate in 4 5 6 7; do
 			sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state $MEMSTATES --mem-clock $MEMCLOCK --set-fanspeed 70		
 		done
 	fi
-	if [ "$MEMSTATES" != "3" ]  
+	if [ "$MEMSTATES" != "2" ]  
 	then
 		for corestate in 7; do
 			sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state $MEMSTATES --mem-clock $MEMCLOCK --set-fanspeed 70		
