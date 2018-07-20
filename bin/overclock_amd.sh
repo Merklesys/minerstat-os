@@ -24,6 +24,8 @@ if [ $1 ]; then
 	FANSPEED=$4
 	VDDC=$5
 	
+	MEMSTATES="3"
+		
 	if [ "$VDDC" != "skip" ]  
 	then
 		if [ "$VDDC" != "0" ]  
@@ -63,8 +65,16 @@ if [ $1 ]; then
 		# Set new clocks for bios 
 		for gpuid in $GPUID; do 
 		echo "Setting up CoreStates and MemClocks GPU$gpuid"
-		for corestate in 4 5 6 7; do 
-		sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state 2 --mem-clock $MEMCLOCK
+		for corestate in 4 5 6 7; do
+		
+	OVERWRITE=$(sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state 3 --mem-clock $MEMCLOCK)
+  	if echo "$OVERWRITE" | grep "memory state does not" ;then
+		OVERWRITEA=$(sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state 2 --mem-clock $MEMCLOCK)
+  		if echo "$OVERWRITEA" | grep "memory state does not" ;then
+			OVERWRITEB=$(sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state 1 --mem-clock $MEMCLOCK) 		
+		fi
+	fi
+	
 		done
 		echo manual > /sys/class/drm/card$gpuid/device/power_dpm_force_performance_level 
 		echo 4 > /sys/class/drm/card$gpuid/device/pp_dpm_sclk  
