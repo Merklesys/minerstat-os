@@ -28,19 +28,21 @@ if [ $1 ]; then
 	MEMSTATES="3"
 	
 	CHECKMEM=$(sudo ./ohgodatool -i $gpuid --show-mem)
-  	if echo "$CHECKMEM" | grep "Memory state 1" ;then
+  	if echo "$CHECKMEM" | grep "Memory state 1:" ;then
 	MEMSTATES="1"
 	fi
 	
-	CHECKMEM=$(sudo ./ohgodatool -i $gpuid --show-mem)
-  	if echo "$CHECKMEM" | grep "Memory state 2" ;then
+	CHECKMEMA=$(sudo ./ohgodatool -i $gpuid --show-mem)
+  	if echo "$CHECKMEMA" | grep "Memory state 2:" ;then
 	MEMSTATES="2"
 	fi
 	
-	CHECKMEM=$(sudo ./ohgodatool -i $gpuid --show-mem)
-  	if echo "$CHECKMEM" | grep "Memory state 3" ;then
+	CHECKMEMB=$(sudo ./ohgodatool -i $gpuid --show-mem)
+  	if echo "$CHECKMEMB" | grep "Memory state 3:" ;then
 	MEMSTATES="3"
 	fi
+	
+	echo "FOUND MEMORY STATE: $MEMSTATES"
 		
 	if [ "$VDDC" != "skip" ]  
 	then
