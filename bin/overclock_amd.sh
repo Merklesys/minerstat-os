@@ -37,11 +37,6 @@ if [ $1 ]; then
 	MEMSTATES="2"
 	fi
 	
-	CHECKMEMB=$(sudo ./ohgodatool -i $GPUID --show-mem)
-  	if echo "$CHECKMEMB" | grep "Memory state 3:" ;then
-	MEMSTATES="3"
-	fi
-	
 	echo "FOUND MEMORY STATE: $MEMSTATES"
 		
 	if [ "$VDDC" != "skip" ]  
