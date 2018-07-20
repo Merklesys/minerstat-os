@@ -25,24 +25,27 @@ if [ $1 ]; then
 	VDDC=$5
 	
 	if [ "$VDDC" != "skip" ]  
-	then  
-		# set all voltage states from 1 upwards to xxx mV:
-		for gpuid in $GPUID; do 
-		echo "Setting up VDDC Voltage GPU$gpuid" 
-		for voltstate in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do  
-		sudo ./ohgodatool -i $gpuid --volt-state $voltstate --vddc-table-set $VDDC 
-		done
-	done
+	then
+		if [ "$VDDC" != "0" ]  
+		then
+			# set all voltage states from 1 upwards to xxx mV:
+			for gpuid in $GPUID; do 
+			echo "Setting up VDDC Voltage GPU$gpuid" 
+			for voltstate in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do  
+			sudo ./ohgodatool -i $gpuid --volt-state $voltstate --vddc-table-set $VDDC 
+			done
+			done
   
-		# VDDCI Voltages 
-		# VDDC Voltage + 50
-		VDDCI=$(expr "$VDDC" + 50)  
-		for gpuid in $GPUID; do 
-		echo "Setting up VDDC Voltage GPU$gpuid" 
-		for memstate in 1 2; do 
-		sudo ./ohgodatool -i $gpuid --mem-state $memstate --vddci $VDDCI  
-		done
-		done 
+			# VDDCI Voltages 
+			# VDDC Voltage + 50
+			VDDCI=$(expr "$VDDC" + 50)  
+			for gpuid in $GPUID; do 
+			echo "Setting up VDDC Voltage GPU$gpuid" 
+			for memstate in 1 2; do 
+			sudo ./ohgodatool -i $gpuid --mem-state $memstate --vddci $VDDCI  
+			done
+			done 
+			fi
 	fi
 
 
