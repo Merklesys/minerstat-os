@@ -56,6 +56,10 @@ if [ $1 ]; then
 	then
 		if [ "$MEMCLOCK" != "skip" ]
 		then
+			if [ "$CORECLOCK" != "0" ]
+			then
+				if [ "$MEMCLOCK" != "0" ]
+				then
 		# Set new clocks for bios 
 		for gpuid in $GPUID; do 
 		echo "Setting up CoreStates and MemClocks GPU$gpuid"
@@ -78,11 +82,19 @@ if [ $1 ]; then
 		sudo ./ohgodatool -i $GPUID --set-fanspeed 70
 		fi
 	fi
+	fi
+	fi
 	
 	if [ "$FANSPEED" != "skip" ]
 	then
 		sudo ./ohgodatool -i $GPUID --set-fanspeed $FANSPEED
 		sudo ./amdcovc fanspeed:$GPUID=$FANSPEED | grep "Setting"
+	fi
+	
+	if [ "$FANSPEED" == "0" ]
+	then
+		sudo ./ohgodatool -i $GPUID --set-fanspeed 70
+		sudo ./amdcovc fanspeed:$GPUID=70 | grep "Setting"
 	fi
 
 fi
