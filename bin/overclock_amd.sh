@@ -50,10 +50,19 @@ if [ $1 ]; then
 		then
 			# set all voltage states from 1 upwards to xxx mV:
 			for gpuid in $GPUID; do 
-			echo "Setting up VDDC Voltage GPU$gpuid" 
+			echo "Setting up VDDC Voltage GPU$gpuid"
+		if [ "$MEMSTATES" == "3" ]  
+		then
 			for voltstate in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do  
 			sudo ./ohgodatool -i $gpuid --volt-state $voltstate --vddc-table-set $VDDC 
 			done
+		fi
+		if [ "$MEMSTATES" != "3" ]  
+		then
+			for voltstate in 1 2 3 4 5 6 7 8; do  
+			sudo ./ohgodatool -i $gpuid --volt-state $voltstate --vddc-table-set $VDDC 
+			done
+		fi
 			done
   
 			# VDDCI Voltages 
@@ -83,9 +92,18 @@ if [ $1 ]; then
 		# Set new clocks for bios 
 		for gpuid in $GPUID; do 
 		echo "Setting up CoreStates and MemClocks GPU$gpuid"
+	if [ "$MEMSTATES" == "3" ]  
+	then
 		for corestate in 4 5 6 7; do
-			sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state $MEMSTATES --mem-clock $MEMCLOCK		
+			sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state $MEMSTATES --mem-clock $MEMCLOCK --set-fanspeed 70		
 		done
+	fi
+	if [ "$MEMSTATES" != "3" ]  
+	then
+		for corestate in 7; do
+			sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state $MEMSTATES --mem-clock $MEMCLOCK --set-fanspeed 70		
+		done
+	fi
 		echo manual > /sys/class/drm/card$gpuid/device/power_dpm_force_performance_level 
 		echo 4 > /sys/class/drm/card$gpuid/device/pp_dpm_sclk  
 		done
