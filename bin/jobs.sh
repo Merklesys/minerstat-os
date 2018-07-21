@@ -5,3 +5,5 @@ find '/home/minerstat/minerstat-os' -name "*log.txt" -type f -delete
 echo "Log files deleted"
 sudo dmesg -n 1
 sudo apt clean
+# Fix Slow start bug
+sudo systemctl disable NetworkManager-wait-online.service
