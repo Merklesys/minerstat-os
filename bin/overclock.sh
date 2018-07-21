@@ -45,6 +45,8 @@ if [ ! -z "$DONVIDIA" ]; then
 	sudo nvidia-smi -pm 1
 	wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=nvidia&token=$TOKEN&worker=$WORKER&nums=$NVIDIADEVICE&bios=$FORCE"
 	sleep 3
+	# FAN PROTECTION
+	sudo nvidia-settings -c :0 -a 'GPUFanControlState=1' -a 'GPUTargetFanSpeed='70'' | grep 'Attribute'
 	sudo sh doclock.sh
 	sleep 2
 	sudo chvt 1
