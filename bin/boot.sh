@@ -5,6 +5,9 @@ screen -A -m -d -S dummy sleep 86400
 sudo echo "boot" > /home/minerstat/minerstat-os/bin/random.txt
 sudo find /var/log -type f -delete
 
+# Fix Slow start bug
+sudo systemctl disable NetworkManager-wait-online.service
+
 NETBOT="$(cat /media/storage/network.txt | grep 'DHCP=' | tail -n 1 | sed 's/DHCP=//g')"
 
 echo ""
