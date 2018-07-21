@@ -65,7 +65,5 @@ sudo nvidia-settings -c :0 -a '[gpu:'"$GPUID"']/GPUGraphicsClockOffset['"$PLEVEL
   fi
 fi
 
-sleep 2
-sudo chvt 1
 
 fi
