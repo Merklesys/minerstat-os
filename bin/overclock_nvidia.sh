@@ -46,7 +46,7 @@ fi
 
 if [ "$FANSPEED" != "skip" ]
 then
-sudo nvidia-settings -c :0 -a '[gpu:'"$GPUID"']/GPUFanControlState=1' -a '[fan:"$GPUID"]/GPUTargetFanSpeed='"$FANSPEED"'';
+sudo nvidia-settings -c :0 -a '[gpu:'"$GPUID"']/GPUFanControlState=1' -a '[fan:'"$GPUID"']/GPUTargetFanSpeed='"$FANSPEED"'';
 fi
 
 if [ "$MEMORYOFFSET" != "skip" ]
