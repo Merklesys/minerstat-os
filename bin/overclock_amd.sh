@@ -50,12 +50,12 @@ if [ $1 ]; then
 		if [ "$MEMSTATES" != "2" ]  
 		then
 			echo "MEMSTATE NOT Equals to 2";
-			for voltstate in 0 8 9 10 15; do  
+			for voltstate in 0 8 9 10; do  
 			sudo ./ohgodatool -i $gpuid --volt-state $voltstate --vddc-table-set $VDDC 
 			done
 		else
 			echo "MEMSTATE Equals to 2";
-			for voltstate in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do  
+			for voltstate in 1 2 3 4 5 6 7 8 9 10 11 12 13 14; do  
 			sudo ./ohgodatool -i $gpuid --volt-state $voltstate --vddc-table-set $VDDC 
 			done
 		fi
