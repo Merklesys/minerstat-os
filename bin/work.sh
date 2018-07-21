@@ -8,6 +8,9 @@ sudo find /var/log -type f -delete
 cd /home/minerstat/shellinabox
 ./shellinaboxd --port 4200 -b
 
+# Fix Slow start bug
+sudo systemctl disable NetworkManager-wait-online.service
+
 NETBOT="$(cat /media/storage/network.txt | grep 'EVERYBOOT=' | tail -n 1 | sed 's/EVERYBOOT=//g')"
 SSID=$(cat /media/storage/network.txt | grep 'WIFISSID="' | sed 's/WIFISSID="//g' | sed 's/"//g')
 
