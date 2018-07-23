@@ -10,6 +10,8 @@ if [ ! $1 ]; then
 	echo "c = Core Clock"
 	echo "d = Fan Speed"
 	echo "e = VDDC"
+	echo "f = VDDCI"
+	echo "g = MDDC"
 	echo ""
 	echo "-- Full Example --"
 	echo "./overclock_amd 0 1750 1100 80 1.11"
@@ -24,6 +26,8 @@ if [ $1 ]; then
 	CORECLOCK=$3
 	FANSPEED=$4
 	VDDC=$5
+	VDDCI=$6
+	MDDC=$7
 	
 	MEMSTATES="2"
 	
@@ -60,17 +64,25 @@ if [ $1 ]; then
 			done
 		fi
 			done
-  
+ 		 
+		 if [ "$VDDCI" != "" ]  
+		 then
+		 if [ "$VDDCI" != "0" ]  
+		 then
+		 if [ "$VDDCI" != "skip" ]  
+		 then
 			# VDDCI Voltages 
 			# VDDC Voltage + 50
-			VDDCI=$(expr "$VDDC" + 50)  
 			for gpuid in $GPUID; do 
 			echo "Setting up VDDC Voltage GPU$gpuid" 
 			for memstate in 1 2; do 
 			sudo ./ohgodatool -i $gpuid --mem-state $memstate --vddci $VDDCI  
 			done
-			done 
+			done
 			fi
+		      fi
+		   fi
+		fi
 	fi
 
 
