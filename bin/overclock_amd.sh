@@ -82,10 +82,13 @@ if [ $1 ]; then
 			fi
 		      fi
 		      else
+		      if [ "$VDDCI" != "skip" ]  
+		      then
 		      VDDCI=$(expr "$VDDC" + 50)
 		      for memstate in 1 2; do 
 		      	 	sudo ./ohgodatool -i $GPUID --mem-state $memstate --vddci $VDDCI  
 		      done
+		      fi
 		   fi
 		fi
 	fi
