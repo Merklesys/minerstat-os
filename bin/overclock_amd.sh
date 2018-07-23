@@ -76,11 +76,16 @@ if [ $1 ]; then
 			for gpuid in $GPUID; do 
 			echo "Setting up VDDC Voltage GPU$gpuid" 
 			for memstate in 1 2; do 
-			sudo ./ohgodatool -i $gpuid --mem-state $memstate --vddci $VDDCI  
+				sudo ./ohgodatool -i $gpuid --mem-state $memstate --vddci $VDDCI  
 			done
 			done
 			fi
 		      fi
+		      else
+		      VDDCI=$(expr "$VDDC" + 50)
+		      for memstate in 1 2; do 
+		      	 	sudo ./ohgodatool -i $GPUID --mem-state $memstate --vddci $VDDCI  
+		      done
 		   fi
 		fi
 	fi
