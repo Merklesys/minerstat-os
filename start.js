@@ -425,7 +425,7 @@ module.exports = {
                     writeStream.end();
                     writeStream.on('finish', function() {
                         //tools.killall();
-                        tools.autoupdate(miner, response.body);
+                        tools.autoupdate(miner, str);
                     });
                 } else {
                     //console.log(response.body);
