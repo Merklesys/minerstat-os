@@ -418,6 +418,9 @@ module.exports = {
                     if (miner.indexOf("sgminer") > -1) {
                         str = JSON.stringify(str);
                     }
+		    if (miner.indexOf("trex") > -1) {
+                        str = JSON.stringify(str);
+                    }
                     writeStream.write("" + str);
                     writeStream.end();
                     writeStream.on('finish', function() {
