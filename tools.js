@@ -288,7 +288,7 @@ module.exports = {
         if (gpuMiner.indexOf("trex") > -1) {
             var options = {
                 host: '127.0.0.1',
-                port: 4068,
+                port: 3333,
                 path: '/summary'
             };
             var req = http.get(options, function(response) {
