@@ -89,6 +89,10 @@ module.exports = {
             args = "";
             execFile = "xmr-stak";
         }
+        if (miner == "trex") {
+            args = "";
+            execFile = "t-rex";
+        }
         // FOR SAFE RUNNING MINER NEED TO CREATE START.BASH
         var writeStream = fs.createWriteStream(global.path + "/" + "clients/" + miner + "/start.bash");
         var str = "";
@@ -260,6 +264,31 @@ module.exports = {
                 host: '127.0.0.1',
                 port: 3333,
                 path: '/'
+            };
+            var req = http.get(options, function(response) {
+                res_data = '';
+                response.on('data', function(chunk) {
+                    global.res_data += chunk;
+                    gpuSyncDone = true;
+                    global.sync = true;
+                });
+                response.on('end', function() {
+                    gpuSyncDone = true;
+                    global.sync = true;
+                });
+            });
+            req.on('error', function(err) {
+                console.log(chalk.hex('#ff8656')(getDateTime() + " MINERSTAT.COM: Package Error. " + err.message));
+                gpuSyncDone = false;
+                global.sync = true;
+            });
+        }
+         // CLAYMORE miner's
+        if (gpuMiner.indexOf("trex") > -1) {
+            var options = {
+                host: '127.0.0.1',
+                port: 4068,
+                path: '/summary'
             };
             var req = http.get(options, function(response) {
                 res_data = '';
