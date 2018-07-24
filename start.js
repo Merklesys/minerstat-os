@@ -394,6 +394,9 @@ module.exports = {
             if (miner.indexOf("claymore") > -1) {
                 global.file = "clients/" + miner + "/config.txt";
             }
+	    if (miner.indexOf("trex") > -1) {
+                global.file = "clients/" + miner + "/config.json";
+            }
             if (miner.indexOf("sgminer") > -1) {
                 global.file = "sgminer.conf";
             }
