@@ -34,7 +34,7 @@ else
 PLEVEL=2
 fi
 
-sleep 1
+sleep 0.2
 
 if [ "$POWERLIMITINWATT" -ne 0 ]
 then
