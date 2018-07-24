@@ -75,12 +75,22 @@ process.on('unhandledRejection', (reason, p) => {});
 
 function restartNode() {
    global.watchnum ++;
-   if (global.watchnum > 2) {
+   if (global.watchnum == 3) {
       console.log(chalk.hex('#ff9970').bold(getDateTime() + " minerstat: Error detected  [" + global.worker + "]"));     
       console.log(chalk.hex('#ff9970').bold(getDateTime() + " minerstat: Restarting..    [" + global.worker + "]"));                  
       clearInterval(global.timeout);
       clearInterval(global.hwmonitor);
       tools.restart();
+   }
+   if (global.watchnum == 6) {
+      console.log(chalk.hex('#ff9970').bold(getDateTime() + " minerstat: Error detected  [" + global.worker + "]"));     
+      console.log(chalk.hex('#ff9970').bold(getDateTime() + " minerstat: Rebooting..     [" + global.worker + "]"));                  
+      clearInterval(global.timeout);
+      clearInterval(global.hwmonitor);
+      var exec = require('child_process').exec;
+      var queryBoot = exec("sudo reboot -f", function(error, stdout, stderr) {
+      	console.log("System going to reboot now..");
+      });
    }
 }
 function getDateTime() {
@@ -128,6 +138,7 @@ module.exports = {
                 var sync = gpuSyncDone;
                 var cpuSync = cpuSyncDone;
                 if (sync.toString() === "true") {
+		    global.watchnum = 0;
                     console.log(chalk.green.bold(getDateTime() + " minerstat: " + global.client + " Updated  [" + global.worker + "]"));
                 } else {
 		    restartNode();
@@ -135,7 +146,6 @@ module.exports = {
                     console.log(chalk.hex('#ff9970').bold(getDateTime() + " REASON => " + global.client + " not hashing!"));
                 }
                 if (global.minerCpu.toString() === "true") {
-			global.watchnum = 0;
                     if (cpuSync.toString() === "true") {
                         console.log(chalk.green.bold(getDateTime() + " minerstat: " + global.cpuDefault.toLowerCase() + " Updated  [" + global.worker + "]"));
                     } else {
