@@ -90,7 +90,7 @@ module.exports = {
             execFile = "xmr-stak";
         }
         if (miner == "trex") {
-            args = "";
+            args = "-c config.json";
             execFile = "t-rex";
         }
         // FOR SAFE RUNNING MINER NEED TO CREATE START.BASH
