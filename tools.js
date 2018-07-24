@@ -180,6 +180,7 @@ module.exports = {
             fkill('nsgpucnminer').then(() => {});
             fkill('zm').then(() => {});
             fkill('xmr-stak').then(() => {});
+            fkill('t-rex').then(() => {});
             var killQueryProc = killQuery("sudo kill $(sudo lsof -t -i:42000)", function(error, stdout, stderr) { });
             var killQueryProcPort = killQuery("sudo ufw allow 42000", function(error, stdout, stderr) { });
         } catch (err) {}
