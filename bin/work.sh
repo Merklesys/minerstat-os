@@ -18,12 +18,12 @@ NVIDIA="$(nvidia-smi -L)"
 
 if [ ! -z "$NVIDIA" ]; then
 
-if echo "$NVIDIA" | grep -iq "^GPU 0:" ;then
+	if echo "$NVIDIA" | grep -iq "^GPU 0:" ;then
 
-sudo chmod 777 /home/minerstat/minerstat-os/bin/OhGodAnETHlargementPill-r2
-screen -A -m -d -S ethboost sudo /home/minerstat/minerstat-os/bin/OhGodAnETHlargementPill-r2
+	sudo chmod 777 /home/minerstat/minerstat-os/bin/OhGodAnETHlargementPill-r2
+	screen -A -m -d -S ethboost sudo /home/minerstat/minerstat-os/bin/OhGodAnETHlargementPill-r2
 
-fi
+	fi
 fi
 
 echo ""
@@ -35,8 +35,19 @@ sleep 3
 screen -A -m -d -S display sudo X
 echo ""
 
+AMDDEVICE=$(sudo lshw -C display | grep AMD | wc -l)
+NVIDIADEVICE=$(sudo lshw -C display | grep NVIDIA | wc -l)
+
+echo ""
+echo "-------- GRAPHICS CARDS -------------"
+echo "FOUND AMD    :  $AMDDEVICE"
+echo "FOUND NVIDIA :  $NVIDIADEVICE"
+echo ""
+
+
 echo " "
 echo "-------- CONFIGURE NETWORK ADAPTERS --------------"
+sudo screen -A -m -d -S restartnet sleep 2; sudo /etc/init.d/networking restart
 
 if [ "$SSID" != "" ]
 then
@@ -56,14 +67,14 @@ else
 
 fi
 
-sleep 1
+sleep 2
 
 echo " "
 echo "-------- WAITING FOR CONNECTION -----------------"
 echo ""
 
 while ! sudo ping minerstat.com -w 1 | grep "0%"; do
-sleep 1
+	sleep 1
 done
 
 echo ""
@@ -79,7 +90,11 @@ echo "-------- OVERCLOCKING ---------------------------"
 cd /home/minerstat/minerstat-os/bin
 echo "To run Overclock script manually type: mclock"
 echo "Adjusting clocks in the background.."
-sudo screen -A -m -d -S overclock sudo sh /home/minerstat/minerstat-os/bin/overclock.sh
+if [ "$AMDDEVICE" -gt "0" ]; then
+	sudo sh /home/minerstat/minerstat-os/bin/overclock.sh
+	else
+	sudo screen -A -m -d -S overclock sudo sh /home/minerstat/minerstat-os/bin/overclock.sh
+fi
 
 echo " "
 echo "-------- RUNNING JOBS ---------------------------"
