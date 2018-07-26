@@ -140,7 +140,13 @@ if [ $1 ]; then
 		echo 5 > /sys/class/drm/card$gpuid/device/pp_dpm_sclk
 	    echo "- CORESTATE has been set to: 5 -"
 		for corestate in 4 5 6 7; do
-		sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state $MEMSTATES --mem-clock $MEMCLOCK $STR1
+			if [ "$corestate" != "7" ]
+			then
+				sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state $MEMSTATES --mem-clock $MEMCLOCK
+			else
+				sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state $MEMSTATES --mem-clock $MEMCLOCK $STR1
+
+			fi
 		done
 	fi
 		done
