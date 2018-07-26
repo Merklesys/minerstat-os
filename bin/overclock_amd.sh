@@ -56,7 +56,7 @@ if [ $1 ]; then
 		MEMSTATES="2"
 	fi
 	
-	echo $MEMSTATES > /sys/class/drm/card2/device/pp_dpm_mclk
+	echo $MEMSTATES > /sys/class/drm/card$GPUID/device/pp_dpm_mclk
 	
 	echo "--- FOUND MEMORY STATE: $MEMSTATES ---"
 		
