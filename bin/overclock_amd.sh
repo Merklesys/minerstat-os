@@ -37,10 +37,12 @@ if [ $1 ]; then
 	
 	## BULIDING QUERIES
 	STR1="";
+	STR2="";
 	
 	if [ "$FANSPEED" != "skip" ]
 	then
 		STR1="--set-fanspeed $FANSPEED";
+		STR2="fanspeed:$GPUID=$FANSPEED";
 	fi
 	
 	## Detect memory state's
@@ -145,15 +147,11 @@ if [ $1 ]; then
 
 		#################################£
 		# Apply Changes
-		sudo ./amdcovc memclk:$GPUID=$MEMCLOCK cmemclk:$GPUID=$MEMCLOCK coreclk:$GPUID=$CORECLOCK ccoreclk:$GPUID=$CORECLOCK | grep "Setting"
+		sudo ./amdcovc memclk:$GPUID=$MEMCLOCK cmemclk:$GPUID=$MEMCLOCK coreclk:$GPUID=$CORECLOCK ccoreclk:$GPUID=$CORECLOCK $STR2 | grep "Setting"
 		fi
 	fi
 	fi
 	fi
 	
-	if [ "$FANSPEED" != "skip" ]
-	then
-		sudo ./amdcovc fanspeed:$GPUID=$FANSPEED | grep "Setting"
-	fi
 	
 fi
