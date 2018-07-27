@@ -59,12 +59,12 @@ then
 	echo "--- MANUAL GPU FAN MOD. ---"
 else
 	echo "--- AUTO FAN SPEED (by Drivers) ---"
-	STR1="-a [gpu:$GPUID]/GPUFanControlState=0"
+	STR1="-a GPUFanControlState=0"
 fi
 
 if [ "$FANSPEED" != "skip" ]
 then
-	STR1="-a [gpu:$GPUID]/GPUFanControlState=1 -a [fan:"$GPUID"]/GPUTargetFanSpeed="$FANSPEED""
+	STR1="-a GPUFanControlState=1 -a GPUTargetFanSpeed="$FANSPEED""
 fi
 
 #################################£
