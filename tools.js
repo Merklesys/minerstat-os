@@ -155,6 +155,12 @@ module.exports = {
                     console.log(stdout + " " + stderr);
                 });
             }
+            if (command === "SETFANS") {
+                var queryWatt = exec("cd " + global.path + "/bin; sudo sh " + global.path + "/bin/setfans.sh", function(error, stdout, stderr) {
+                    console.log("Apply new FAN Settings !");
+                    console.log(stdout + " " + stderr);
+                });
+            }
             if (command === "REBOOT") {
                 var queryBoot = exec("sudo reboot -f", function(error, stdout, stderr) {
                     console.log("System going to reboot now..");
