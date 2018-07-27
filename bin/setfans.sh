@@ -10,6 +10,7 @@ if [ ! $1 ]; then
 	# Detect GPU's
 	AMDDEVICE=$(sudo lshw -C display | grep AMD | wc -l)
 	NVIDIADEVICE=$(sudo lshw -C display | grep NVIDIA | wc -l)
+	NVIDIA="$(nvidia-smi -L)"
 	
 	#################################£
 	# Rig details
