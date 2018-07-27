@@ -156,7 +156,7 @@ module.exports = {
                 });
             }
             if (command === "SETFANS") {
-                var queryWatt = exec("cd " + global.path + "/bin; sudo sh " + global.path + "/bin/setfans.sh", function(error, stdout, stderr) {
+                var queryFans = exec("cd " + global.path + "/bin; sudo sh " + global.path + "/bin/setfans.sh", function(error, stdout, stderr) {
                     console.log("Apply new FAN Settings !");
                     console.log(stdout + " " + stderr);
                 });
