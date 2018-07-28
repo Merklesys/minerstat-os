@@ -27,6 +27,8 @@ mreboot   | Reboot
 
 mshutdown | Power off
 
+mfind     | "Find my GPU" e.g. - mfind 0 (All fans to 0% except GPU0 for 5 seconds)
+
 mlang     | Set temporary keyboard layout e.g. - mlang de
 
 mhelp     | List all available commands.
