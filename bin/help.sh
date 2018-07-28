@@ -9,5 +9,6 @@ echo "$(tput setaf 1)mreconf $(tput setab 7)simulate first boot: configure DHCP,
 echo "$(tput setaf 1)mclock $(tput setab 7)Set clocks to match with the online inferface.$(tput sgr 0)"
 echo "$(tput setaf 1)mreboot $(tput setab 7)Reboot.$(tput sgr 0)"
 echo "$(tput setaf 1)mshutdown $(tput setab 7)Power off.$(tput sgr 0)"
+echo "$(tput setaf 1)mfind $(tput setab 7)Find my GPU e.g. - mfind 0 (All fans to 0% except GPU0 for 5 seconds).$(tput sgr 0)"
 echo "$(tput setaf 1)mlang $(tput setab 7)Set temporary keyboard layout e.g. - mlang de.$(tput sgr 0)"
 echo "$(tput setaf 1)mhelp $(tput setab 7)this screen.$(tput sgr 0)"
