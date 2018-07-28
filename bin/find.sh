@@ -23,7 +23,7 @@ else
     if [ ! -z "$NVIDIA" ]; then
 		  if echo "$NVIDIA" | grep -iq "^GPU 0:" ;then
     		echo "NVIDIA: SET ALL FANS TO 0%"
-    		STR1="-a GPUFanControlState=1 -a GPUTargetFanSpeed=0"
+    		STR1="-c :0 -a GPUFanControlState=1 -a GPUTargetFanSpeed=0"
     		FINISH="$(sudo nvidia-settings $STR1)"
 			echo $FINISH
 			echo ""
@@ -33,7 +33,7 @@ else
     		echo ""
 			echo "-- NVIDIA --"
     		echo "GPU $1 >> 100%"
-    		STR2="-a [gpu:$1]/GPUFanControlState=1 -a [gpu:$1]/GPUTargetFanSpeed=100"
+    		STR2="-c :0 -a [gpu:$1]/GPUFanControlState=1 -a [gpu:$1]/GPUTargetFanSpeed=100"
     		APPLY="$(sudo nvidia-settings $STR2)"
 			echo $APPLY
 			echo ""
