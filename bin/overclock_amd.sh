@@ -38,6 +38,10 @@ if [ $1 ]; then
 	## BULIDING QUERIES
 	STR1="";
 	STR2="";
+	STR3="";
+	STR4="";
+	STR5="";
+	STR6="";
 	
 	if [ "$FANSPEED" != "skip" ]
 	then
@@ -124,6 +128,12 @@ if [ $1 ]; then
 			then
 				if [ "$MEMCLOCK" != "0" ]
 				then
+		# APPLY AT THE END
+		STR3="memclk:$GPUID=$MEMCLOCK"
+		STR4="cmemclk:$GPUID=$MEMCLOCK"
+		STR5="coreclk:$GPUID=$CORECLOCK"
+		STR6="ccoreclk:$GPUID=$CORECLOCK"
+		
 		# Set new clocks in tables
 		for gpuid in $GPUID; do 
 		echo "--- Setting up CoreStates and MemClocks GPU$gpuid ---"
@@ -153,7 +163,9 @@ if [ $1 ]; then
 
 		#################################£
 		# Apply Changes
-		sudo ./amdcovc memclk:$GPUID=$MEMCLOCK cmemclk:$GPUID=$MEMCLOCK coreclk:$GPUID=$CORECLOCK ccoreclk:$GPUID=$CORECLOCK $STR2 | grep "Setting"
+		#sudo ./amdcovc memclk:$GPUID=$MEMCLOCK cmemclk:$GPUID=$MEMCLOCK coreclk:$GPUID=$CORECLOCK ccoreclk:$GPUID=$CORECLOCK $STR2 | grep "Setting"
+		sudo ./amdcovc $STR3 $STR4 $STR5 $STR6 $STR2 | grep "Setting"
+
 		fi
 	fi
 	fi
