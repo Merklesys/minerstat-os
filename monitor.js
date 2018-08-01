@@ -49,7 +49,7 @@ module.exports = {
             while (lstart != (response - 1)) {
                 lstart++;
                 var datar = "";
-                var q2 = exec("nvidia-smi -i " + lstart + " --query-gpu=name,temperature.gpu,fan.speed --format=csv,noheader | tail -n1", function(error, stdout, stderr) {
+                var q2 = exec("nvidia-smi -i " + lstart + " --query-gpu=name,temperature.gpu,fan.speed,power.draw --format=csv,noheader | tail -n1", function(error, stdout, stderr) {
                     datar = stdout;
                     // ADD DATA TO ARRAY
                     hwg.push(datar);
