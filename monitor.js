@@ -26,12 +26,16 @@ module.exports = {
         });
     },
     /*
-    	AMDMEMINFO - AMD
+    	AMDCOVC - AMD
     */
     HWamd: function(gpuSyncDone, cpuSyncDone) {
         var exec = require('child_process').exec;
         var query = exec(global.path + "/bin/amdcovc", function(error, stdout, stderr) {
-            isfinished(stdout, "amd", gpuSyncDone, cpuSyncDone);
+        var amdResponse = stdout;
+        	var queryPower = exec("cd " + global.path + "/bin/; sudo ./rocm-smi -P | grep 'GPU Power' | sed 's/.*://' | sed 's/W/''/g' | xargs", function(error, stdout, stderr) {
+        		//console.log("Estimated GPU Consumption(s): " + stdout);
+        		isfinished(amdResponse, "amd", gpuSyncDone, cpuSyncDone, stdout);
+        	});
         });
     },
     /*
@@ -55,19 +59,20 @@ module.exports = {
                     hwg.push(datar);
                     response_start++;
                     if (response_start == (response - 1)) {
-                        isfinished(hwg, "nvidia", gpuSyncDone, cpuSyncDone);
+                        isfinished(hwg, "nvidia", gpuSyncDone, cpuSyncDone, "");
                     }
                 });
             } // END WHILE
         }); // END FETCH
     } // END HWNvidia
 } // END MODULE.EXPORT
-function isfinished(hwdatar, typ, gpuSyncDone, cpuSyncDone) {
+function isfinished(hwdatar, typ, gpuSyncDone, cpuSyncDone, powerResponse) {
     if (typ === "nvidia") {
         // ARRAY to JSON
         var hwdatas = JSON.stringify(hwdatar);
     } else {
         var hwdatas = hwdatar;
+        var hwPower = powerResponse;
     }
     /*
     	MAIN FUNCTIONS
@@ -77,5 +82,5 @@ function isfinished(hwdatar, typ, gpuSyncDone, cpuSyncDone) {
     	SEND DATA TO ENDPOINT
     */
     var main = require('./start.js');
-    main.callBackHardware(hwdatas, gpuSyncDone, cpuSyncDone);
+    main.callBackHardware(hwdatas, gpuSyncDone, cpuSyncDone, hwPower);
 } 

@@ -113,11 +113,12 @@ module.exports = {
             monitor.HWamd(gpuSyncDone, cpuSyncDone);
         }
     },
-    callBackHardware: function(hwdatas, gpuSyncDone, cpuSyncDone) {
+    callBackHardware: function(hwdatas, gpuSyncDone, cpuSyncDone, hwPower) {
         // WHEN HARDWARE INFO FETCHED SEND BOTH RESPONSE TO THE SERVER
         var sync = global.sync;
         var res_data = global.res_data;
         var cpu_data = global.cpu_data;
+        var power_data = hwPower;
         //console.log(res_data);         //SHOW SYNC OUTPUT
         // SEND LOG TO SERVER                         
         var request = require('request');
@@ -126,7 +127,8 @@ module.exports = {
             form: {
                 minerData: res_data,
                 cpuData: cpu_data,
-                hwData: hwdatas
+                hwData: hwdatas,
+                hwPower: power_data
             }
         }, function(error, response, body) {
             console.log(chalk.gray("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
