@@ -154,7 +154,7 @@ if [ $1 ]; then
 		echo "-- MEMSTATE Equals to 2 --";
 		echo 5 > /sys/class/drm/card$gpuid/device/pp_dpm_sclk
 	    echo "- CORESTATE has been set to: 5 -"
-		for corestate in 3 4 5 6 7; do
+		for corestate in 4 5 6 7; do
 			if [ "$corestate" != "7" ]
 			then
 				sudo ./ohgodatool -i $gpuid --core-state $corestate --core-clock $CORECLOCK --mem-state $MEMSTATES --mem-clock $MEMCLOCK
