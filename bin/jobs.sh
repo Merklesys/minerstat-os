@@ -10,3 +10,4 @@ sudo systemctl disable NetworkManager-wait-online.service
 # Nvidia PCI_BUS_ID
 sudo rm /etc/environment
 sudo cp /home/minerstat/minerstat-os/core/environment /etc/environment
+export CUDA_DEVICE_ORDER=PCI_BUS_ID
