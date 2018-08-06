@@ -245,7 +245,7 @@ module.exports = {
             var options = {
                 host: '127.0.0.1',
                 port: 2222,
-                path: 'api.json'
+                path: '/api.json'
             };
             var req = http.get(options, function(response) {
                 res_data = '';
