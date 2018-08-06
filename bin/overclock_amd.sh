@@ -175,5 +175,8 @@ if [ $1 ]; then
 		# Apply Changes
 		#sudo ./amdcovc memclk:$GPUID=$MEMCLOCK cmemclk:$GPUID=$MEMCLOCK coreclk:$GPUID=$CORECLOCK ccoreclk:$GPUID=$CORECLOCK $STR2 | grep "Setting"
 		sudo ./amdcovc $STR3 $STR4 $STR5 $STR6 $STR2 | grep "Setting"
-	
+		
+		##################################
+		# Clock Protection
+		sudo ./amdcovc ccoreclk:5=$CORECLOCK memclk:5=$MEMCLOCK
 fi
