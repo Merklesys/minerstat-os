@@ -7,3 +7,6 @@ sudo dmesg -n 1
 sudo apt clean
 # Fix Slow start bug
 sudo systemctl disable NetworkManager-wait-online.service
+# Nvidia PCI_BUS_ID
+sudo rm /etc/environment
+sudo cp /home/minerstat/minerstat-os/core/environment /etc/environment
