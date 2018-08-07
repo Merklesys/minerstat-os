@@ -90,11 +90,7 @@ echo "-------- OVERCLOCKING ---------------------------"
 cd /home/minerstat/minerstat-os/bin
 echo "To run Overclock script manually type: mclock"
 echo "Adjusting clocks in the background.."
-if [ "$AMDDEVICE" -gt "0" ]; then
-	sudo sh /home/minerstat/minerstat-os/bin/overclock.sh
-	else
-	sudo screen -A -m -d -S overclock sudo sh /home/minerstat/minerstat-os/bin/overclock.sh
-fi
+sudo sh /home/minerstat/minerstat-os/bin/overclock.sh
 
 echo " "
 echo "-------- RUNNING JOBS ---------------------------"
