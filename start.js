@@ -402,6 +402,9 @@ module.exports = {
 	    if (miner.indexOf("trex") > -1) {
                 global.file = "clients/" + miner + "/config.json";
             }
+	    if (miner.indexOf("lolminer") > -1) {
+                global.file = "clients/" + miner + "/user_config.json";
+            }
             if (miner.indexOf("sgminer") > -1) {
                 global.file = "sgminer.conf";
             }
@@ -424,6 +427,9 @@ module.exports = {
                         str = JSON.stringify(str);
                     }
 		    if (miner.indexOf("trex") > -1) {
+                        str = JSON.stringify(str);
+                    }
+		    if (miner.indexOf("lolminer") > -1) {
                         str = JSON.stringify(str);
                     }
                     writeStream.write("" + str);
