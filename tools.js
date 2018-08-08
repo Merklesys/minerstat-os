@@ -85,6 +85,10 @@ module.exports = {
             args = startArgs;
             execFile = "cpuminer";
         }
+        if (miner == "xmrig") {
+            args = "";
+            execFile = "xmrig";
+        }
         if (miner == "xmr-stak") {
             args = "";
             execFile = "xmr-stak";
@@ -197,6 +201,7 @@ module.exports = {
             fkill('t-rex').then(() => {});
             fkill('CryptoDredge').then(() => {});
             fkill('lolMiner').then(() => {});
+            fkill('xmrig').then(() => {});
             var killQueryProc = killQuery("sudo kill $(sudo lsof -t -i:42000)", function(error, stdout, stderr) { });
             var killQueryProcPort = killQuery("sudo ufw allow 42000", function(error, stdout, stderr) { });
         } catch (err) {}
