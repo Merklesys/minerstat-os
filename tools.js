@@ -93,6 +93,10 @@ module.exports = {
             args = "-c config.json";
             execFile = "t-rex";
         }
+        if (miner == "cryptodrege") {
+            args = "";
+            execFile = "xmr-stak";
+        }
         // FOR SAFE RUNNING MINER NEED TO CREATE START.BASH
         var writeStream = fs.createWriteStream(global.path + "/" + "clients/" + miner + "/start.bash");
         var str = "";
@@ -334,6 +338,28 @@ module.exports = {
                 global.sync = true;
             });
             ccminerClient.on('end', () => {
+                global.sync = true;
+            });
+        }
+        // CRYPTODREGE
+        if (gpuMiner.indexOf("cryptodrege") > -1) {
+            const cryptodregeClient = telNet.createConnection({
+                port: 3333
+            }, () => {
+                cryptodregeClient.write("summary+pool");
+            });
+            cryptodregeClient.on('data', (data) => {
+                console.log(data.toString());
+                global.res_data = data.toString();
+                gpuSyncDone = true;
+                global.sync = true;
+                cryptodregeClient.end();
+            });
+            cryptodregeClient.on('error', () => {
+                gpuSyncDone = false;
+                global.sync = true;
+            });
+            cryptodregeClient.on('end', () => {
                 global.sync = true;
             });
         }
