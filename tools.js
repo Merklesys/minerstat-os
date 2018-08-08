@@ -93,9 +93,9 @@ module.exports = {
             args = "-c config.json";
             execFile = "t-rex";
         }
-        if (miner == "cryptodrege") {
+        if (miner == "cryptodredge") {
             args = "";
-            execFile = "xmr-stak";
+            execFile = "CryptoDredge";
         }
         // FOR SAFE RUNNING MINER NEED TO CREATE START.BASH
         var writeStream = fs.createWriteStream(global.path + "/" + "clients/" + miner + "/start.bash");
@@ -341,25 +341,25 @@ module.exports = {
                 global.sync = true;
             });
         }
-        // CRYPTODREGE
-        if (gpuMiner.indexOf("cryptodrege") > -1) {
-            const cryptodregeClient = telNet.createConnection({
+        // cryptodredge
+        if (gpuMiner.indexOf("cryptodredge") > -1) {
+            const cryptodredgeClient = telNet.createConnection({
                 port: 3333
             }, () => {
-                cryptodregeClient.write("summary+pool");
+                cryptodredgeClient.write("summary+pool");
             });
-            cryptodregeClient.on('data', (data) => {
+            cryptodredgeClient.on('data', (data) => {
                 console.log(data.toString());
                 global.res_data = data.toString();
                 gpuSyncDone = true;
                 global.sync = true;
-                cryptodregeClient.end();
+                cryptodredgeClient.end();
             });
-            cryptodregeClient.on('error', () => {
+            cryptodredgeClient.on('error', () => {
                 gpuSyncDone = false;
                 global.sync = true;
             });
-            cryptodregeClient.on('end', () => {
+            cryptodredgeClient.on('end', () => {
                 global.sync = true;
             });
         }
