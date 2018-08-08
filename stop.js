@@ -23,6 +23,7 @@ try {
     fkill('nsgpucnminer').then(() => {});
     fkill('xmr-stak').then(() => {});
     fkill('t-rex').then(() => {});
+    fkill('CryptoDredge').then(() => {});	
 } catch (e) {}
 var query = exec("killall node", function(error, stdout, stderr) {
     console.log("Terminated");
