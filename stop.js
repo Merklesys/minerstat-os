@@ -25,6 +25,7 @@ try {
     fkill('t-rex').then(() => {});
     fkill('CryptoDredge').then(() => {});
     fkill('lolMiner').then(() => {});
+    fkill('xmrig').then(() => {});
 } catch (e) {}
 var query = exec("killall node", function(error, stdout, stderr) {
     console.log("Terminated");
