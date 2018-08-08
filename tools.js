@@ -93,6 +93,10 @@ module.exports = {
             args = "-c config.json";
             execFile = "t-rex";
         }
+        if (miner == "lolminer") {
+            args = "-profile=MINERSTAT";
+            execFile = "lolMiner";
+        }      
         if (miner == "cryptodredge") {
             args = "";
             execFile = "CryptoDredge";
@@ -192,6 +196,7 @@ module.exports = {
             fkill('xmr-stak').then(() => {});
             fkill('t-rex').then(() => {});
             fkill('CryptoDredge').then(() => {});
+            fkill('lolMiner').then(() => {});
             var killQueryProc = killQuery("sudo kill $(sudo lsof -t -i:42000)", function(error, stdout, stderr) { });
             var killQueryProcPort = killQuery("sudo ufw allow 42000", function(error, stdout, stderr) { });
         } catch (err) {}
@@ -271,7 +276,7 @@ module.exports = {
             });
         }
         // CLAYMORE miner's
-        if (gpuMiner.indexOf("claymore") > -1) {
+        if (gpuMiner.indexOf("claymore") > -1 || gpuMiner.indexOf("lolminer") > -1) {
             var options = {
                 host: '127.0.0.1',
                 port: 3333,
