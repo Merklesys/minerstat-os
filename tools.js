@@ -276,7 +276,7 @@ module.exports = {
             });
         }
         // CLAYMORE miner's
-        if (gpuMiner.indexOf("claymore") > -1 || gpuMiner.indexOf("lolminer") > -1) {
+        if (gpuMiner.indexOf("claymore") > -1) {
             var options = {
                 host: '127.0.0.1',
                 port: 3333,
@@ -300,7 +300,23 @@ module.exports = {
                 global.sync = true;
             });
         }
-         // CLAYMORE miner's
+        // LOLMINER
+        if (gpuMiner.indexOf("lolminer") > -1) {        	 
+        	 var curlQuery = require('child_process').exec;
+        	 var querylolMiner = curlQuery("curl http://127.0.0.1:3333", function(error, stdout, stderr) {      	 
+        	    if (stderr.indexOf("Failed") == -1) {
+        	 	    res_data = '';
+        	 	    global.res_data = "{ " + stdout;
+        	        gpuSyncDone = true;
+                    global.sync = true;
+        	    } else {
+        	 	    console.log(chalk.hex('#ff8656')(getDateTime() + " MINERSTAT.COM: Package Error. " + error));
+             	    gpuSyncDone = false;
+             	    global.sync = true;
+        	    }      	 
+        	 });
+        }
+       // CLAYMORE miner's
         if (gpuMiner.indexOf("trex") > -1) {
             var options = {
                 host: '127.0.0.1',
