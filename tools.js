@@ -347,7 +347,7 @@ module.exports = {
             const cryptodredgeClient = telNet.createConnection({
                 port: 3333
             }, () => {
-                cryptodredgeClient.write("summary+pool");
+                cryptodredgeClient.write("summary");
             });
             cryptodredgeClient.on('data', (data) => {
                 console.log(data.toString());
