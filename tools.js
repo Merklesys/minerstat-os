@@ -457,27 +457,52 @@ module.exports = {
             });
         }
         // CPUMINER
-        if (isCpu.toString() == "true" || isCpu.toString() == "True") {
-            const cpuminerClient = telNet.createConnection({
-                port: 4048
-            }, () => {
-                cpuminerClient.write("summary");
-            });
-            cpuminerClient.on('data', (data) => {
-                console.log(data.toString());
-                global.cpu_data = data.toString();
-                cpuSyncDone = true;
-                global.cpuSync = true;
-                cpuminerClient.end();
-            });
-            cpuminerClient.on('error', () => {
-                cpuSyncDone = false;
-                global.cpuSync = true;
-            });
-            cpuminerClient.on('end', () => {
-                global.cpuSync = true;
-            });
-        }
+		if (isCpu.toString() == "true" || isCpu.toString() == "True") {
+		   // CPUMINER-OPT
+  		   if (global.cpuDefault == "cpuminer-opt" || global.cpuDefault == "CPUMINER-OPT") {
+       		  const cpuminerClient = telNet.createConnection({
+        		     port: 4048
+        		 }, () => {
+       		      cpuminerClient.write("summary");
+       		  });
+        		 cpuminerClient.on('data', (data) => {
+          		   console.log(data.toString());
+          		   global.cpu_data = data.toString();
+          		   cpuSyncDone = true;
+         		   global.cpuSync = true;
+       		       cpuminerClient.end();
+       		  });
+       		  cpuminerClient.on('error', () => {
+        		     cpuSyncDone = false;
+       		      global.cpuSync = true;
+       		  });
+        		 cpuminerClient.on('end', () => {
+        		     global.cpuSync = true;
+        		 });
+     		}
+     		// XMRIG
+     		if (global.cpuDefault == "XMRIG" || global.cpuDefault == "xmrig") {
+     			 var options = {
+             	   host: '127.0.0.1',
+            	    port: 7887,
+            	    path: '/'
+            	};
+            	var req = http.get(options, function(response) {
+              	  response.on('data', function(chunk) {
+                  	  global.cpu_data = chunk.toString('utf8');
+                   	  cpuSyncDone = true;
+         		      global.cpuSync = true;
+                	});
+                	response.on('end', function() {
+                 	  global.cpuSync = true;
+                	});
+           	 });
+            	req.on('error', function(err) {
+        		     cpuSyncDone = false;
+       		      	 global.cpuSync = true;
+            	});
+     			}
+ 		}
         // LOOP UNTIL SYNC DONE
         var _flagCheck = setInterval(function() {
             var sync = global.sync;
