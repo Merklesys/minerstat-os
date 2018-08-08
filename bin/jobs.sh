@@ -11,3 +11,5 @@ sudo systemctl disable NetworkManager-wait-online.service
 sudo rm /etc/environment
 sudo cp /home/minerstat/minerstat-os/core/environment /etc/environment
 export CUDA_DEVICE_ORDER=PCI_BUS_ID
+# libc-ares2
+sudo apt-get install libc-ares2
