@@ -98,7 +98,7 @@ module.exports = {
             execFile = "lolMiner";
         }      
         if (miner == "cryptodredge") {
-            args = "";
+            args = startArgs;
             execFile = "CryptoDredge";
         }
         // FOR SAFE RUNNING MINER NEED TO CREATE START.BASH
