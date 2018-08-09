@@ -206,6 +206,7 @@ module.exports = {
             fkill('CryptoDredge').then(() => {});
             fkill('lolMiner').then(() => {});
             fkill('xmrig').then(() => {});
+	    fkill('z-enemy').then(() => {});
             var killQueryProc = killQuery("sudo kill $(sudo lsof -t -i:42000)", function(error, stdout, stderr) { });
             var killQueryProcPort = killQuery("sudo ufw allow 42000", function(error, stdout, stderr) { });
         } catch (err) {}
