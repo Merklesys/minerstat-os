@@ -29,18 +29,24 @@ STR2=""
 STR3=""
 STR4="-c :0"
 
-# TESING PERFORMANCE LEVEL
+# DETECTING VIDEO CARD FOR PERFORMACE LEVEL
 
-QUERY="$(sudo nvidia-settings -c :0 -a [gpu:"$GPUID"]/GPUMemoryTransferRateOffset[3]=100)"
-#sudo nvidia-settings -c :0 -a GPUPowerMizerMode=1 | grep "Attribute"
+QUERY="$(sudo nvidia-smi -i "$GPUID" --query-gpu=name --format=csv,noheader | tail -n1)"
 
-if echo "$QUERY" | grep "Attri" ;then
-	PLEVEL=3
-else
-	PLEVEL=2
+echo "--- GPU $GPUID: $QUERY ---";
+
+# DEFAULT IS 3 some card requires only different
+PLEVEL=3
+
+if echo "$QUERY" | grep "1050" ;then PLEVEL=2 
+	elif echo "$QUERY" | grep "P106-100" ;then PLEVEL=2
+	elif echo "$QUERY" | grep "P102-100" ;then PLEVEL=1
+	elif echo "$QUERY" | grep "P104-100" ;then PLEVEL=1
+	elif echo "$QUERY" | grep "P106-090" ;then PLEVEL=1
 fi
 
-echo "--- DETECTED PERFORMANCE LEVEL: $PLEVEL ---";
+
+echo "--- PERFORMANCE LEVEL: $PLEVEL ---";
 
 #################################£
 # POWER LIMIT

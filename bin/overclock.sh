@@ -46,7 +46,8 @@ if [ ! -z "$DONVIDIA" ]; then
 	wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=nvidia&token=$TOKEN&worker=$WORKER&nums=$NVIDIADEVICE&bios=$FORCE"
 	sleep 1.5
 	sudo sh doclock.sh
-	sleep 2
+	sync
+	sleep 0.5
 	sudo chvt 1
 fi
 
@@ -54,5 +55,6 @@ if [ ! -z "$DOAMD" ]; then
 	wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=amd&token=$TOKEN&worker=$WORKER&nums=$AMDDEVICE&bios=$FORCE"
 	sleep 1.5
 	sudo sh doclock.sh
+	sync
 	sudo chvt 1
 fi
