@@ -49,7 +49,7 @@ if [ ! -z "$DONVIDIA" ]; then
 	sync
 	
 	# NO IDEA, BUT THIS SOLVE P8 STATE ISSUES (ON ALL CARD!)
-	sudo screen -A -m -d -S p8issue sudo nvidia-settings -a [gpu:0]/GPUPowerMizerMode=1 -c :0	
+	sudo screen -A -m -d -S p8issue sudo sh /home/minerstat/minerstat-os/bin/p8issue.sh
 	sleep 0.5
 	
 	sudo chvt 1
