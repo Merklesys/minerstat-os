@@ -47,7 +47,11 @@ if [ ! -z "$DONVIDIA" ]; then
 	sleep 1.5
 	sudo sh doclock.sh
 	sync
+	
+	# NO IDEA, BUT THIS SOLVE P8 STATE ISSUES (ON ALL CARD!)
+	sudo nvidia-settings -a [gpu:0]/GPUPowerMizerMode=1	
 	sleep 0.5
+	
 	sudo chvt 1
 fi
 
