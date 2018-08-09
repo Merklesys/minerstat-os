@@ -393,6 +393,9 @@ module.exports = {
             if (miner.indexOf("ccminer") > -1) {
                 global.file = "clients/" + miner + "/start.bash";
             }
+            if (miner.indexOf("z-enemy") > -1) {
+                global.file = "clients/" + miner + "/start.bash";
+            }
 	        if (miner.indexOf("cryptodredge") > -1) {
                 global.file = "clients/" + miner + "/start.bash";
             }
@@ -423,7 +426,7 @@ module.exports = {
                 } else {
                     global.chunk = response.body;
                 }
-                if (miner != "ewbf-zec" &&  miner != "bminer" && miner != "ewbf-zhash" && miner != "ethminer" && miner != "zm-zec" && miner != "cryptodredge" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
+                if (miner != "ewbf-zec" &&  miner != "bminer" && miner != "ewbf-zhash" && miner != "ethminer" && miner != "zm-zec" && miner != "z-enemy" && miner != "cryptodredge" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
                     var writeStream = fs.createWriteStream(global.path + "/" + global.file);
                     var str = response.body;
                     if (miner.indexOf("sgminer") > -1) {

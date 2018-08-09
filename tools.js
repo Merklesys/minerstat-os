@@ -105,6 +105,10 @@ module.exports = {
             args = startArgs;
             execFile = "CryptoDredge";
         }
+        if (miner.indexOf("z-enemy") > -1) {
+            args = startArgs;
+            execFile = "z-enemy";
+        }
         // FOR SAFE RUNNING MINER NEED TO CREATE START.BASH
         var writeStream = fs.createWriteStream(global.path + "/" + "clients/" + miner + "/start.bash");
         var str = "";
@@ -347,7 +351,7 @@ module.exports = {
             });
         }
         // CCMINER with all fork's
-        if (gpuMiner.indexOf("ccminer") > -1) {
+        if (gpuMiner.indexOf("ccminer") > -1 || gpuMiner.indexOf("z-enemy") > -1) {
             const ccminerClient = telNet.createConnection({
                 port: 3333
             }, () => {
