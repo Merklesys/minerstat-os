@@ -112,8 +112,9 @@ if [ $1 ]; then
 	  	echo "- CORESTATE has been set to: $CORESTATE -"
 	  		if [ "$MEMSTATES" != "2" ]  
 			then
-					for corestate in 5 7; do
+					for corestate in 5; do
 						sudo ./ohgodatool -i $GPUID --core-state $corestate --core-clock $CORECLOCK --mem-state $MEMSTATES --mem-clock $MEMCLOCK $STR1
+						CORESTATE=5
 					done
 			else
 				for corestate in 3 4 5 6 7; do
@@ -144,5 +145,6 @@ if [ $1 ]; then
 		
 		##################################
 		# CURRENT_Clock Protection
-		sudo ./amdcovc ccoreclk:$GPUID=$CORECLOCK memclk:$GPUID=$MEMCLOCK | grep "Setting"
+		sudo ./amdcovc memclk:$GPUID=$MEMCLOCK | grep "Setting"
+		sudo ./amdcovc ccoreclk:$GPUID=$CORECLOCK | grep "Setting"
 fi
