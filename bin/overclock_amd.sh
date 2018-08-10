@@ -113,7 +113,7 @@ if [ $1 ]; then
 	  		if [ "$MEMSTATES" != "2" ]  
 			then
 					for corestate in 5 7; do
-						sudo ./ohgodatool -i $GPUID --core-state $CORESTATE --core-clock $CORECLOCK --mem-state $MEMSTATES --mem-clock $MEMCLOCK $STR1
+						sudo ./ohgodatool -i $GPUID --core-state $corestate --core-clock $CORECLOCK --mem-state $MEMSTATES --mem-clock $MEMCLOCK $STR1
 					done
 			else
 				for corestate in 3 4 5 6 7; do
