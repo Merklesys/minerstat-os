@@ -57,19 +57,10 @@ if [ $1 ]; then
 		if [ "$VDDC" != "0" ]  
 		then
 			# set all voltage states from 1 upwards to xxx mV:
-			echo "--- Setting up VDDC Voltage GPU$gpuid ---"
-			
-			if [ "$MEMSTATES" != "2" ]  
-			then
-				for voltstate in 7 8 9 10 14; do  
+			echo "--- Setting up VDDC Voltage GPU$gpuid ---"		
+			for voltstate in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do  
 				sudo ./ohgodatool -i $GPUID --volt-state $voltstate --vddc-table-set $VDDC 
-				done
-			else
-				for voltstate in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do  
-				sudo ./ohgodatool -i $GPUID --volt-state $voltstate --vddc-table-set $VDDC 
-				done
-			fi
-			
+			done
 		fi
 	
 	
