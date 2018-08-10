@@ -104,7 +104,7 @@ if [ $1 ]; then
 	  	echo "- CORESTATE has been set to: $CORESTATE -"
 	  		if [ "$MEMSTATES" != "2" ]  
 			then
-					for corestate in 4 5 6 7; do
+					for corestate in 1 2 3 4 5 6 7; do
 						sudo ./ohgodatool -i $GPUID --core-state $corestate --core-clock $CORECLOCK $STR1
 						CORESTATE=5
 					done
