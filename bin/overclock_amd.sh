@@ -142,6 +142,8 @@ if [ $1 ]; then
 		#################################£
 		# Apply Changes
 		#sudo ./amdcovc memclk:$GPUID=$MEMCLOCK cmemclk:$GPUID=$MEMCLOCK coreclk:$GPUID=$CORECLOCK ccoreclk:$GPUID=$CORECLOCK $STR2 | grep "Setting"
+		echo "--- APPLY CURRENT_CLOCKS ---"
+		echo "Notice: If below is empty try to use a 'Supported clock by your gpu bios' "
 		sudo ./amdcovc $STR4 $STR5 $STR2 | grep "Setting"
 		
 		##################################
