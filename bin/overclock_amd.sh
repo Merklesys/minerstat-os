@@ -61,7 +61,7 @@ if [ $1 ]; then
 			
 			if [ "$MEMSTATES" != "2" ]  
 			then
-				for voltstate in 0 8 9 10; do  
+				for voltstate in 7 8 9 10 14; do  
 				sudo ./ohgodatool -i $GPUID --volt-state $voltstate --vddc-table-set $VDDC 
 				done
 			else
@@ -109,20 +109,21 @@ if [ $1 ]; then
 		# Set new clocks in tables
 		echo "--- Setting up CoreStates and MemClocks GPU$gpuid ---"
 		echo "-- MEMSTATE Equals to $MEMSTATES --";
+		sudo ./ohgodatool -i $GPUID --mem-state $MEMSTATES --mem-clock $MEMCLOCK 
 	  	echo "- CORESTATE has been set to: $CORESTATE -"
 	  		if [ "$MEMSTATES" != "2" ]  
 			then
-					for corestate in 5; do
-						sudo ./ohgodatool -i $GPUID --core-state $corestate --core-clock $CORECLOCK --mem-state $MEMSTATES --mem-clock $MEMCLOCK $STR1
+					for corestate in 4 5 6 7; do
+						sudo ./ohgodatool -i $GPUID --core-state $corestate --core-clock $CORECLOCK $STR1
 						CORESTATE=5
 					done
 			else
 				for corestate in 3 4 5 6 7; do
 				if [ "$corestate" != "$CORESTATE" ] 
 				then
-					sudo ./ohgodatool -i $GPUID --core-state $corestate --core-clock $CORECLOCK --mem-state $MEMSTATES --mem-clock $MEMCLOCK
+					sudo ./ohgodatool -i $GPUID --core-state $corestate --core-clock $CORECLOCK
 				else
-					sudo ./ohgodatool -i $GPUID --core-state $corestate --core-clock $CORECLOCK --mem-state $MEMSTATES --mem-clock $MEMCLOCK $STR1
+					sudo ./ohgodatool -i $GPUID --core-state $corestate --core-clock $CORECLOCK $STR1
 				fi
 				done
 			fi
