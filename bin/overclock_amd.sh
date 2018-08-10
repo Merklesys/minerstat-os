@@ -128,9 +128,9 @@ if [ $1 ]; then
 	   
 	#################################£
 	# Overwrite PowerPlay to manual
-	sudo echo "manual" > /sys/class/drm/card$GPUID/device/power_dpm_force_performance_level 
-	sudo echo $CORESTATE > /sys/class/drm/card$GPUID/device/pp_dpm_sclk
-	sudo echo $MEMSTATES > /sys/class/drm/card$GPUID/device/pp_dpm_mclk 
+	sudo su -c "echo 'manual' > /sys/class/drm/card$GPUID/device/power_dpm_force_performance_level"
+	sudo su -c "echo $CORESTATE > /sys/class/drm/card$GPUID/device/pp_dpm_sclk"
+	sudo su -c "echo $MEMSTATES > /sys/class/drm/card$GPUID/device/pp_dpm_mclk"
 	
 	 fi
 	 fi
