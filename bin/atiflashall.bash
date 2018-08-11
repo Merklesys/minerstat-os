@@ -7,6 +7,9 @@ ARG2=$2
 ARG3=$3
 ARG4=$4
 
+echo "--- ATIFLASHER ---"
+echo ""
+
 if [ "$AMDDEVICE" != 0 ]
 then
 	echo ""
@@ -27,6 +30,7 @@ fi
 cd /home/minerstat/minerstat-os/bin
 
 sudo ./atiflash -i
+echo ""
 
 for (( i=0; i < $AMDN; i++ )); do
 	echo "--- Flashing GPU$i ---"
