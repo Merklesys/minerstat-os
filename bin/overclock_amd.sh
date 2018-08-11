@@ -1,5 +1,5 @@
 #!/bin/bash
-exec 2>/dev/null
+#exec 2>/dev/null
 
 if [ ! $1 ]; then
 	echo ""
@@ -53,21 +53,26 @@ if [ $1 ]; then
 	maxMemState=$(sudo ./ohgodatool -i $GPUID --show-mem  | grep -E "Memory state ([0-9]+):" | tail -n 1 | sed -r 's/.*([0-9]+).*/\1/' | sed 's/[^0-9]*//g')
 	maxCoreState=$(sudo ./ohgodatool -i $GPUID --show-core | grep -E "DPM state ([0-9]+):"    | tail -n 1 | sed -r 's/.*([0-9]+).*/\1/' | sed 's/[^0-9]*//g')
 	currentCoreState=$(sudo su -c "cat /sys/class/drm/card$GPUID/device/pp_dpm_sclk | grep '*' | cut -f1 -d':' | sed -r 's/.*([0-9]+).*/\1/' | sed 's/[^0-9]*//g'")
+	#currentCoreState=5
 	
 	## If $currentCoreState equals zero (undefined)
 	## Use maxCoreState BUT IF ZERO means idle use the same
 	 
-	if [[ -z $currentCoreState || ! $currentCoreState > 0 ]]; then
-		echo "ERROR: No Current Core State found for GPU$GPUID (Idle)"
-		currentCoreState=$maxCoreState
-		if [[ -z $maxCoreState ]]; then
-			echo "WARN: USING Default Core State for GPU$GPUID (5)"
-			currentCoreState=5
-		fi
+	if [ -z $currentCoreState ]; then
+		echo "ERROR: No Current Core State found for GPU$GPUID"
+		currentCoreState=5
 	fi
 	
+	if [ "$currentCoreState" != 0 ]
+	then
+		echo ""
+	else
+   		echo "WARN: GPU$GPUID was idle, using default states (5) (Idle)"
+		currentCoreState=5
+   	fi
+	
 	## Memstate just for protection
-	if [[ -z $maxMemState ]]; then
+	if [ -z $maxMemState ]; then
 		echo "ERROR: No Current Mem State found for GPU$GPUID"
 		$maxMemState = 1; # 1 is exist on RX400 & RX500 too.
 	fi
@@ -136,7 +141,7 @@ if [ $1 ]; then
 	 
 	 #################################£
 	 # PROTECT FANS, JUST IN CASE
-	 if [[ ! $FANSPEED > 0 ]]; then
+	 if [ ! $FANSPEED > 0 ]; then
 	 	OHGOD3=" --set-fanspeed 70"
 	 else
 	 	OHGOD3=" --set-fanspeed $FANSPEED"
