@@ -54,12 +54,18 @@ if [ $1 ]; then
 	## Use maxCoreState
 	
 	if [[ -z $currentCoreState ]]; then
-		echo "ERROR: No Current State found for GPU$GPUID"
+		echo "ERROR: No Current Core State found for GPU$GPUID"
 		$currentCoreState = $maxCoreState;
 		if [[ -z $maxCoreState ]]; then
-			echo "WARN: USING Default state for GPU$GPUID (5)"
+			echo "WARN: USING Default Core State for GPU$GPUID (5)"
 			$currentCoreState = 5;
 		fi
+	fi
+	
+	## Memstate just for protection
+	if [[ -z $maxMemState ]]; then
+		echo "ERROR: No Current Mem State found for GPU$GPUID"
+		$maxMemState = 1; # 1 is exist on RX400 & RX500 too.
 	fi
 	
 	echo "--- FOUND MEMORY STATE: $maxMemState ---"
