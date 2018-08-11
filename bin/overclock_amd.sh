@@ -156,7 +156,7 @@ if [ $1 ]; then
 	echo "- SET | GPU$GPUID Performance level: manual -"
 	echo "- SET | GPU$GPUID DPM state: $currentCoreState -"
 	echo "- SET | GPU$GPUID MEM state: $maxMemState -"
-	sudo ./ohgodatool -i $GPUID $OHGOD1 $OHGOD2 $OHGOD3 | grep "-"
+	sudo ./ohgodatool -i $GPUID $OHGOD1 $OHGOD2 $OHGOD3 | grep "-" | cut -f1 -d"Usage"
 	
 	sudo su -c "echo 'manual' > /sys/class/drm/card$GPUID/device/power_dpm_force_performance_level"
 	sudo su -c "echo $currentCoreState > /sys/class/drm/card$GPUID/device/pp_dpm_sclk"
@@ -165,7 +165,7 @@ if [ $1 ]; then
 	echo "NOTICE: If below is empty try to use a 'Supported clock or flash your gpu bios' "
 	echo ""	
 	sleep 0.2
-	sudo ./amdcovc $STR4 $STR5 $STR2 | grep "Setting" | cut -f1 -d"Usage"
+	sudo ./amdcovc $STR4 $STR5 $STR2 | grep "Setting"
 		
 	##################################
 	# CURRENT_Clock Protection
