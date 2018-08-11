@@ -56,7 +56,18 @@ if [ ! -z "$DONVIDIA" ]; then
 fi
 
 if [ ! -z "$DOAMD" ]; then
-	wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=amd&token=$TOKEN&worker=$WORKER&nums=$AMDDEVICE&bios=$FORCE"
+
+	TEST=$(cat /sys/class/drm/card0/device/pp_dpm_sclk)
+	if [ "$TEST" != "cat: /sys/class/drm/card0/device/pp_dpm_sclk: No such file or directory" ] 
+	then
+		STARTS=1
+	else
+		STARTS=0
+	fi
+	
+	echo "STARTS WITH ID: $STARTS"
+	
+	wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=amd&token=$TOKEN&worker=$WORKER&nums=$AMDDEVICE&bios=$FORCE&starts=$STARTS"
 	sleep 1.5
 	sudo sh doclock.sh
 	sync
