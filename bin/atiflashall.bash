@@ -24,8 +24,9 @@ else
 	exit 1
 fi
 
+cd /home/minerstat/minerstat-os/bin
 
 for (( i=0; i < $AMDN; i++ )); do
 	echo "--- Flashing GPU$i ---"
-	./home/minerstat/minerstat-os/bin/atiflash -p $i $BIOS $ARGS2 $ARGS3 $ARGS4
+	sudo ./atiflash -p $i $BIOS $ARGS2 $ARGS3 $ARGS4
 done
