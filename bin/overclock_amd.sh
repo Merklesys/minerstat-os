@@ -83,7 +83,7 @@ if [ $1 ]; then
 	voltStateLine=$(($currentCoreState + 1))
 	currentVoltState=$(sudo ./ohgodatool -i 0 --show-core | grep -E "VDDC:" | sed -n $voltStateLine"p" | sed 's/^.*entry/entry/' | sed 's/[^0-9]*//g')
 		
-
+	echo "DEBUG: C $currentCoreState / VL $voltStateLine / CVS $currentVoltState"
 	echo ""
 		
 	if [ "$VDDC" != "skip" ]  
@@ -140,9 +140,9 @@ if [ $1 ]; then
 	 # PROTECT FANS, JUST IN CASE
 	 if [ "$FANSPEED" != 0 ]
 	 then
-	 	OHGOD3=" --set-fanspeed 70"
+		OHGOD3=" --set-fanspeed $FANSPEED"
 	 else
-	 	OHGOD3=" --set-fanspeed $FANSPEED"
+	 	OHGOD3=" --set-fanspeed 70"
 	 fi
 
 	
