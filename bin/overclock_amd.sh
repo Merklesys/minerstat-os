@@ -136,14 +136,10 @@ if [ $1 ]; then
 	 
 	 #################################£
 	 # PROTECT FANS, JUST IN CASE
-	 if [[ ! -z $STR1 ]]; then
-	 	if [[ $FANSPEED > 0 ]]; then
-	 		OHGOD3=" --set-fanspeed $FANSPEED"
-	 	else
-	 		OHGOD3=" --set-fanspeed 70"
-	 	fi
+	 if [[ ! $FANSPEED > 0 ]]; then
+	 	OHGOD3=" --set-fanspeed 70"
 	 else
-	 		OHGOD3=" --set-fanspeed 65"
+	 	OHGOD3=" --set-fanspeed $FANSPEED"
 	 fi
 
 	
@@ -163,7 +159,7 @@ if [ $1 ]; then
 	sudo su -c "echo $currentCoreState > /sys/class/drm/card$GPUID/device/pp_dpm_sclk"
 	sudo su -c "echo $maxMemState > /sys/class/drm/card$GPUID/device/pp_dpm_mclk"
 	echo ""
-	echo "NOTICE: If below is empty try to use a 'Supported clock by your gpu bios' "
+	echo "NOTICE: If below is empty try to use a 'Supported clock or flash your gpu bios' "
 	echo ""	
 	sleep 0.2
 	sudo ./amdcovc $STR4 $STR5 $STR2 | grep "Setting"
