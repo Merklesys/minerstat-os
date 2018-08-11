@@ -26,7 +26,15 @@ fi
 
 cd /home/minerstat/minerstat-os/bin
 
+sudo ./atiflash -i
+
 for (( i=0; i < $AMDN; i++ )); do
 	echo "--- Flashing GPU$i ---"
 	sudo ./atiflash -p $i $BIOS $ARGS2 $ARGS3 $ARGS4
 done
+
+sudo ./atiflash -i
+
+echo ""
+echo "Reboot to apply changes"
+echo "-- Done --"
