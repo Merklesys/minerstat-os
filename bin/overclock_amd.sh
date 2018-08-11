@@ -46,11 +46,23 @@ if [ $1 ]; then
 	fi
 	
 	## Detect state's
-	MEMSTATES=$(sudo ./ohgodatool -i $GPUID --show-mem  | grep -E "Memory state ([0-9]+):" | tail -n 1 | sed -r 's/.*([0-9]+).*/\1/')
-	CORESTATE=$(sudo ./ohgodatool -i $GPUID --show-core | grep -E "DPM state ([0-9]+):"    | tail -n 1 | sed -r 's/.*([0-9]+).*/\1/')
+	maxMemState=$(sudo ./ohgodatool -i $GPUID --show-mem  | grep -E "Memory state ([0-9]+):" | tail -n 1 | sed -r 's/.*([0-9]+).*/\1/' | sed 's/[^0-9]*//g')
+	maxCoreState=$(sudo ./ohgodatool -i $GPUID --show-core | grep -E "DPM state ([0-9]+):"    | tail -n 1 | sed -r 's/.*([0-9]+).*/\1/' | sed 's/[^0-9]*//g')
+	currentCoreState=$(sudo su -c "cat /sys/class/drm/card0/device/pp_dpm_sclk | grep '*' | cut -f1 -d':' | sed -r 's/.*([0-9]+).*/\1/' | sed 's/[^0-9]*//g'")
 	
+	## If $currentCoreState equals zero (undefined)
+	## Use maxCoreState
 	
-	echo "--- FOUND MEMORY STATE: $MEMSTATES ---"
+	if [[ -z $currentCoreState ]]; then
+		echo "ERROR: No Current State found for GPU$GPUID"
+		$currentCoreState = $maxCoreState;
+		if [[ -z $maxCoreState ]]; then
+			echo "WARN: USING Default state for GPU$GPUID (5)"
+			$currentCoreState = 5;
+		fi
+	fi
+	
+	echo "--- FOUND MEMORY STATE: $maxMemState ---"
 		
 	if [ "$VDDC" != "skip" ]  
 	then
@@ -58,9 +70,9 @@ if [ $1 ]; then
 		then
 			# set all voltage states from 1 upwards to xxx mV:
 			echo "--- Setting up VDDC Voltage GPU$gpuid ---"
-			if [ "$MEMSTATES" != "2" ]  
+			if [ "$maxMemState" != "2" ]  
 			then
-				for voltstate in $CORESTATE; do  
+				for voltstate in $currentCoreState; do  
 					sudo ./ohgodatool -i $GPUID --volt-state $voltstate --vddc-table-set $VDDC 
 				done
 			else
@@ -80,7 +92,7 @@ if [ $1 ]; then
 		# VDDCI Voltages 
 		# VDDC Voltage + 50
 			echo "--- Setting up VDDCI Voltage GPU$gpuid ---" 
-			sudo ./ohgodatool -i $GPUID --mem-state $MEMSTATES --vddci $VDDCI  
+			sudo ./ohgodatool -i $GPUID --mem-state $maxMemState --vddci $VDDCI  
 	fi
 	fi
 	fi
@@ -106,28 +118,21 @@ if [ $1 ]; then
 		
 		# Set new clocks in tables
 		echo "--- Setting up CoreStates and MemClocks GPU$gpuid ---"
-		echo "-- MEMSTATE Equals to $MEMSTATES --";
-		sudo ./ohgodatool -i $GPUID --mem-state $MEMSTATES --mem-clock $MEMCLOCK 
-	  	echo "- CORESTATE has been set to: $CORESTATE -"
-	  		if [ "$MEMSTATES" != "2" ]  
-			then
-				sudo ./ohgodatool -i $GPUID --core-state $CORESTATE --core-clock $CORECLOCK $STR1
-			else
-				for corestate in 3 4 5 6 7; do
-				if [ "$corestate" != "$CORESTATE" ] 
-				then
-					sudo ./ohgodatool -i $GPUID --core-state $corestate --core-clock $CORECLOCK
-				else
-					sudo ./ohgodatool -i $GPUID --core-state $corestate --core-clock $CORECLOCK $STR1
-				fi
-				done
-			fi
+	  	echo ""
+	  	sudo ./ohgodatool -i $GPUID --mem-state $maxMemState --mem-clock $MEMCLOCK  --core-state $currentCoreState --core-clock $CORECLOCK $STR1
+
 	   
-	#################################£
-	# Overwrite PowerPlay to manual
-	sudo su -c "echo 'manual' > /sys/class/drm/card$GPUID/device/power_dpm_force_performance_level"
-	sudo su -c "echo $CORESTATE > /sys/class/drm/card$GPUID/device/pp_dpm_sclk"
-	sudo su -c "echo $MEMSTATES > /sys/class/drm/card$GPUID/device/pp_dpm_mclk"
+		#################################£
+		# Overwrite PowerPlay to manual
+		echo ""
+		echo "--- APPLY CURRENT_CLOCKS ---"
+		echo "- SET | GPU$GPUID Performance level: manual -"
+		echo "- SET | GPU$GPUID DPM state: $currentCoreState -"
+		echo "- SET | GPU$GPUID MEM state: $maxMemState -"
+		echo ""
+		sudo su -c "echo 'manual' > /sys/class/drm/card$GPUID/device/power_dpm_force_performance_level"
+		sudo su -c "echo $currentCoreState > /sys/class/drm/card$GPUID/device/pp_dpm_sclk"
+		sudo su -c "echo $maxMemState > /sys/class/drm/card$GPUID/device/pp_dpm_mclk"
 	
 	 fi
 	 fi
@@ -137,8 +142,9 @@ if [ $1 ]; then
 		#################################£
 		# Apply Changes
 		#sudo ./amdcovc memclk:$GPUID=$MEMCLOCK cmemclk:$GPUID=$MEMCLOCK coreclk:$GPUID=$CORECLOCK ccoreclk:$GPUID=$CORECLOCK $STR2 | grep "Setting"
-		echo "--- APPLY CURRENT_CLOCKS ---"
-		echo "Notice: If below is empty try to use a 'Supported clock by your gpu bios' "
+		echo "NOTICE: If below is empty try to use a 'Supported clock by your gpu bios' "
+		echo ""	
+		sleep 0.2
 		sudo ./amdcovc $STR4 $STR5 $STR2 | grep "Setting"
 		
 		##################################
