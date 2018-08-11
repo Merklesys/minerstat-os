@@ -60,9 +60,9 @@ if [ ! -z "$DOAMD" ]; then
 	TEST=$(cat /sys/class/drm/card0/device/pp_dpm_sclk)
 	if [ "$TEST" != "cat: /sys/class/drm/card0/device/pp_dpm_sclk: No such file or directory" ] 
 	then
-		STARTS=1
-	else
 		STARTS=0
+	else
+		STARTS=1
 	fi
 	
 	echo "STARTS WITH ID: $STARTS"
