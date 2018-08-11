@@ -4,8 +4,6 @@
 AMDN=$(sudo lshw -C display | grep AMD | wc -l)
 BIOS=$1
 ARG2=$2
-ARG3=$3
-ARG4=$4
 
 echo "====== ATIFLASHER ======="
 
@@ -35,7 +33,12 @@ echo ""
 
 for (( i=0; i < $AMDN; i++ )); do
 	echo "--- Flashing GPU$i ---"
-	sudo ./atiflash $ARGS2 $ARGS3 $ARGS4 -p $i $BIOS
+	if [ "$ARG2" != "-f" ]
+	then
+		sudo ./atiflash -p $i $BIOS
+	else
+		sudo ./atiflash -p -f $i $BIOS
+	fi
 done
 
 sudo ./atiflash -i
