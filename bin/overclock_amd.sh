@@ -92,7 +92,7 @@ if [ $1 ]; then
 		then
 			# set all voltage states from 1 upwards to xxx mV:
 			echo "--- Setting up VDDC Voltage GPU$GPUID (VS: $currentVoltState) ---"
-			sudo ./ohgodatool -i $GPUID --volt-state $currentVoltState --vddc-table-set $VDDC 			
+			sudo ./ohgodatool -i $GPUID --volt-state $currentVoltState --vddc-table-set $VDDC | grep "-"			
 		fi
 	fi
 	
@@ -107,7 +107,7 @@ if [ $1 ]; then
 			# VDDC Voltage + 50
 				echo ""
 				echo "--- Setting up VDDCI Voltage GPU$GPUID ---" 
-				sudo ./ohgodatool -i $GPUID --mem-state $maxMemState --vddci $VDDCI  
+				sudo ./ohgodatool -i $GPUID --mem-state $maxMemState --vddci $VDDCI | grep "-"
 	 fi
 	 fi
 	 fi
@@ -156,7 +156,7 @@ if [ $1 ]; then
 	echo "- SET | GPU$GPUID Performance level: manual -"
 	echo "- SET | GPU$GPUID DPM state: $currentCoreState -"
 	echo "- SET | GPU$GPUID MEM state: $maxMemState -"
-	sudo ./ohgodatool -i $GPUID $OHGOD1 $OHGOD2 $OHGOD3
+	sudo ./ohgodatool -i $GPUID $OHGOD1 $OHGOD2 $OHGOD3 | grep "-"
 	
 	sudo su -c "echo 'manual' > /sys/class/drm/card$GPUID/device/power_dpm_force_performance_level"
 	sudo su -c "echo $currentCoreState > /sys/class/drm/card$GPUID/device/pp_dpm_sclk"
