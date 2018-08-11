@@ -98,7 +98,7 @@ if [ $1 ]; then
 		# VDDCI Voltages 
 		# VDDC Voltage + 50
 			echo ""
-			echo "--- Setting up VDDCI Voltage GPU$gpuid ---" 
+			echo "--- Setting up VDDCI Voltage GPU$GPUID ---" 
 			sudo ./ohgodatool -i $GPUID --mem-state $maxMemState --vddci $VDDCI  
 	fi
 	fi
