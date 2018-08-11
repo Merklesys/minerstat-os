@@ -54,6 +54,7 @@ if [ $1 ]; then
 	maxCoreState=$(sudo ./ohgodatool -i $GPUID --show-core | grep -E "DPM state ([0-9]+):"    | tail -n 1 | sed -r 's/.*([0-9]+).*/\1/' | sed 's/[^0-9]*//g')
 	currentCoreState=$(sudo su -c "cat /sys/class/drm/card$GPUID/device/pp_dpm_sclk | grep '*' | cut -f1 -d':' | sed -r 's/.*([0-9]+).*/\1/' | sed 's/[^0-9]*//g'")
 	#currentCoreState=5
+
 	
 	## If $currentCoreState equals zero (undefined)
 	## Use maxCoreState BUT IF ZERO means idle use the same
@@ -70,12 +71,18 @@ if [ $1 ]; then
    		echo "WARN: GPU$GPUID was idle, using default states (5) (Idle)"
 		currentCoreState=5
    	fi
-	
+   	
 	## Memstate just for protection
 	if [ -z $maxMemState ]; then
 		echo "ERROR: No Current Mem State found for GPU$GPUID"
 		$maxMemState = 1; # 1 is exist on RX400 & RX500 too.
 	fi
+
+	
+	# CURRENT Volt State for Undervolt
+	voltStateLine=$(($currentCoreState + 1))
+	currentVoltState=$(sudo ./ohgodatool -i 0 --show-core | grep -E "VDDC:" | sed -n $voltStateLine"p" | sed 's/^.*entry/entry/' | sed 's/[^0-9]*//g')
+		
 
 	echo ""
 		
@@ -85,17 +92,7 @@ if [ $1 ]; then
 		then
 			# set all voltage states from 1 upwards to xxx mV:
 			echo "--- Setting up VDDC Voltage GPU$GPUID ---"
-			if [ "$maxMemState" != "2" ]  
-			then
-				for voltstate in $currentCoreState; do  
-					sudo ./ohgodatool -i $GPUID --volt-state $voltstate --vddc-table-set $VDDC 
-				done
-			else
-				for voltstate in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do  
-					sudo ./ohgodatool -i $GPUID --volt-state $voltstate --vddc-table-set $VDDC 
-				done
-			fi
-			
+			sudo ./ohgodatool -i $GPUID --volt-state $currentVoltState --vddc-table-set $VDDC 			
 		fi
 	fi
 	
