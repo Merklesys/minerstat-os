@@ -67,8 +67,8 @@ if [ $1 ]; then
 		echo "ERROR: No Current Mem State found for GPU$GPUID"
 		$maxMemState = 1; # 1 is exist on RX400 & RX500 too.
 	fi
-	
-	echo "--- FOUND MEMORY STATE: $maxMemState ---"
+
+	echo ""
 		
 	if [ "$VDDC" != "skip" ]  
 	then
@@ -97,6 +97,7 @@ if [ $1 ]; then
 	 then
 		# VDDCI Voltages 
 		# VDDC Voltage + 50
+			echo ""
 			echo "--- Setting up VDDCI Voltage GPU$gpuid ---" 
 			sudo ./ohgodatool -i $GPUID --mem-state $maxMemState --vddci $VDDCI  
 	fi
@@ -123,8 +124,8 @@ if [ $1 ]; then
 		STR5="coreclk:$GPUID=$CORECLOCK"
 		
 		# Set new clocks in tables
+		echo ""
 		echo "--- Setting up CoreStates and MemClocks GPU$gpuid ---"
-	  	echo ""
 	  	sudo ./ohgodatool -i $GPUID --mem-state $maxMemState --mem-clock $MEMCLOCK  --core-state $currentCoreState --core-clock $CORECLOCK $STR1
 
 	   
@@ -135,7 +136,6 @@ if [ $1 ]; then
 		echo "- SET | GPU$GPUID Performance level: manual -"
 		echo "- SET | GPU$GPUID DPM state: $currentCoreState -"
 		echo "- SET | GPU$GPUID MEM state: $maxMemState -"
-		echo ""
 		sudo su -c "echo 'manual' > /sys/class/drm/card$GPUID/device/power_dpm_force_performance_level"
 		sudo su -c "echo $currentCoreState > /sys/class/drm/card$GPUID/device/pp_dpm_sclk"
 		sudo su -c "echo $maxMemState > /sys/class/drm/card$GPUID/device/pp_dpm_mclk"
@@ -148,6 +148,7 @@ if [ $1 ]; then
 		#################################£
 		# Apply Changes
 		#sudo ./amdcovc memclk:$GPUID=$MEMCLOCK cmemclk:$GPUID=$MEMCLOCK coreclk:$GPUID=$CORECLOCK ccoreclk:$GPUID=$CORECLOCK $STR2 | grep "Setting"
+		echo ""
 		echo "NOTICE: If below is empty try to use a 'Supported clock by your gpu bios' "
 		echo ""	
 		sleep 0.2
