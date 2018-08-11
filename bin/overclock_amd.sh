@@ -91,7 +91,7 @@ if [ $1 ]; then
 		if [ "$VDDC" != "0" ]  
 		then
 			# set all voltage states from 1 upwards to xxx mV:
-			echo "--- Setting up VDDC Voltage GPU$GPUID ---"
+			echo "--- Setting up VDDC Voltage GPU$GPUID (VS: $currentVoltState) ---"
 			sudo ./ohgodatool -i $GPUID --volt-state $currentVoltState --vddc-table-set $VDDC 			
 		fi
 	fi
@@ -126,9 +126,9 @@ if [ $1 ]; then
 	 fi
 
 	
-	 if [ "$MEMCLOCK" != "0" ] 
-	 then
 	 if [ "$MEMCLOCK" != "skip" ] 
+	 then
+	 if [ "$MEMCLOCK" != "0" ] 
 	 then
 	 	# APPLY AT THE END
 		STR4="cmemclk:$GPUID=$MEMCLOCK"
