@@ -60,7 +60,7 @@ if [ $1 ]; then
 			echo "--- Setting up VDDC Voltage GPU$gpuid ---"
 			if [ "$MEMSTATES" != "2" ]  
 			then
-				for voltstate in 1 2 3 4 5 6 7; do  
+				for voltstate in $CORESTATE; do  
 					sudo ./ohgodatool -i $GPUID --volt-state $voltstate --vddc-table-set $VDDC 
 				done
 			else
