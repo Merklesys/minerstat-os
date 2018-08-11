@@ -32,7 +32,7 @@ echo ""
 
 for (( i=0; i < $AMDN; i++ )); do
 	echo "--- Flashing GPU$i ---"
-	sudo ./atiflash -p $i $BIOS $ARGS2 $ARGS3 $ARGS4
+	sudo ./atiflash -p $ARGS2 $ARGS3 $ARGS4 $i $BIOS
 done
 
 sudo ./atiflash -i
