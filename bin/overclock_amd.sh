@@ -141,7 +141,8 @@ if [ $1 ]; then
 	 
 	 #################################£
 	 # PROTECT FANS, JUST IN CASE
-	 if [ ! $FANSPEED > 0 ]; then
+	 if [ "$FANSPEED" != 0 ]
+	 then
 	 	OHGOD3=" --set-fanspeed 70"
 	 else
 	 	OHGOD3=" --set-fanspeed $FANSPEED"
