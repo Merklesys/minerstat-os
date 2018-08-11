@@ -81,9 +81,9 @@ if [ $1 ]; then
 	
 	# CURRENT Volt State for Undervolt
 	voltStateLine=$(($currentCoreState + 1))
-	currentVoltState=$(sudo ./ohgodatool -i 0 --show-core | grep -E "VDDC:" | sed -n $voltStateLine"p" | sed 's/^.*entry/entry/' | sed 's/[^0-9]*//g')
+	currentVoltState=$(sudo ./ohgodatool -i $GPUID --show-core | grep -E "VDDC:" | sed -n $voltStateLine"p" | sed 's/^.*entry/entry/' | sed 's/[^0-9]*//g')
 		
-	echo "DEBUG: C $currentCoreState / VL $voltStateLine / CVS $currentVoltState"
+	#echo "DEBUG: C $currentCoreState / VL $voltStateLine / CVS $currentVoltState"
 	echo ""
 		
 	if [ "$VDDC" != "skip" ]  
