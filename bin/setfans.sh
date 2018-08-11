@@ -37,7 +37,18 @@ if [ ! $1 ]; then
 	fi
 
 	if [ "$AMDDEVICE" -gt "0" ]; then
-			wget -qO dofans.sh "https://api.minerstat.com/v2/getfans.php?type=amd&token=$TOKEN&worker=$WORKER&nums=$AMDDEVICE"
+	
+	FILE="/sys/class/drm/card0/device/pp_dpm_sclk" 
+	
+	if [ -f "$FILE" ]
+	then
+		STARTS=0
+	else
+		STARTS=1
+	fi
+			echo "STARTS WITH ID: $STARTS"
+	
+			wget -qO dofans.sh "https://api.minerstat.com/v2/getfans.php?type=amd&token=$TOKEN&worker=$WORKER&nums=$AMDDEVICE&starts=$STARTS"
 			sleep 1.5
 			sudo chmod 777 dofans.sh
 			sleep 0.5
