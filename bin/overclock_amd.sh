@@ -75,7 +75,7 @@ if [ $1 ]; then
 		if [ "$VDDC" != "0" ]  
 		then
 			# set all voltage states from 1 upwards to xxx mV:
-			echo "--- Setting up VDDC Voltage GPU$gpuid ---"
+			echo "--- Setting up VDDC Voltage GPU$GPUID ---"
 			if [ "$maxMemState" != "2" ]  
 			then
 				for voltstate in $currentCoreState; do  
@@ -125,7 +125,7 @@ if [ $1 ]; then
 		
 		# Set new clocks in tables
 		echo ""
-		echo "--- Setting up CoreStates and MemClocks GPU$gpuid ---"
+		echo "--- Setting up CoreStates and MemClocks GPU$GPUID ---"
 	  	sudo ./ohgodatool -i $GPUID --mem-state $maxMemState --mem-clock $MEMCLOCK  --core-state $currentCoreState --core-clock $CORECLOCK $STR1
 
 	   
