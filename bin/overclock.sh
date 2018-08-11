@@ -57,8 +57,8 @@ fi
 
 if [ ! -z "$DOAMD" ]; then
 
-	TEST=$(cat /sys/class/drm/card0/device/pp_dpm_sclk)
-	if [ "$TEST" != "cat: /sys/class/drm/card0/device/pp_dpm_sclk: No such file or directory" ] 
+	FILE="/sys/class/drm/card0/device/pp_dpm_sclk" 
+	if [ -f "$FILE" ]
 	then
 		STARTS=0
 	else
