@@ -7,9 +7,6 @@ ARG2=$2
 ARG3=$3
 ARG4=$4
 
-echo "--- ATIFLASHER ---"
-echo ""
-
 if [ "$AMDDEVICE" != 0 ]
 then
 	echo ""
@@ -23,6 +20,7 @@ then
 	echo ""
 else
 	echo "Flash VBIOS to all AMD GPUs on the system"
+	echo "You need to upload your .rom file to /home/minerstat/minerstat-os/bin"
 	echo "Usage: mflashall bios.rom";
 	exit 1
 fi
