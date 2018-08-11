@@ -92,7 +92,7 @@ if [ $1 ]; then
 		then
 			# set all voltage states from 1 upwards to xxx mV:
 			echo "--- Setting up VDDC Voltage GPU$GPUID (VS: $currentVoltState) ---"
-			sudo ./ohgodatool -i $GPUID --volt-state $currentVoltState --vddc-table-set $VDDC | grep "-"			
+			sudo ./ohgodatool -i $GPUID --volt-state $currentVoltState --vddc-table-set $VDDC | grep "-" | cut -f1 -d"Usage"			
 		fi
 	fi
 	
@@ -107,7 +107,7 @@ if [ $1 ]; then
 			# VDDC Voltage + 50
 				echo ""
 				echo "--- Setting up VDDCI Voltage GPU$GPUID ---" 
-				sudo ./ohgodatool -i $GPUID --mem-state $maxMemState --vddci $VDDCI | grep "-"
+				sudo ./ohgodatool -i $GPUID --mem-state $maxMemState --vddci $VDDCI | grep "-" | cut -f1 -d"Usage"
 	 fi
 	 fi
 	 fi
@@ -165,7 +165,7 @@ if [ $1 ]; then
 	echo "NOTICE: If below is empty try to use a 'Supported clock or flash your gpu bios' "
 	echo ""	
 	sleep 0.2
-	sudo ./amdcovc $STR4 $STR5 $STR2 | grep "Setting"
+	sudo ./amdcovc $STR4 $STR5 $STR2 | grep "Setting" | cut -f1 -d"Usage"
 		
 	##################################
 	# CURRENT_Clock Protection
