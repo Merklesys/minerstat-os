@@ -7,6 +7,8 @@ ARG2=$2
 ARG3=$3
 ARG4=$4
 
+echo "====== ATIFLASHER ======="
+
 if [ "$AMDDEVICE" != 0 ]
 then
 	echo ""
@@ -20,8 +22,9 @@ then
 	echo ""
 else
 	echo "Flash VBIOS to all AMD GPUs on the system"
-	echo "You need to upload your .rom file to /home/minerstat/minerstat-os/bin"
+	echo "You need to upload your .rom file to /home/minerstat/minerstat-os/bin (SFTP)"
 	echo "Usage: mflashall bios.rom";
+	echo "To force the flash use: mflashall bios.rom -f"
 	exit 1
 fi
 
@@ -32,11 +35,12 @@ echo ""
 
 for (( i=0; i < $AMDN; i++ )); do
 	echo "--- Flashing GPU$i ---"
-	sudo ./atiflash -p $ARGS2 $ARGS3 $ARGS4 $i $BIOS
+	sudo ./atiflash $ARGS2 $ARGS3 $ARGS4 -p $i $BIOS
 done
 
 sudo ./atiflash -i
 
 echo ""
+echo "------ FLASH DONE -------"
 echo "Reboot to apply changes"
-echo "-- Done --"
+echo "======  Done   ========="
