@@ -29,7 +29,7 @@ done
 
 sudo chmod -R 777 /home/minerstat/minerstat-os/bin/bios
 
-ls
+ls bios
 
 echo ""
 echo "==== BIOS DUMP DONE ==="
