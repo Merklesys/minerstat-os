@@ -226,6 +226,7 @@ then
 if [ "$MEMCLOCK" != "0" ] 
 then
 	sudo ./amdcovc memclk:$GPUID=$MEMCLOCK | grep "Setting"
+	sudo ./amdcovc memod:$GPUID=20 | grep "Setting"
 fi
 fi
 
