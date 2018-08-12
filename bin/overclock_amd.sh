@@ -178,7 +178,7 @@ if [ $1 ]; then
 	echo "- SET | GPU$GPUID Performance level: manual -"
 	echo "- SET | GPU$GPUID DPM state: $currentCoreState -"
 	echo "- SET | GPU$GPUID MEM state: $maxMemState -"
-	sudo ./ohgodatool -i $GPUID $OHGOD1 $OHGOD2 $OHGOD3 | grep "-" | cut -f1 -d"Usage"
+	sudo ./ohgodatool -i $GPUID $OHGOD1 $OHGOD2 $OHGOD3
 	
 	sudo su -c "echo 'manual' > /sys/class/drm/card$GPUID/device/power_dpm_force_performance_level"
 	sudo su -c "echo $currentCoreState > /sys/class/drm/card$GPUID/device/pp_dpm_sclk"
