@@ -42,6 +42,7 @@ if [ $1 ]; then
 	OHGOD2="";
 	OHGOD3="";
 	OHGOD4="";
+	R9="";
 	
 	if [ "$FANSPEED" != "skip" ]
 	then
@@ -155,6 +156,12 @@ if [ $1 ]; then
 	 	# APPLY AT THE END
 		STR4="cmemclk:$GPUID=$MEMCLOCK"
 		OHGOD2=" --mem-state $maxMemState --mem-clock $MEMCLOCK"
+		if [ "$maxMemState" != "1" ]  
+		then
+			R9=""
+		else
+			R9="memclk:$GPUID=$MEMCLOCK"
+		fi
 	 fi
 	 fi
 	 
@@ -193,5 +200,8 @@ if [ $1 ]; then
 	# CURRENT_Clock Protection
 	sudo ./amdcovc memclk:$GPUID=$MEMCLOCK | grep "Setting"
 	sudo ./amdcovc ccoreclk:$GPUID=$CORECLOCK | grep "Setting"
+	if [ "$R9" != "" ]  
+		sudo ./amdcovc $R9 | grep "Setting"
+	fi
 
 fi
