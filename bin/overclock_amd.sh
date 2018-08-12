@@ -44,6 +44,13 @@ if [ $1 ]; then
 	OHGOD4="";
 	R9="";
 	
+	# Check this is older R, or RX Series
+	isThisR9=$(sudo ./amdcovc -a 0 | grep "R9"| sed 's/^.*R9/R9/' | cut -f1 -d' ' | sed 's/[^A-Z0-9]*//g')
+	
+if [ "$isThisR9" != "R9" ]
+then
+	
+	
 	if [ "$FANSPEED" != "skip" ]
 	then
 		STR1="--set-fanspeed $FANSPEED";
@@ -55,7 +62,11 @@ if [ $1 ]; then
 	maxCoreState=$(sudo ./ohgodatool -i $GPUID --show-core | grep -E "DPM state ([0-9]+):"    | tail -n 1 | sed -r 's/.*([0-9]+).*/\1/' | sed 's/[^0-9]*//g')
 	currentCoreState=$(sudo su -c "cat /sys/class/drm/card$GPUID/device/pp_dpm_sclk | grep '*' | cut -f1 -d':' | sed -r 's/.*([0-9]+).*/\1/' | sed 's/[^0-9]*//g'")
 	#currentCoreState=5
-
+	
+	if [ "$R9" != "" ]
+	then
+		sudo ./amdcovc $R9 | grep "Setting"
+	fi
 	
 	## If $currentCoreState equals zero (undefined)
 	## Use maxCoreState BUT IF ZERO means idle use the same
@@ -156,12 +167,6 @@ if [ $1 ]; then
 	 	# APPLY AT THE END
 		STR4="cmemclk:$GPUID=$MEMCLOCK"
 		OHGOD2=" --mem-state $maxMemState --mem-clock $MEMCLOCK"
-		if [ "$maxMemState" != "1" ]  
-		then
-			R9=""
-		else
-			R9="memclk:$GPUID=$MEMCLOCK"
-		fi
 	 fi
 	 fi
 	 
@@ -200,9 +205,11 @@ if [ $1 ]; then
 	# CURRENT_Clock Protection
 	sudo ./amdcovc memclk:$GPUID=$MEMCLOCK | grep "Setting"
 	sudo ./amdcovc ccoreclk:$GPUID=$CORECLOCK | grep "Setting"
-	if [ "$R9" != "" ]
-	then
-		sudo ./amdcovc $R9 | grep "Setting"
-	fi
+
+else
+
+echo "I'm R9"
+
+fi
 
 fi
