@@ -200,7 +200,8 @@ if [ $1 ]; then
 	# CURRENT_Clock Protection
 	sudo ./amdcovc memclk:$GPUID=$MEMCLOCK | grep "Setting"
 	sudo ./amdcovc ccoreclk:$GPUID=$CORECLOCK | grep "Setting"
-	if [ "$R9" != "" ]  
+	if [ "$R9" != "" ]
+	then
 		sudo ./amdcovc $R9 | grep "Setting"
 	fi
 
