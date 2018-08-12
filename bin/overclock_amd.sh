@@ -131,7 +131,10 @@ if [ $1 ]; then
 		
 		if [ "$maxMemState" != "2" ]  
 		then
-			OHGOD1=" --core-state $currentCoreState --core-clock $CORECLOCK"
+			#OHGOD1=" --core-state $currentCoreState --core-clock $CORECLOCK"
+			for corestate in 3 4 5 6; do
+				sudo ./ohgodatool -i $GPUID --core-state $corestate --core-clock $CORECLOCK
+			done
 		else
 			for corestate in 3 4 5 6 7; do
 				sudo ./ohgodatool -i $GPUID --core-state $corestate --core-clock $CORECLOCK
