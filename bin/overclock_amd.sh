@@ -94,10 +94,10 @@ if [ $1 ]; then
 			# set all voltage states from 1 upwards to xxx mV:
 			if [ "$MEMSTATES" != "2" ]  
 			then
-				sudo ./ohgodatool -i $GPUID --volt-state $currentVoltState --vddc-table-set $VDDC | cut -f1 -d"Usage"
+				sudo ./ohgodatool -i $GPUID --volt-state $currentVoltState --vddc-table-set $VDDC
 			else
 				for voltstate in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do  
-					sudo ./ohgodatool -i $GPUID --volt-state $voltstate --vddc-table-set $VDDC | cut -f1 -d"Usage"
+					sudo ./ohgodatool -i $GPUID --volt-state $voltstate --vddc-table-set $VDDC
 				done
 			fi			
 		fi
