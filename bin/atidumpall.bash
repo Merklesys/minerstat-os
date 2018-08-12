@@ -7,7 +7,7 @@ sudo rm -rf /home/minerstat/minerstat-os/bin/bios
 sudo mkdir /home/minerstat/minerstat-os/bin/bios
 sudo chmod -R 777 /home/minerstat/minerstat-os/bin/bios
 
-cd /home/minerstat/minerstat-os/bin/bios
+cd /home/minerstat/minerstat-os/bin
 
 if [ "$AMDDEVICE" != 0 ]
 then
