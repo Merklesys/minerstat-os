@@ -217,7 +217,7 @@ if [ "$CORECLOCK" != "skip" ]
 then
 if [ "$CORECLOCK" != "0" ] 
 then
-	sudo ./amdcovc coreclk:$GPUID=$CORECLOCK
+	sudo ./amdcovc coreclk:$GPUID=$CORECLOCK | grep "Setting"
 fi
 fi
 
@@ -225,7 +225,7 @@ if [ "$MEMCLOCK" != "skip" ]
 then
 if [ "$MEMCLOCK" != "0" ] 
 then
-	sudo ./amdcovc memclk:$GPUID=$MEMCLOCK
+	sudo ./amdcovc memclk:$GPUID=$MEMCLOCK | grep "Setting"
 fi
 fi
 
@@ -243,7 +243,7 @@ then
 
 # Divide by 1000 to get mV in V
 VCORE=$(($VDDC / 1000))
-sudo ./amdcovc vcore:$GPUID=$VCORE
+sudo ./amdcovc vcore:$GPUID=$VCORE | grep "Setting"
 
 fi
 fi
