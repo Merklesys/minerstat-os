@@ -92,7 +92,7 @@ if [ $1 ]; then
 		then
 			echo "--- Setting up VDDC Voltage GPU$GPUID (VS: $currentVoltState) ---"
 			# set all voltage states from 1 upwards to xxx mV:
-			if [ "$MEMSTATES" != "2" ]  
+			if [ "$maxMemState" != "2" ]  
 			then
 				sudo ./ohgodatool -i $GPUID --volt-state $currentVoltState --vddc-table-set $VDDC
 			else
@@ -114,7 +114,7 @@ if [ $1 ]; then
 			# VDDC Voltage + 50
 				echo ""
 				echo "--- Setting up VDDCI Voltage GPU$GPUID ---" 
-				sudo ./ohgodatool -i $GPUID --mem-state $maxMemState --vddci $VDDCI | grep "-" | cut -f1 -d"Usage"
+				sudo ./ohgodatool -i $GPUID --mem-state $maxMemState --vddci $VDDCI
 	 fi
 	 fi
 	 fi
@@ -129,7 +129,7 @@ if [ $1 ]; then
 		# APPLY AT THE END
 		STR5="coreclk:$GPUID=$CORECLOCK"
 		
-		if [ "$MEMSTATES" != "2" ]  
+		if [ "$maxMemState" != "2" ]  
 		then
 			OHGOD1=" --core-state $currentCoreState --core-clock $CORECLOCK"
 		else
