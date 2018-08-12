@@ -208,7 +208,44 @@ then
 
 else
 
-echo "I'm R9"
+echo "== SETTING GPU$GPUID ==="
+
+if [ "$CORECLOCK" != "skip" ] 
+then
+if [ "$CORECLOCK" != "0" ] 
+then
+	sudo ./amdcovc coreclk:$GPUID=$CORECLOCK | grep "Setting"
+fi
+fi
+
+if [ "$MEMCLOCK" != "skip" ] 
+then
+if [ "$MEMCLOCK" != "0" ] 
+then
+	sudo ./amdcovc memclk:$GPUID=$MEMCLOCK | grep "Setting"
+fi
+fi
+
+if [ "$FANSPEED" != 0 ]
+then
+	sudo ./amdcovc fanspeed:$GPUID=$FANSPEED | grep "Setting"
+else
+	sudo ./amdcovc fanspeed:$GPUID=70 | grep "Setting"
+fi
+
+if [ "$VDDC" != "skip" ]  
+then
+if [ "$VDDC" != "0" ]  
+then
+
+# Divide by 1000 to get mV in V
+VCORE=$(($VDDC / 1000))
+sudo ./amdcovc vcore:$GPUID=$VCORE | grep "Setting"
+
+fi
+fi
+
+echo ""
 
 fi
 
