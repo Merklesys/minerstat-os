@@ -128,7 +128,16 @@ if [ $1 ]; then
 	then
 		# APPLY AT THE END
 		STR5="coreclk:$GPUID=$CORECLOCK"
-	  	OHGOD1=" --core-state $currentCoreState --core-clock $CORECLOCK"
+		
+		if [ "$MEMSTATES" != "2" ]  
+		then
+			OHGOD1=" --core-state $currentCoreState --core-clock $CORECLOCK"
+		else
+			for corestate in 3 4 5 6 7; do
+				sudo ./ohgodatool -i $GPUID --core-state $corestate --core-clock $CORECLOCK
+			done
+		fi
+
 	 fi
 	 fi
 
