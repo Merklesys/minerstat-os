@@ -7,6 +7,8 @@ sudo rm -rf /home/minerstat/minerstat-os/bin/bios
 sudo mkdir /home/minerstat/minerstat-os/bin/bios
 sudo chmod -R 777 /home/minerstat/minerstat-os/bin/bios
 
+cd /home/minerstat/minerstat-os/bin/bios
+
 if [ "$AMDDEVICE" != 0 ]
 then
 	echo ""
@@ -15,9 +17,19 @@ then
 	exit 1
 fi
 
+echo "=== VBIOS DUMP ==="
+echo ""
+echo "Saving your gpu rom's to /home/minerstat/minerstat-os/bin/bios"
+echo ""
+
 for (( i=0; i < $AMDN; i++ )); do
-	echo "--- Exporting GPU$i VBIOS ---"
-	./atiflash -s $i "bios/"$i"_bios.rom"
+	echo "=== Exporting GPU$i VBIOS ==="
+	sudo ./atiflash -s $i "bios/"$i"_bios.rom"
 done
 
 sudo chmod -R 777 /home/minerstat/minerstat-os/bin/bios
+
+ls
+
+echo ""
+echo "==== BIOS DUMP DONE ==="
