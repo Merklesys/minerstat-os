@@ -14,7 +14,7 @@ export CUDA_DEVICE_ORDER=PCI_BUS_ID
 # libc-ares2
 sudo apt-get install libc-ares2 | grep "install"
 # Max performance
-export GPU_FORCE_64BIT_PTR=1
+#export GPU_FORCE_64BIT_PTR=1 #causes problems
 export GPU_USE_SYNC_OBJECTS=1
 export GPU_MAX_ALLOC_PERCENT=100
 export GPU_SINGLE_ALLOC_PERCENT=100
