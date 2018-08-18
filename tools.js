@@ -228,12 +228,33 @@ module.exports = {
         global.cpuSync = false;
         const telNet = require('net');
         var http = require('http');
-        // ETHMINER
-        if (gpuMiner.indexOf("ethminer") > -1) {
+        //if (gpuMiner.indexOf("ethminer") > -1) {
             // INTEGRATED TO THE CLIENT
             // START WITH --token ACCESKEY --worker WORKERNAME 
-            gpuSyncDone = true;
-            global.sync = true;
+        //    gpuSyncDone = true;
+        //    global.sync = true;
+        //}
+	// ETHMINER
+        if (gpuMiner.indexOf("ethminer") > -1) {
+            const ethMinerQuery = telNet.createConnection({
+                port: 3333
+            }, () => {
+                ethMinerQuery.write("{\"id\":0, \"jsonrpc\":\"2.0\", \"method\":\"miner_getstat1\"}\n");
+            });
+            ethMinerQuery.on('data', (data) => {
+                console.log(data.toString());
+                global.res_data = data.toString();
+                gpuSyncDone = true;
+                global.sync = true;
+                ethMinerQuery.end();
+            });
+            ethMinerQuery.on('error', () => {
+                gpuSyncDone = false;
+                global.sync = true;
+            });
+            ethMinerQuery.on('end', () => {
+                global.sync = true;
+            });
         }
         // BMINER
         if (gpuMiner.indexOf("bminer") > -1) {
