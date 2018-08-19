@@ -7,6 +7,12 @@ echo "--- Ctrl + C to abort it. ---"
 
 sleep 3
 
+# STOP MINING AND STUFF
+sudo killall screen
+killall screen
+killall node
+sudo chvt 1
+
 sudo apt-get --yes --force-yes purge snapd ubuntu-core-launcher squashfs-tools
 sudo apt-get --yes --force-yes update
 sudo apt-get --yes --force-yes install cuda-runtime-9-2
