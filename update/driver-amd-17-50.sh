@@ -11,6 +11,7 @@ sleep 3
 sudo killall screen
 killall screen
 killall node
+sleep 5
 sudo chvt 1
 
 # UPDATE
