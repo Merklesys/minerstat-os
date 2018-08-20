@@ -178,8 +178,12 @@ then
 	 if [ "$FANSPEED" != 0 ]
 	 then
 		OHGOD3=" --set-fanspeed $FANSPEED"
+		STR1="--set-fanspeed $FANSPEED"
+		STR2="fanspeed:$GPUID=$FANSPEED"
 	 else
 	 	OHGOD3=" --set-fanspeed 70"
+		STR1="--set-fanspeed 70"
+		STR2="fanspeed:$GPUID=70"
 	 fi
 
 	
