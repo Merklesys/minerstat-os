@@ -53,8 +53,11 @@ then
 	
 	if [ "$FANSPEED" != "skip" ]
 	then
+		if [ "$FANSPEED" != 0 ]
+	 	then
 		STR1="--set-fanspeed $FANSPEED";
 		STR2="fanspeed:$GPUID=$FANSPEED";
+		fi
 	fi
 	
 	## Detect state's
