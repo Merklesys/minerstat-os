@@ -1,4 +1,7 @@
-echo "-*- Expanding /dev/sda Partition -*-"
+DETECT="$(df -h | grep "20M" | grep "/dev/" | cut -f1 -d"2" | sed 's/dev//g' | sed 's/\///g')"
+PART=$DETECT"1"
+
+echo "-*- Expanding /dev/$DETECT Partition -*-"
 (
 echo d # Delete partition 
 echo 1 # Delete first
@@ -8,9 +11,9 @@ echo 1 # 1 Partition
 echo   # First sector (Accept default: 1)
 echo   # Last sector (Accept default: varies)
 echo w # Write changes
-) | sudo fdisk /dev/sda | grep "Created a new partition"
+) | sudo fdisk /dev/$DETECT | grep "Created a new partition"
 echo ""
-sudo resize2fs /dev/sda1
+sudo resize2fs /dev/$PART
 echo ""
-STR1="$(df -hm | grep sda1 | awk '{print $4}')" 
+STR1="$(df -hm | grep $PART | awk '{print $4}')" 
 echo "Free Space on the Disk: $STR1 MB"
