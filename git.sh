@@ -28,3 +28,9 @@ chmod -R 777 *
 fi
 
 sudo rm /home/minerstat/debug.txt
+
+# APPLY NEW BASHRC
+sudo cp -fR /home/minerstat/minerstat-os/core/.bashrc /home/minerstat
+sleep 1
+exec bash
+source ~/.bashrc
