@@ -42,11 +42,15 @@ RESPONSE="$(wget -qO- "https://api.minerstat.com/v2/os_listener.php?token=$TOKEN
 echo "RESPONSE: $RESPONSE"
 
 if [ $RESPONSE = "REBOOT" ]; then
-sudo reboot -f
+#sudo reboot -f
+sudo su -c "echo 1 > /proc/sys/kernel/sysrq";
+sudo su -c "echo b > /proc/sysrq-trigger"
 fi
 
 if [ $RESPONSE = "SHUTDOWN" ]; then
-sudo shutdown -h now
+#sudo shutdown -h now
+sudo su -c "echo 1 > /proc/sys/kernel/sysrq"; 
+sudo su -c "echo o > /proc/sysrq-trigger";
 fi
 
 if [ $RESPONSE = "null" ]; then
