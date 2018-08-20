@@ -49,8 +49,7 @@ if [ $1 ]; then
 	
 if [ "$isThisR9" != "R9" ]
 then
-	
-	
+
 	if [ "$FANSPEED" != "skip" ]
 	then
 		if [ "$FANSPEED" != 0 ]
@@ -182,6 +181,15 @@ then
 		STR2="fanspeed:$GPUID=$FANSPEED"
 	 else
 	 	OHGOD3=" --set-fanspeed 70"
+		STR1="--set-fanspeed 70"
+		STR2="fanspeed:$GPUID=70"
+	 fi
+	 
+	 if [ "$FANSPEED" != "skip" ]
+	 then
+		echo ""
+	 else
+		OHGOD3=" --set-fanspeed 70"
 		STR1="--set-fanspeed 70"
 		STR2="fanspeed:$GPUID=70"
 	 fi
