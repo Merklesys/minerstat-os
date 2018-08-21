@@ -12,7 +12,7 @@ sudo rm /etc/environment
 sudo cp /home/minerstat/minerstat-os/core/environment /etc/environment
 export CUDA_DEVICE_ORDER=PCI_BUS_ID
 # libc-ares2
-sudo apt-get install libc-ares2 | grep "install"
+sudo apt-get --yes --force-yes install libc-ares2 | grep "install"
 # Max performance
 #export GPU_FORCE_64BIT_PTR=1 #causes problems
 export GPU_USE_SYNC_OBJECTS=1
@@ -21,3 +21,5 @@ export GPU_SINGLE_ALLOC_PERCENT=100
 export GPU_MAX_HEAP_SIZE=100
 # .bashrc
 sudo cp -fR /home/minerstat/minerstat-os/core/.bashrc /home/minerstat
+# rocm (for later usage)
+# export HSA_ENABLE_SDMA=0
