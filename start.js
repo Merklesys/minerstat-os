@@ -157,6 +157,7 @@ module.exports = {
                     }
                 }
             } else {
+		console.log("ERROR => " + error);
                 console.log(chalk.hex('#ff9970').bold(getDateTime() + " MINERSTAT.COM: CONNECTION LOST  [" + global.worker + "]"));
             }
             console.log(chalk.gray(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
@@ -217,6 +218,7 @@ module.exports = {
                     console.log(chalk.gray(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
                 });
             } else {
+		console.log("ERROR => " + error);
                 clearInterval(global.timeout);
                 clearInterval(global.hwmonitor);
                 console.log(chalk.hex('#ff9970').bold(getDateTime() + " Waiting for connection.."));
