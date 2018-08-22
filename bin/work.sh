@@ -44,7 +44,6 @@ echo "FOUND AMD    :  $AMDDEVICE"
 echo "FOUND NVIDIA :  $NVIDIADEVICE"
 echo ""
 
-
 echo " "
 echo "-------- CONFIGURE NETWORK ADAPTERS --------------"
 sudo screen -A -m -d -S restartnet sleep 2; sudo /etc/init.d/networking restart
@@ -80,6 +79,7 @@ done
 echo ""
 echo "-------- AUTO UPDATE MINERSTAT ------------------"
 echo ""
+sudo update-pciids
 cd /home/minerstat/minerstat-os
 sudo sh git.sh
 echo ""
@@ -113,7 +113,7 @@ echo "Minerstat has been started in the background.."
 echo "Waiting for console output.."
 sleep 5
 sudo chvt 1
-sleep 9
+sleep 17
 screen -x minerstat-console
 sleep 1
 exec bash
