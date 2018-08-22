@@ -1,7 +1,7 @@
 DETECT="$(df -h | grep "20M" | grep "/dev/" | cut -f1 -d"2" | sed 's/dev//g' | sed 's/\///g')"
 PART=$DETECT"1"
 STR1="$(df -hm | grep $PART | awk '{print $4}')" 
-LIMIT=100 # MB
+LIMIT=400 # MB
 
 echo "-*- Expanding /dev/$DETECT Partition -*-"
 
