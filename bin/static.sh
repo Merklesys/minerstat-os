@@ -6,9 +6,9 @@ echo ""
 INTERFACE="$(sudo cat /proc/net/dev | tail -n1 | awk -F '\\:' '{print $1}')"
 
 # READ FROM network.txt
-ADDRESS=$(cat /media/storage/network.txt | grep 'IPADDRESS="' | sed 's/WIFISSID="//g' | sed 's/"//g')
-NETMASK=$(cat /media/storage/network.txt | grep 'NETMASK="' | sed 's/WIFISSID="//g' | sed 's/"//g')
-GATEWAY=$(cat /media/storage/network.txt | grep 'GATEWAY="' | sed 's/WIFISSID="//g' | sed 's/"//g')
+ADDRESS=$(cat /media/storage/network.txt | grep 'IPADDRESS="' | sed 's/IPADDRESS="//g' | sed 's/"//g')
+NETMASK=$(cat /media/storage/network.txt | grep 'NETMASK="' | sed 's/NETMASK="//g' | sed 's/"//g')
+GATEWAY=$(cat /media/storage/network.txt | grep 'GATEWAY="' | sed 's/GATEWAY="//g' | sed 's/"//g')
 
 echo "Configuring LAN for: "$INTERFACE
 echo ""
