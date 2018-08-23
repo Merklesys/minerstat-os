@@ -3,6 +3,9 @@ if ! screen -list | grep -q "dummy"; then
 screen -A -m -d -S dummy sleep 22176000
 screen -A -m -d -S listener sudo sh /home/minerstat/minerstat-os/core/init.sh
 
+# FIX CTRL + ALT + F1
+screen -A -m -d -S chvt sudo watch -n1 sudo chvt 1
+
 sudo find /var/log -type f -delete
 
 cd /home/minerstat/shellinabox
