@@ -25,7 +25,7 @@ COREOFFSET=$4
 STR1=""
 STR2=""
 STR3=""
-STR4="-c :0; sleep 2; sudo chvt 1"
+STR4="-c :0"
 
 # DETECTING VIDEO CARD FOR PERFORMACE LEVEL
 
@@ -98,5 +98,7 @@ fi
 FINISH="$(sudo nvidia-settings $STR1 $STR2 $STR3 $STR4)"
 echo $FINISH
 
+sleep 2
+sudo chvt 1
 
 fi
