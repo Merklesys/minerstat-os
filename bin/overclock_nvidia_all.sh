@@ -25,7 +25,7 @@ COREOFFSET=$4
 STR1=""
 STR2=""
 STR3=""
-STR4="-c :0"
+STR4="-c :0; sleep 2; sudo chvt 1"
 
 # DETECTING VIDEO CARD FOR PERFORMACE LEVEL
 
