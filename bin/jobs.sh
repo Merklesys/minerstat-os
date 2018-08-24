@@ -22,4 +22,4 @@ export GPU_MAX_HEAP_SIZE=100
 # .bashrc
 sudo cp -fR /home/minerstat/minerstat-os/core/.bashrc /home/minerstat
 # rocm (for later usage)
-# export HSA_ENABLE_SDMA=0
+export HSA_ENABLE_SDMA=0
