@@ -14,20 +14,7 @@ cd /home/minerstat/shellinabox
 # Fix Slow start bug
 sudo systemctl disable NetworkManager-wait-online.service
 
-NETBOT="$(cat /media/storage/network.txt | grep 'EVERYBOOT=' | tail -n 1 | sed 's/EVERYBOOT=//g')"
-SSID=$(cat /media/storage/network.txt | grep 'WIFISSID="' | sed 's/WIFISSID="//g' | sed 's/"//g')
-
 NVIDIA="$(nvidia-smi -L)"
-
-if [ ! -z "$NVIDIA" ]; then
-
-	if echo "$NVIDIA" | grep -iq "^GPU 0:" ;then
-
-	sudo chmod 777 /home/minerstat/minerstat-os/bin/OhGodAnETHlargementPill-r2
-	screen -A -m -d -S ethboost sudo /home/minerstat/minerstat-os/bin/OhGodAnETHlargementPill-r2
-
-	fi
-fi
 
 echo ""
 echo "-------- INITIALIZING FAKE DUMMY PLUG -------------"
@@ -49,7 +36,10 @@ echo ""
 
 echo " "
 echo "-------- CONFIGURE NETWORK ADAPTERS --------------"
-sudo screen -A -m -d -S restartnet sleep 2; sudo /etc/init.d/networking restart
+SSID=$(cat /media/storage/network.txt | grep 'WIFISSID="' | sed 's/WIFISSID="//g' | sed 's/"//g')
+DHCP=$(cat /media/storage/network.txt | grep 'DHCP="' | sed 's/DHCP="//g' | sed 's/"//g')
+
+#sudo screen -A -m -d -S restartnet sudo /etc/init.d/networking restart
 
 if [ "$SSID" != "" ]
 then
@@ -59,12 +49,13 @@ then
 
 else
 
-	if [ "$NETBOT" != "NO" ]
+	if [ "$DHCP" != "NO" ]
 	then
 		cd /home/minerstat/minerstat-os/bin
 		sudo sh dhcp.sh
 	else
-		echo "If you don't have connection set EVERYBOOT=YES parameter on the USB."
+		cd /home/minerstat/minerstat-os/bin
+		sudo sh static.sh
 	fi
 
 fi
@@ -114,9 +105,25 @@ screen -A -m -d -S minerstat-console sh /home/minerstat/minerstat-os/start.sh;
 echo ""
 echo "Minerstat has been started in the background.."
 echo "Waiting for console output.."
+
+if [ ! -z "$NVIDIA" ]; then
+
+	if echo "$NVIDIA" | grep -iq "^GPU 0:" ;then
+	
+	ETHPILLARGS=$(cat /media/storage/settings.txt 2>/dev/null | grep 'OHGODARGS="' | sed 's/OHGODARGS="//g' | sed 's/"//g')
+	ETHPILLDELAY=$(cat /media/storage/settings.txt 2>/dev/null | grep 'OHGODADELAY="' | sed 's/OHGODADELAY="//g' | sed 's/"//g')
+	
+	
+	
+	sudo chmod 777 /home/minerstat/minerstat-os/bin/OhGodAnETHlargementPill-r2
+	screen -A -m -d -S ethboost sudo /home/minerstat/minerstat-os/bin/OhGodAnETHlargementPill-r2 $ETHPILLARGS
+
+	fi
+fi
+
 sleep 5
 sudo chvt 1
-sleep 17
+sleep 9
 screen -x minerstat-console
 sleep 1
 exec bash
