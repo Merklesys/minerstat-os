@@ -8,8 +8,6 @@ sudo find /var/log -type f -delete
 # Fix Slow start bug
 sudo systemctl disable NetworkManager-wait-online.service
 
-NETBOT="$(cat /media/storage/network.txt | grep 'DHCP=' | tail -n 1 | sed 's/DHCP=//g')"
-
 echo ""
 echo "-------- INSTALLING FAKE DUMMY PLUG ------------"
 echo "Please wait.."
@@ -18,8 +16,12 @@ sudo update-grub
 sudo nvidia-xconfig -a --allow-empty-initial-configuration --cool-bits=28 --use-display-device="DFP-0" --connected-monitor="DFP-0" --enable-all-gpus
 sudo service gdm stop
 #screen -A -m -d -S display sudo X
-sleep 10
+sleep 5
+
+# FIX CTRL + ALT + F1
+sudo screen -A -m -d -S chvt sudo watch -n1 sudo chvt 1
 sudo chvt 1
+
 echo ""
 
 #echo "-------- OVERCLOCKING ---------------------------"
@@ -27,13 +29,29 @@ echo ""
 #sudo sh overclock.sh
 
 echo " "
-echo "-------- AUTO CONFIGURE NETWORK ADAPTERS --------"
-if [ "$NETBOT" != "NO" ]
+echo "-------- CONFIGURE NETWORK ADAPTERS --------------"
+SSID=$(cat /media/storage/network.txt | grep 'WIFISSID="' | sed 's/WIFISSID="//g' | sed 's/"//g')
+DHCP=$(cat /media/storage/network.txt | grep 'DHCP="' | sed 's/DHCP="//g' | sed 's/"//g')
+
+#sudo screen -A -m -d -S restartnet sudo /etc/init.d/networking restart
+
+if [ "$SSID" != "" ]
 then
-cd /home/minerstat/minerstat-os/bin
-sudo sh dhcp.sh
+
+	cd /home/minerstat/minerstat-os/core
+	sudo sh wifi.sh
+
 else
-echo "If you don't have connection set DHCP=YES parameter on the USB."
+
+	if [ "$DHCP" != "NO" ]
+	then
+		cd /home/minerstat/minerstat-os/bin
+		sudo sh dhcp.sh
+	else
+		cd /home/minerstat/minerstat-os/bin
+		sudo sh static.sh
+	fi
+
 fi
 
 sleep 2
