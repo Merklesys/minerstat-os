@@ -383,46 +383,25 @@ module.exports = {
         }
         //// GET CONFIG TO YOUR DEFAULT MINER
         async function dlconf(miner, clientType) {
-            if (miner.indexOf("bminer") > -1) {
-                global.file = "clients/" + miner + "/start.bash";
-            }
-            if (miner.indexOf("ewbf") > -1) {
-                global.file = "clients/" + miner + "/start.bash";
-            }
-            if (miner.indexOf("ethminer") > -1) {
-                global.file = "clients/" + miner + "/start.bash";
-            }
-            if (miner.indexOf("ccminer") > -1) {
-                global.file = "clients/" + miner + "/start.bash";
-            }
-            if (miner.indexOf("z-enemy") > -1) {
-                global.file = "clients/" + miner + "/start.bash";
-            }
-	        if (miner.indexOf("cryptodredge") > -1) {
-                global.file = "clients/" + miner + "/start.bash";
-            }
-            if (miner.indexOf("claymore") > -1) {
-                global.file = "clients/" + miner + "/config.txt";
-            }
-	        if (miner.indexOf("trex") > -1) {
-                global.file = "clients/" + miner + "/config.json";
-            }
-            if (miner.indexOf("xmrig") > -1) {
-                global.file = "clients/" + miner + "/config.json";
-            }
-	        if (miner.indexOf("lolminer") > -1) {
-                global.file = "clients/" + miner + "/user_config.json";
-            }
-            if (miner.indexOf("sgminer") > -1) {
-                global.file = "clients/" + miner + "/sgminer.conf";
-            }
-            if (miner.indexOf("zm-zec") > -1) {
-                global.file = "clients/" + miner + "/start.bash";
-            }
-            if (miner.indexOf("xmr-stak") > -1) {
-                global.file = "clients/" + miner + "/pools.txt";
-            }
-            needle.get('https://api.minerstat.com/v2/conf/gpu/' + global.accesskey + '/' + global.worker + '/' + miner.toLowerCase(), function(error, response) {
+            const MAPPINGS = { 
+                "bminer": "start.bash",
+                "ewbf": "start.bash",
+                "ethminer": "start.bash",
+                "ccminer": "start.bash",
+                "z-enemy": "start.bash",
+                "cryptodredge": "start.bash",
+                "claymore": "config.txt",
+                "trex": "config.json",
+                "xmrig": "config.json",
+                "lolminer": "user_config.json",
+                "sgminer": "sgminer.conf",
+                "zm-zec": "start.bash",
+                "xmr-stak": "pools.txt"
+            };
+
+            global.file = "clients/" + miner + "/" + MAPPINGS[miner];
+
+	    needle.get('https://api.minerstat.com/v2/conf/gpu/' + global.accesskey + '/' + global.worker + '/' + miner.toLowerCase(), function(error, response) {
                 if (clientType == "cpu") {
                     global.chunkCpu = response.body;
                 } else {
