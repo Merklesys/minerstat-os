@@ -113,12 +113,14 @@ if [ ! -z "$NVIDIA" ]; then
 	if echo "$NVIDIA" | grep -iq "^GPU 0:" ;then
 	
 	ETHPILLARGS=$(cat /media/storage/settings.txt 2>/dev/null | grep 'OHGODARGS="' | sed 's/OHGODARGS="//g' | sed 's/"//g')
-	ETHPILLDELAY=$(cat /media/storage/settings.txt 2>/dev/null | grep 'OHGODADELAY="' | sed 's/OHGODADELAY="//g' | sed 's/"//g')
+	ETHPILLDELAY=$(cat /media/storage/settings.txt 2>/dev/null | grep 'OHGODADELAY=' | sed 's/[^0-9]*//g')
 	
-	
-	
+	if [ "$ETHPILLDELAY" != "999" ]
+	then
+	cd /home/minerstat/minerstat-os/bin
 	sudo chmod 777 /home/minerstat/minerstat-os/bin/OhGodAnETHlargementPill-r2
-	screen -A -m -d -S ethboost sudo /home/minerstat/minerstat-os/bin/OhGodAnETHlargementPill-r2 $ETHPILLARGS
+	screen -A -m -d -S ethboost sudo sh ethpill.sh $ETHPILLARGS $ETHPILLDELAY
+	fi
 
 	fi
 fi
