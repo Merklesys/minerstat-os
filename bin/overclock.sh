@@ -57,13 +57,9 @@ fi
 
 if [ ! -z "$DOAMD" ]; then
 
-	FILE="/sys/class/drm/card0/device/pp_dpm_sclk" 
-	if [ -f "$FILE" ]
-	then
-		STARTS=0
-	else
-		STARTS=1
-	fi
+	START_ID="$(sudo ./amdcovc | grep "Adapter 0:" | cut -f1 -d':' | sed 's/[^0-9]*//g')"
+	# First AMD GPU ID. 0 OR 1 Usually
+	STARTS=$START_ID
 	
 	echo "STARTS WITH ID: $STARTS"
 	
