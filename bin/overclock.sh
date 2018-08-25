@@ -57,7 +57,7 @@ fi
 
 if [ ! -z "$DOAMD" ]; then
 
-	START_ID="$(sudo ./amdcovc | grep "Adapter 0:" | cut -f1 -d':' | sed 's/[^0-9]*//g')"
+	START_ID="$(sudo ./amdcovc | cut -f1 -d':' | sed 's/[^0-9]*//g')"
 	# First AMD GPU ID. 0 OR 1 Usually
 	STARTS=$START_ID
 	
