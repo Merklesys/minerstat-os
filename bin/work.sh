@@ -74,12 +74,12 @@ echo ""
 echo "-------- AUTO UPDATE MINERSTAT ------------------"
 echo ""
 sudo update-pciids
-echo "Moving MSOS config.js to / (LINUX)"
-sudo cp -rf "/media/storage/config.js" "/home/minerstat/minerstat-os/"
 cd /home/minerstat/minerstat-os
 sudo sh git.sh
 echo ""
 sudo chmod -R 777 /home/minerstat/minerstat-os/*
+echo "Moving MSOS config.js to / (LINUX)"
+sudo cp -rf "/media/storage/config.js" "/home/minerstat/minerstat-os/"
 
 echo " "
 echo "-------- OVERCLOCKING ---------------------------"
