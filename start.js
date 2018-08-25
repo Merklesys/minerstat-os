@@ -385,16 +385,24 @@ module.exports = {
         async function dlconf(miner, clientType) {
             const MAPPINGS = { 
                 "bminer": "start.bash",
-                "ewbf": "start.bash",
+                "ewbf-zec": "start.bash",
+		"ewbf-zhash": "start.bash",
                 "ethminer": "start.bash",
-                "ccminer": "start.bash",
+                "ccminer-alexis": "start.bash",
+		"ccminer-djm34": "start.bash",
+		"ccminer-krnlx": "start.bash",
+		"ccminer-tpruvot": "start.bash",
+		"ccminer-x16r": "start.bash",
                 "z-enemy": "start.bash",
                 "cryptodredge": "start.bash",
-                "claymore": "config.txt",
+                "claymore-eth": "config.txt",
+		"claymore-zec": "config.txt",
+		"claymore-xmr": "config.txt",
                 "trex": "config.json",
                 "xmrig": "config.json",
                 "lolminer": "user_config.json",
-                "sgminer": "sgminer.conf",
+                "sgminer-gm": "sgminer.conf",
+		"sgminer-avermore": "sgminer.conf",
                 "zm-zec": "start.bash",
                 "xmr-stak": "pools.txt"
             };
