@@ -3,12 +3,6 @@
 */
 "use strict";
 global.path = __dirname;
-var colors = require('colors');
-var exec = require('child_process').exec;
-var fs = require('fs');
-var path = require('path');
-var pump = require('pump');
-var sleep = require('sleep');
 global.timeout;
 global.gputype;
 global.configtype = "simple";
@@ -21,45 +15,25 @@ global.dlGpuFinished;
 global.dlCpuFinished;
 global.chunkCpu;
 global.watchnum;
-var tools = require('./tools.js');
-var monitor = require('./monitor.js');
-var settings = require("./config.js");
+var colors = require('colors'),
+    exec = require('child_process').exec,
+    fs = require('fs'),
+    path = require('path'),
+    pump = require('pump'),
+    sleep = require('sleep'),
+    tools = require('./tools.js'),
+    monitor = require('./monitor.js'),
+    settings = require("./config.js");
 const chalk = require('chalk');
-// CONFIG PROTECTION
-if (global.accesskey === "CHANGEIT" || global.accesskey === "") {
-    var readlineSync = require('readline-sync');
-    console.log("-*- If you see Segmentation fault error:");
-    console.log("Type");
-    console.log("(¯`·.¸¸.·´¯`·.¸¸.-> sudo node start");
-    console.log("");
-    console.log("After fill in your details");
-    var qtoken = readlineSync.question("Please enter my.minerstat.com AccessKey: ");
-    var qworker = readlineSync.question('Please enter my.minerstat.com Worker: ');
-    var fstream = require('fs');
-    var stream = fstream.createWriteStream("/media/storage/config.js");
-    stream.once('open', function(fd) {
-        stream.write("global.accesskey = '" + qtoken + "';\n");
-        stream.write("global.worker = '" + qworker + "';\n");
-        stream.write("global.path = __dirname;");
-        stream.end();
-    });
-    global.accesskey = qtoken;
-    global.worker = qworker;
-    global.reboot = "yes";
-    console.log(chalk.gray('Installation Done!'));
-    console.log(chalk.gray('Please remove your HDMI cables and press ENTER to REBOOT.'));
-    console.log(chalk.gray(''));
-    var rreboot = readlineSync.question('Press Enter to REBOOT the System');
-}
 /*
 	CATCH ERROR's
 */
 process.on('SIGINT', function() {
+    var execProc = require('child_process').exec,
+        childrenProc;
     console.log("Ctrl + C --> Closing running miner & minerstat");
     tools.killall();
-    var childz;
-    var execz = require('child_process').exec;
-    childz = execz("mstop", function(error, stdout, stderr) {});
+    childrenProc = execProc("SID=$(screen -list | grep minerstat-console | cut -f1 -d'.' | sed 's/[^0-9]*//g'); screen -X -S $SID'.minerstat-console' quit;", function(error, stdout, stderr) {});
     process.exit();
 });
 process.on('uncaughtException', function(err) {
@@ -73,31 +47,11 @@ process.on('uncaughtException', function(err) {
 })
 process.on('unhandledRejection', (reason, p) => {});
 
-function restartNode() {
-   global.watchnum ++;
-   if (global.watchnum == 3) {
-      console.log(chalk.hex('#ff9970').bold(getDateTime() + " minerstat: Error detected  [" + global.worker + "]"));     
-      console.log(chalk.hex('#ff9970').bold(getDateTime() + " minerstat: Restarting..    [" + global.worker + "]"));                  
-      clearInterval(global.timeout);
-      clearInterval(global.hwmonitor);
-      tools.restart();
-   }
-   if (global.watchnum == 6) {
-      console.log(chalk.hex('#ff9970').bold(getDateTime() + " minerstat: Error detected  [" + global.worker + "]"));     
-      console.log(chalk.hex('#ff9970').bold(getDateTime() + " minerstat: Rebooting..     [" + global.worker + "]"));                  
-      clearInterval(global.timeout);
-      clearInterval(global.hwmonitor);
-      var exec = require('child_process').exec;
-      var queryBoot = exec("sudo reboot -f", function(error, stdout, stderr) {
-      	console.log("System going to reboot now..");
-      });
-   }
-}
 function getDateTime() {
-    var date = new Date();
-    var hour = date.getHours();
-    var min = date.getMinutes();
-    var sec = date.getSeconds();
+    var date = new Date(),
+        hour = date.getHours(),
+        min = date.getMinutes(),
+        sec = date.getSeconds();
     hour = (hour < 10 ? "0" : "") + hour;
     min = (min < 10 ? "0" : "") + min;
     sec = (sec < 10 ? "0" : "") + sec;
@@ -115,10 +69,10 @@ module.exports = {
     },
     callBackHardware: function(hwdatas, gpuSyncDone, cpuSyncDone, hwPower) {
         // WHEN HARDWARE INFO FETCHED SEND BOTH RESPONSE TO THE SERVER
-        var sync = global.sync;
-        var res_data = global.res_data;
-        var cpu_data = global.cpu_data;
-        var power_data = hwPower;
+        var sync = global.sync,
+            res_data = global.res_data,
+            cpu_data = global.cpu_data,
+            power_data = hwPower;
         //console.log(res_data);         //SHOW SYNC OUTPUT
         // SEND LOG TO SERVER                         
         var request = require('request');
@@ -132,18 +86,17 @@ module.exports = {
             }
         }, function(error, response, body) {
             console.log(chalk.gray("•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`•.•´¯`• "));
-            if (error == null)  {
+            if (error == null) {
                 // Process Remote Commands
                 var tools = require('./tools.js');
-                tools.remotecommand(body);
+                tools.remotecommand(body.replace(" ", ""));
                 // Display GPU Sync Status
-                var sync = gpuSyncDone;
-                var cpuSync = cpuSyncDone;
+                var sync = gpuSyncDone,
+                    cpuSync = cpuSyncDone;
                 if (sync.toString() === "true") {
-		    global.watchnum = 0;
+                    global.watchnum = 0;
                     console.log(chalk.green.bold(getDateTime() + " minerstat: " + global.client + " Updated  [" + global.worker + "]"));
                 } else {
-		    restartNode();
                     console.log(chalk.hex('#ff9970').bold(getDateTime() + " minerstat: ERROR  [" + global.worker + "]"));
                     console.log(chalk.hex('#ff9970').bold(getDateTime() + " REASON => " + global.client + " not hashing!"));
                 }
@@ -151,13 +104,12 @@ module.exports = {
                     if (cpuSync.toString() === "true") {
                         console.log(chalk.green.bold(getDateTime() + " minerstat: " + global.cpuDefault.toLowerCase() + " Updated  [" + global.worker + "]"));
                     } else {
-			//restartNode();
                         console.log(chalk.hex('#ff9970').bold(getDateTime() + " minerstat: ERROR  [" + global.worker + "]"));
                         console.log(chalk.hex('#ff9970').bold(getDateTime() + " REASON => " + global.cpuDefault.toLowerCase() + " not hashing!"));
                     }
                 }
             } else {
-		console.log("ERROR => " + error);
+                console.log("ERROR => " + error);
                 console.log(chalk.hex('#ff9970').bold(getDateTime() + " MINERSTAT.COM: CONNECTION LOST  [" + global.worker + "]"));
             }
             console.log(chalk.gray(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
@@ -188,7 +140,7 @@ module.exports = {
         global.cpu_data = "";
         global.dlGpuFinished = false;
         global.dlCpuFinished = false;
-	global.watchnum = 0;
+        global.watchnum = 0;
         console.log(chalk.gray(getDateTime() + " WORKER: " + global.worker));
         // GET DEFAULT CLIENT AND SEND STATUS TO THE SERVER
         sleep.sleep(1);
@@ -218,7 +170,7 @@ module.exports = {
                     console.log(chalk.gray(" .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`• .•´¯`•"));
                 });
             } else {
-		console.log("ERROR => " + error);
+                console.log("ERROR => " + error);
                 clearInterval(global.timeout);
                 clearInterval(global.hwmonitor);
                 console.log(chalk.hex('#ff9970').bold(getDateTime() + " Waiting for connection.."));
@@ -227,10 +179,10 @@ module.exports = {
             }
         });
         if (global.reboot === "yes") {
-            var childp = require('child_process').exec;
-            var queries = childp("sudo reboot -f", function(error, stdout, stderr) {
-                console.log("System going to reboot now..");
-            });
+            var childp = require('child_process').exec,
+                queries = childp("sudo reboot -f", function(error, stdout, stderr) {
+                    console.log("System going to reboot now..");
+                });
         }
         // Remove directory recursively
         function deleteFolder(dir_path) {
@@ -248,9 +200,12 @@ module.exports = {
         }
         //// DOWNLOAD LATEST STABLE VERSION AVAILABLE FROM SELECTED minerCpu
         async function downloadMiners(gpuMiner, isCpu, cpuMiner) {
-            var gpuServerVersion, cpuServerVersion, gpuLocalVersion, cpuLocalVersion, dlGpu, dlCpu;
-            dlGpu = false;
-            dlCpu = false;
+            var gpuServerVersion,
+                cpuServerVersion,
+                gpuLocalVersion,
+                cpuLocalVersion,
+                dlGpu = false,
+                dlCpu = false;
             // Create clients folder if not exist
             var dir = 'clients';
             if (!fs.existsSync(dir)) {
@@ -320,11 +275,11 @@ module.exports = {
         }
         // Function for add permissions to run files
         function applyChmod(minerName, minerType) {
-            var chmodQuery = require('child_process').exec;
-            var setChmod = chmodQuery("cd /home/minerstat/minerstat-os/; sudo chmod -R 777 *", function(error, stdout, stderr) {
-                console.log("New permissions applied to the downloaded files => 0777");
-                dlconf(minerName, minerType);
-            });
+            var chmodQuery = require('child_process').exec,
+                setChmod = chmodQuery("cd /home/minerstat/minerstat-os/; sudo chmod -R 777 *", function(error, stdout, stderr) {
+                    console.log("New permissions applied to the downloaded files => 0777");
+                    dlconf(minerName, minerType);
+                });
         }
         // Callback downloadMiners(<#gpuMiner#>, <#isCpu#>, <#cpuMiner#>)
         function callbackVersion(dlGpu, isCpu, dlCpu, callbackType, gpuMiner, cpuMiner, gpuServerVersion, cpuServerVersion) {
@@ -383,51 +338,44 @@ module.exports = {
         }
         //// GET CONFIG TO YOUR DEFAULT MINER
         async function dlconf(miner, clientType) {
-            const MAPPINGS = { 
+        // MINER DEFAULT CONFIG file
+        // IF START ARGS start.bash if external config then use that.
+            const MINER_CONFIG_FILE = {
                 "bminer": "start.bash",
                 "ewbf-zec": "start.bash",
-		"ewbf-zhash": "start.bash",
+                "ewbf-zhash": "start.bash",
                 "ethminer": "start.bash",
                 "ccminer-alexis": "start.bash",
-		"ccminer-djm34": "start.bash",
-		"ccminer-krnlx": "start.bash",
-		"ccminer-tpruvot": "start.bash",
-		"ccminer-x16r": "start.bash",
+                "ccminer-djm34": "start.bash",
+                "ccminer-krnlx": "start.bash",
+                "ccminer-tpruvot": "start.bash",
+                "ccminer-x16r": "start.bash",
                 "z-enemy": "start.bash",
                 "cryptodredge": "start.bash",
                 "claymore-eth": "config.txt",
-		"claymore-zec": "config.txt",
-		"claymore-xmr": "config.txt",
+                "claymore-zec": "config.txt",
+                "claymore-xmr": "config.txt",
                 "trex": "config.json",
                 "xmrig": "config.json",
                 "lolminer": "user_config.json",
                 "sgminer-gm": "sgminer.conf",
-		"sgminer-avermore": "sgminer.conf",
+                "sgminer-avermore": "sgminer.conf",
                 "zm-zec": "start.bash",
                 "xmr-stak": "pools.txt"
             };
-
-            global.file = "clients/" + miner + "/" + MAPPINGS[miner];
-
-	    needle.get('https://api.minerstat.com/v2/conf/gpu/' + global.accesskey + '/' + global.worker + '/' + miner.toLowerCase(), function(error, response) {
+            global.file = "clients/" + miner + "/" + MINER_CONFIG_FILE[miner];
+            needle.get('https://api.minerstat.com/v2/conf/gpu/' + global.accesskey + '/' + global.worker + '/' + miner.toLowerCase(), function(error, response) {
                 if (clientType == "cpu") {
                     global.chunkCpu = response.body;
                 } else {
                     global.chunk = response.body;
                 }
-                if (miner != "ewbf-zec" &&  miner != "bminer" && miner != "ewbf-zhash" && miner != "ethminer" && miner != "zm-zec" && miner != "z-enemy" && miner != "cryptodredge" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
+                if (miner != "ewbf-zec" && miner != "bminer" && miner != "ewbf-zhash" && miner != "ethminer" && miner != "zm-zec" && miner != "z-enemy" && miner != "cryptodredge" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
                     var writeStream = fs.createWriteStream(global.path + "/" + global.file);
-                    var str = response.body;
-                    if (miner.indexOf("sgminer") > -1) {
-                        str = JSON.stringify(str);
-                    }
-		            if (miner.indexOf("trex") > -1) {
-                        str = JSON.stringify(str);
-                    }
-		            if (miner.indexOf("lolminer") > -1) {
-                        str = JSON.stringify(str);
-                    }
-                    if (miner.indexOf("xmrig") > -1) {
+                    // This ARRAY only need to fill if the miner using JSON config.
+                    var str = response.body,
+                        stringifyArray = ["sgminer", "sgminer-gm", "sgminer-avermore", "trex", "lolminer", "xmrig"];
+                    if (stringifyArray.indexOf(miner) > -1) {
                         str = JSON.stringify(str);
                     }
                     writeStream.write("" + str);

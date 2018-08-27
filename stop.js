@@ -5,10 +5,9 @@
 /*
 	CATCH ERROR's
 */
-process.on('SIGINT', function() { });
-process.on('uncaughtException', function(err) { })
+process.on('SIGINT', function() {});
+process.on('uncaughtException', function(err) {})
 process.on('unhandledRejection', (reason, p) => {});
-
 const fkill = require('fkill');
 var exec = require('child_process').exec;
 try {
@@ -28,6 +27,5 @@ try {
     fkill('xmrig').then(() => {});
     fkill('z-enemy').then(() => {});
 } catch (e) {}
-var query = exec("killall node", function(error, stdout, stderr) {
-    console.log("Terminated");
-});
+var killScreen = exec("SID=$(screen -list | grep minerstat-console | cut -f1 -d'.' | sed 's/[^0-9]*//g'); screen -X -S $SID'.minerstat-console'", function(error, stdout, stderr) {}),
+    killNode = exec("killall node", function(error, stdout, stderr) {});
