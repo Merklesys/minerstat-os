@@ -33,13 +33,14 @@ function runMiner(miner, execFile, args, plus) {
     }
 }
 function restartNode() {
+	var main = require('./start.js');
     global.watchnum++;
-    if (global.watchnum == 3) {
+    if (global.watchnum == 2 || global.watchnum == 4) {
         console.log(chalk.hex('#ff9970').bold(getDateTime() + " minerstat: Error detected  [" + global.worker + "]"));
         console.log(chalk.hex('#ff9970').bold(getDateTime() + " minerstat: Restarting software..    [" + global.worker + "]"));
         clearInterval(global.timeout);
         clearInterval(global.hwmonitor);
-        tools.restart();
+        main.main();
     }
     if (global.watchnum == 6) {
         console.log(chalk.hex('#ff9970').bold(getDateTime() + " minerstat: Error detected  [" + global.worker + "]"));
@@ -47,9 +48,7 @@ function restartNode() {
         clearInterval(global.timeout);
         clearInterval(global.hwmonitor);
         var exec = require('child_process').exec,
-            queryBoot = exec("sudo su -c 'echo 1 > /proc/sys/kernel/sysrq'; sudo su -c 'echo b > /proc/sysrq-trigger';", function(error, stdout, stderr) {
-                console.log("System going to reboot now..");
-            });
+            queryBoot = exec("sudo su -c 'echo 1 > /proc/sys/kernel/sysrq'; sudo su -c 'echo b > /proc/sysrq-trigger';", function(error, stdout, stderr) {});
     }
 }
 const MINER_JSON = {
@@ -314,7 +313,6 @@ module.exports = {
         killall: function() {
             const fkill = require('fkill');
             try {
-                var killQuery = require('child_process').exec;
                 fkill('bminer').then(() => {});
                 fkill('ccminer').then(() => {});
                 fkill('cpuminer').then(() => {});
@@ -332,8 +330,9 @@ module.exports = {
                 fkill('xmrig').then(() => {});
                 fkill('xmrig').then(() => {}); // yes twice
                 fkill('z-enemy').then(() => {});
-                var killQueryProc = killQuery("sudo kill $(sudo lsof -t -i:42000)", function(error, stdout, stderr) {});
-                var killQueryProcPort = killQuery("sudo ufw allow 42000", function(error, stdout, stderr) {});
+                var killQuery = require('child_process').exec,
+                    killQueryProc = killQuery("sudo kill $(sudo lsof -t -i:42000)", function(error, stdout, stderr) {}),
+                    killQueryProcPort = killQuery("sudo ufw allow 42000", function(error, stdout, stderr) {});
             } catch (err) {}
         },
         /*
