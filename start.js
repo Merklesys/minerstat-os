@@ -14,7 +14,7 @@ global.minerCpu;
 global.dlGpuFinished;
 global.dlCpuFinished;
 global.chunkCpu;
-global.watchnum;
+global.watchnum = 0;
 var colors = require('colors'),
     exec = require('child_process').exec,
     fs = require('fs'),
