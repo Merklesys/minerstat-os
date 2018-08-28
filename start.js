@@ -140,7 +140,7 @@ module.exports = {
         global.cpu_data = "";
         global.dlGpuFinished = false;
         global.dlCpuFinished = false;
-        global.watchnum = 0;
+        //global.watchnum = 0;
         console.log(chalk.gray(getDateTime() + " WORKER: " + global.worker));
         // GET DEFAULT CLIENT AND SEND STATUS TO THE SERVER
         sleep.sleep(1);
