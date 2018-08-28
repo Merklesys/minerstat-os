@@ -25,6 +25,8 @@ try {
     fkill('CryptoDredge').then(() => {});
     fkill('lolMiner').then(() => {});
     fkill('xmrig').then(() => {});
+    fkill('xmrig').then(() => {}); // yes twice
+    fkill('xmrig-amd').then(() => {});
     fkill('z-enemy').then(() => {});
 } catch (e) {}
 var killScreen = exec("SID=$(screen -list | grep minerstat-console | cut -f1 -d'.' | sed 's/[^0-9]*//g'); screen -X -S $SID'.minerstat-console'", function(error, stdout, stderr) {}),

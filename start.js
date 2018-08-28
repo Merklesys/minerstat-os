@@ -357,6 +357,7 @@ module.exports = {
                 "claymore-xmr": "config.txt",
                 "trex": "config.json",
                 "xmrig": "config.json",
+                "xmrig-amd": "start.bash",
                 "lolminer": "user_config.json",
                 "sgminer-gm": "sgminer.conf",
                 "sgminer-avermore": "sgminer.conf",
@@ -370,7 +371,7 @@ module.exports = {
                 } else {
                     global.chunk = response.body;
                 }
-                if (miner != "ewbf-zec" && miner != "bminer" && miner != "ewbf-zhash" && miner != "ethminer" && miner != "zm-zec" && miner != "z-enemy" && miner != "cryptodredge" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
+                if (miner != "ewbf-zec" && miner != "bminer" && miner != "xmrig-amd" && miner != "ewbf-zhash" && miner != "ethminer" && miner != "zm-zec" && miner != "z-enemy" && miner != "cryptodredge" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
                     var writeStream = fs.createWriteStream(global.path + "/" + global.file);
                     // This ARRAY only need to fill if the miner using JSON config.
                     var str = response.body,

@@ -194,6 +194,13 @@ const MINER_JSON = {
         "apiPath": "/",
         "apiType": "curl"
     },
+    "xmrig-amd": {
+        "args": "auto",
+        "execFile": "xmrig-amd",
+        "apiPort": 4028,
+        "apiPath": "/",
+        "apiType": "http"
+    },
     "cryptodredge": {
         "args": "auto",
         "execFile": "CryptoDredge",
@@ -331,6 +338,7 @@ module.exports = {
                 fkill('lolMiner').then(() => {});
                 fkill('xmrig').then(() => {});
                 fkill('xmrig').then(() => {}); // yes twice
+                fkill('xmrig-amd').then(() => {});
                 fkill('z-enemy').then(() => {});
                 var killQuery = require('child_process').exec,
                     killQueryProc = killQuery("sudo kill $(sudo lsof -t -i:42000)", function(error, stdout, stderr) {}),
