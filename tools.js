@@ -42,13 +42,15 @@ function restartNode() {
         clearInterval(global.hwmonitor);
         main.main();
     }
-    if (global.watchnum == 6) {
+    if (global.watchnum >= 6) {
         console.log(chalk.hex('#ff9970').bold(getDateTime() + " minerstat: Error detected  [" + global.worker + "]"));
         console.log(chalk.hex('#ff9970').bold(getDateTime() + " minerstat: Rebooting..     [" + global.worker + "]"));
         clearInterval(global.timeout);
         clearInterval(global.hwmonitor);
-        var exec = require('child_process').exec,
-            queryBoot = exec("sudo su -c 'echo 1 > /proc/sys/kernel/sysrq'; sudo su -c 'echo b > /proc/sysrq-trigger';", function(error, stdout, stderr) {});
+        var exec = require('child_process').exec;
+        var queryBoot = exec("sudo su -c 'echo 1 > /proc/sys/kernel/sysrq'; sudo su -c 'echo b > /proc/sysrq-trigger';", function(error, stdout, stderr) {
+		console.log(stdout + " " + stderr);
+	});
     }
 }
 const MINER_JSON = {
