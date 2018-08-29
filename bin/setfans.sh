@@ -38,17 +38,25 @@ if [ ! $1 ]; then
 
 	if [ "$AMDDEVICE" -gt "0" ]; then
 	
-	FILE="/sys/class/drm/card0/device/pp_dpm_sclk" 
+	START_ID="$(sudo ./amdcovc | grep "Adapter" | cut -f1 -d':' | sed '1q' | sed 's/[^0-9]//g')"
+	# First AMD GPU ID. 0 OR 1 Usually
+	STARTS=$START_ID
 	
-	if [ -f "$FILE" ]
-	then
-		STARTS=0
-	else
-		STARTS=1
-	fi
-			echo "STARTS WITH ID: $STARTS"
+	echo "STARTS WITH ID: $STARTS"
 	
-			wget -qO dofans.sh "https://api.minerstat.com/v2/getfans.php?type=amd&token=$TOKEN&worker=$WORKER&nums=$AMDDEVICE&starts=$STARTS"
+	i=0
+	SKIP=""
+	while [ $i -le $AMDDEVICE ]; do
+ 		if [ -f "/sys/class/drm/card$i/device/pp_dpm_sclk" ]		 	
+ 		then		
+ 			SKIP=$SKIP	
+ 		else
+ 			SKIP=$SKIP"-$i"	
+ 		fi		
+		i=$(($i+1))
+	done
+	
+			wget -qO dofans.sh "https://api.minerstat.com/v2/getfans.php?type=amd&token=$TOKEN&worker=$WORKER&nums=$AMDDEVICE&starts=$STARTS&skip=$SKIP"
 			sleep 1.5
 			sudo chmod 777 dofans.sh
 			sleep 0.5
