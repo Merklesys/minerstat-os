@@ -11,6 +11,7 @@ sudo systemctl disable NetworkManager-wait-online.service
 sudo rm /etc/environment
 sudo cp /home/minerstat/minerstat-os/core/environment /etc/environment
 export CUDA_DEVICE_ORDER=PCI_BUS_ID
+sudo su -c "export CUDA_DEVICE_ORDER=PCI_BUS_ID"
 # libc-ares2 && libuv1-dev
 sudo apt-get --yes --force-yes install libc-ares2 libuv1-dev | grep "install"
 # Max performance
