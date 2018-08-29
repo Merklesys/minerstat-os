@@ -72,7 +72,19 @@ if [ ! -z "$DOAMD" ]; then
 	
 	echo "STARTS WITH ID: $STARTS"
 	
-	wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=amd&token=$TOKEN&worker=$WORKER&nums=$AMDDEVICE&bios=$FORCE&starts=$STARTS"
+	i=0
+	SKIP=""
+	while [ $i -le $AMDDEVICE ]; do
+ 		if [ -f "/sys/class/drm/card$i/device/pp_dpm_sclk" ]		 	
+ 		then		
+ 			SKIP=$SKIP	
+ 		else
+ 			SKIP=$SKIP"-$i"	
+ 		fi		
+		i=$(($i+1))
+	done
+				
+	wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=amd&token=$TOKEN&worker=$WORKER&nums=$AMDDEVICE&bios=$FORCE&starts=$STARTS&skip=$SKIP"
 	sleep 1.5
 	sudo sh doclock.sh
 	sync
