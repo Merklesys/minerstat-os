@@ -25,5 +25,5 @@ sudo cp -fR /home/minerstat/minerstat-os/core/.bashrc /home/minerstat
 # rocm for VEGA
 export HSA_ENABLE_SDMA=0
 # Hugepages (XMR) [Need more test, this required or not]
-#sudo su -c "echo 128 > /proc/sys/vm/nr_hugepages"
-#sudo su -c "sysctl -w vm.nr_hugepages=128"
+sudo su -c "echo 128 > /proc/sys/vm/nr_hugepages"
+sudo su -c "sysctl -w vm.nr_hugepages=128"
