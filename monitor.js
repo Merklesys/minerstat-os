@@ -46,20 +46,23 @@ module.exports = {
             response_start = -1,
             exec = require('child_process').exec;
         var gpunum,
-            hwg = [],
-            hwf = [];
+            monitorObject = {};
         gpunum = exec("nvidia-smi --query-gpu=count --format=csv,noheader | tail -n1", function(error, stdout, stderr) {
             var response = stdout;
             while (lstart != (response - 1)) {
                 lstart++;
-                var datar = "",
-                    q2 = exec("nvidia-smi -i " + lstart + " --query-gpu=name,temperature.gpu,fan.speed,power.draw --format=csv,noheader | tail -n1", function(error, stdout, stderr) {
-                        datar = stdout;
-                        // ADD DATA TO ARRAY
-                        hwg.push(datar);
+                var q2 = exec("nvidia-smi -i " + lstart + " --query-gpu=name,temperature.gpu,fan.speed,power.draw --format=csv,noheader | tail -n1", function(error, stdout, stderr) {
+                        
+                        // Fix ID, push to Object to avoid ID floating issues.
+                        var idFix = lstart;					
+						                        
+                        // New Array to Fixed ID
+                        monitorObject[idFix] = stdout;	
+                       
+                        //monitorObject[lstart].push(stdout);
                         response_start++;
                         if (response_start == (response - 1)) {
-                            isfinished(hwg, "nvidia", gpuSyncDone, cpuSyncDone, "");
+                            isfinished(monitorObject, "nvidia", gpuSyncDone, cpuSyncDone, "");
                         }
                     });
             } // END WHILE
