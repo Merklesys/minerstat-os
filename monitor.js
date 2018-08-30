@@ -60,15 +60,15 @@ function processNvidia(lstart, gpuSyncDone, cpuSyncDone, response_start, respons
     var idFix = lstart;
     setTimeout(function() {
         // SET Timeout for driver crash, if one GPU fails send zero data
-        monitorObject[idFix] = "NVIDIA CUDA #001, 30, 66%, 0 W\n";
+        monitorObject[idFix] = "NVIDIA #001, 0, 0%, 0 W\n";
         response_start++;
         if (response_start == (response - 1)) {
             isfinished(monitorObject, "nvidia", gpuSyncDone, cpuSyncDone, "");
         }
-    }, 3000);
+    }, 3500);
     var q2 = exec("nvidia-smi -i " + lstart + " --query-gpu=name,temperature.gpu,fan.speed,power.draw --format=csv,noheader | tail -n1", function(error, stdout, stderr) {
         // New Key - Value
-        console.log("GPU" + idFix + " - " + stdout);
+        //console.log("GPU" + idFix + " - " + stdout);
         monitorObject[idFix] = stdout;
         //monitorObject[lstart].push(stdout);
         response_start++;
