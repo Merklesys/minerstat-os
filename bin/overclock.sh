@@ -75,7 +75,7 @@ if [ ! -z "$DOAMD" ]; then
 	i=0
 	SKIP=""
 	while [ $i -le $AMDDEVICE ]; do
- 		if [ -f "/sys/class/drm/card$i/device/pp_dpm_sclk" ]		 	
+ 		if [ -f "/sys/class/drm/card$i/device/pp_table" ]		 	
  		then		
  			SKIP=$SKIP	
  		else
@@ -83,6 +83,11 @@ if [ ! -z "$DOAMD" ]; then
  		fi		
 		i=$(($i+1))
 	done
+	
+	if [ "$SKIP" != "" ]
+	then
+	echo "Integrated Graphics ID: "$SKIP
+	fi			
 				
 	wget -qO doclock.sh "https://api.minerstat.com/v2/getclock.php?type=amd&token=$TOKEN&worker=$WORKER&nums=$AMDDEVICE&bios=$FORCE&starts=$STARTS&skip=$SKIP"
 	sleep 1.5

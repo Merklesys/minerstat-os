@@ -47,7 +47,7 @@ if [ ! $1 ]; then
 	i=0
 	SKIP=""
 	while [ $i -le $AMDDEVICE ]; do
- 		if [ -f "/sys/class/drm/card$i/device/pp_dpm_sclk" ]		 	
+ 		if [ -f "/sys/class/drm/card$i/device/pp_table" ]		 	
  		then		
  			SKIP=$SKIP	
  		else
@@ -55,6 +55,11 @@ if [ ! $1 ]; then
  		fi		
 		i=$(($i+1))
 	done
+		
+	if [ "$SKIP" != "" ]
+	then
+	echo "Integrated Graphics ID: "$SKIP
+	fi	
 	
 			wget -qO dofans.sh "https://api.minerstat.com/v2/getfans.php?type=amd&token=$TOKEN&worker=$WORKER&nums=$AMDDEVICE&starts=$STARTS&skip=$SKIP"
 			sleep 1.5
