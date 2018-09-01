@@ -275,11 +275,19 @@ module.exports = {
         }
         // Function for add permissions to run files
         function applyChmod(minerName, minerType) {
-            var chmodQuery = require('child_process').exec,
-                setChmod = chmodQuery("cd /home/minerstat/minerstat-os/; sudo chmod -R 777 *", function(error, stdout, stderr) {
-                    console.log("New permissions applied to the downloaded files => 0777");
+            var chmodQuery = require('child_process').exec;
+            try {
+                var setChmod = chmodQuery("cd /home/minerstat/minerstat-os/; sudo chmod -R 777 *", function(error, stdout, stderr) {
+                    console.log(minerName + " => New permissions has been applied to the downloaded files => 0777");
                     dlconf(minerName, minerType);
                 });
+            } catch (error) {
+                console.error(error);
+                var setChmod = chmodQuery("sync; sudo su -c 'echo 1 > /proc/sys/vm/drop_caches'; cd /home/minerstat/minerstat-os/; sudo chmod -R 777 *", function(error, stdout, stderr) {
+                    console.log(minerName + " => New permissions has been applied to the downloaded files => 0777");
+                    dlconf(minerName, minerType);
+                });
+            }
         }
         // Callback downloadMiners(<#gpuMiner#>, <#isCpu#>, <#cpuMiner#>)
         function callbackVersion(dlGpu, isCpu, dlCpu, callbackType, gpuMiner, cpuMiner, gpuServerVersion, cpuServerVersion) {
@@ -338,8 +346,8 @@ module.exports = {
         }
         //// GET CONFIG TO YOUR DEFAULT MINER
         async function dlconf(miner, clientType) {
-        // MINER DEFAULT CONFIG file
-        // IF START ARGS start.bash if external config then use that.
+            // MINER DEFAULT CONFIG file
+            // IF START ARGS start.bash if external config then use that.
             const MINER_CONFIG_FILE = {
                 "bminer": "start.bash",
                 "ewbf-zec": "start.bash",
@@ -366,38 +374,47 @@ module.exports = {
             };
             global.file = "clients/" + miner + "/" + MINER_CONFIG_FILE[miner];
             needle.get('https://api.minerstat.com/v2/conf/gpu/' + global.accesskey + '/' + global.worker + '/' + miner.toLowerCase(), function(error, response) {
-                if (clientType == "cpu") {
-                    global.chunkCpu = response.body;
-                } else {
-                    global.chunk = response.body;
-                }
-                if (miner != "ewbf-zec" && miner != "bminer" && miner != "xmrig-amd" && miner != "ewbf-zhash" && miner != "ethminer" && miner != "zm-zec" && miner != "z-enemy" && miner != "cryptodredge" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
-                    var writeStream = fs.createWriteStream(global.path + "/" + global.file);
-                    // This ARRAY only need to fill if the miner using JSON config.
-                    var str = response.body,
-                        stringifyArray = ["sgminer", "sgminer-gm", "sgminer-avermore", "trex", "lolminer", "xmrig"];
-                    if (stringifyArray.indexOf(miner) > -1) {
-                        str = JSON.stringify(str);
+                if (error === null) {
+                    if (clientType == "cpu") {
+                        global.chunkCpu = response.body;
+                    } else {
+                        global.chunk = response.body;
                     }
-                    writeStream.write("" + str);
-                    writeStream.end();
-                    writeStream.on('finish', function() {
+                    if (miner != "ewbf-zec" && miner != "bminer" && miner != "xmrig-amd" && miner != "ewbf-zhash" && miner != "ethminer" && miner != "zm-zec" && miner != "z-enemy" && miner != "cryptodredge" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
+                        var writeStream = fs.createWriteStream(global.path + "/" + global.file);
+                        // This ARRAY only need to fill if the miner using JSON config.
+                        var str = response.body,
+                            stringifyArray = ["sgminer", "sgminer-gm", "sgminer-avermore", "trex", "lolminer", "xmrig"];
+                        if (stringifyArray.indexOf(miner) > -1) {
+                            str = JSON.stringify(str);
+                        }
+                        writeStream.write("" + str);
+                        writeStream.end();
+                        writeStream.on('finish', function() {
+                            //tools.killall();
+                            tools.autoupdate(miner, str);
+                        });
+                    } else {
+                        //console.log(response.body);
                         //tools.killall();
-                        tools.autoupdate(miner, str);
-                    });
+                        tools.autoupdate(miner, response.body);
+                    }
+                    if (clientType == "gpu") {
+                        console.log(chalk.gray(getDateTime() + " ONLINE CONFIG GPU TYPE: " + global.minerType));
+                        console.log(chalk.gray(getDateTime() + " LOCAL GPU TYPE: " + global.gputype));
+                        console.log("*** Hardware monitor is running in the background.. ***");
+                        global.dlGpuFinished = true;
+                    }
+                    if (clientType == "cpu") {
+                        global.dlCpuFinished = true;
+                    }
                 } else {
-                    //console.log(response.body);
-                    //tools.killall();
-                    tools.autoupdate(miner, response.body);
-                }
-                if (clientType == "gpu") {
-                    console.log(chalk.gray(getDateTime() + " ONLINE CONFIG GPU TYPE: " + global.minerType));
-                    console.log(chalk.gray(getDateTime() + " LOCAL GPU TYPE: " + global.gputype));
-                    console.log("*** Hardware monitor is running in the background.. ***");
-                    global.dlGpuFinished = true;
-                }
-                if (clientType == "cpu") {
-                    global.dlCpuFinished = true;
+                // Error (Restart)
+                console.log("ERROR => " + error);
+                clearInterval(global.timeout);
+                clearInterval(global.hwmonitor);
+                sleep.sleep(10);
+                tools.restart();
                 }
             });
         }

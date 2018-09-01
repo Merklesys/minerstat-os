@@ -19,7 +19,7 @@ function runMiner(miner, execFile, args, plus) {
     const execa = require('execa');
     try {
         var chmodQuery = require('child_process').exec;
-        var setChmod = chmodQuery("cd /home/minerstat/minerstat-os/clients/; sudo chmod -R 777 *", function(error, stdout, stderr) {
+        var setChmod = chmodQuery("sync; sudo su -c 'echo 1 > /proc/sys/vm/drop_caches'; sleep 1; cd /home/minerstat/minerstat-os/clients/; sudo chmod -R 777 *", function(error, stdout, stderr) {
             execa.shell('clients/' + miner + '/start.bash', {
                 cwd: process.cwd(),
                 detached: false,

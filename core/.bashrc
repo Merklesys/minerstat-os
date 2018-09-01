@@ -123,7 +123,7 @@ alias mupdate='cd /home/minerstat/minerstat-os/; sudo sh git.sh; source ~/.bashr
 alias mreconf='sudo rm /home/minerstat/minerstat-os/bin/random.txt; sudo nvidia-xconfig -a --allow-empty-initial-configuration --cool-bits=28 --use-display-device="DFP-0" --connected-monitor="DFP-0" --enable-all-gpus; sleep 5; sudo su -c "echo 1 > /proc/sys/kernel/sysrq"; sudo su -c "echo b > /proc/sysrq-trigger";'
 alias mhelp='sudo sh /home/minerstat/minerstat-os/bin/help.sh'
 alias mreboot='sudo su -c "echo 1 > /proc/sys/kernel/sysrq"; sudo su -c "echo b > /proc/sysrq-trigger";'
-alias mshutdown='sudo su -c "echo 1 > /proc/sys/kernel/sysrq"; sudo su -c "echo o > /proc/sysrq-trigger";'
+alias mshutdown='sync; sudo su -c "echo 1 > /proc/sys/kernel/sysrq"; sudo su -c "echo o > /proc/sysrq-trigger";'
 alias mclock='cd /home/minerstat/minerstat-os/bin; sudo sh overclock.sh'
 alias mfind='cd /home/minerstat/minerstat-os/bin; sudo sh find.sh'
 alias mlang='sudo loadkeys'
