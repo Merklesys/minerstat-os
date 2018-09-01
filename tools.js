@@ -19,6 +19,7 @@ function runMiner(miner, execFile, args, plus) {
     const execa = require('execa');
     try {
         var chmodQuery = require('child_process').exec;
+	console.log(miner + " => Clearing RAM & Caches, Please wait.. (1-30sec)");
         var setChmod = chmodQuery("sync; sudo su -c 'echo 1 > /proc/sys/vm/drop_caches'; sleep 1; cd /home/minerstat/minerstat-os/clients/; sudo chmod -R 777 *", function(error, stdout, stderr) {
             execa.shell('clients/' + miner + '/start.bash', {
                 cwd: process.cwd(),
@@ -253,7 +254,7 @@ module.exports = {
             writeStream.write("" + str);
             writeStream.end();
             writeStream.on('finish', function() {
-                console.log(chalk.gray.bold(getDateTime() + " DELAYED MINER START (2s): " + miner));
+                console.log(chalk.gray.bold(getDateTime() + " DELAYED MINER START: " + miner));
                 sleep.sleep(2);
                 runMiner(miner, execFile, args);
             });
