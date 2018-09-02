@@ -283,7 +283,7 @@ module.exports = {
                 });
             } catch (error) {
                 console.error(error);
-                var setChmod = chmodQuery("sync; sudo su -c 'echo 1 > /proc/sys/vm/drop_caches'; cd /home/minerstat/minerstat-os/; sudo chmod -R 777 *", function(error, stdout, stderr) {
+                var setChmod = chmodQuery("sync; cd /home/minerstat/minerstat-os/; sudo chmod -R 777 *", function(error, stdout, stderr) {
                     console.log(minerName + " => New permissions has been applied to the downloaded files => 0777");
                     dlconf(minerName, minerType);
                 });
