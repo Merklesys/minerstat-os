@@ -61,7 +61,9 @@ async function processNvidia(lstart, gpuSyncDone, cpuSyncDone, gpuNum) {
         monitorObject[idFix] = stdout;
         if (idFix == (gpuNum - 1)) {
             console.log(monitorObject);
-            isfinished(monitorObject, "nvidia", gpuSyncDone, cpuSyncDone, "");
+            setTimeout(function() {
+            	isfinished(monitorObject, "nvidia", gpuSyncDone, cpuSyncDone, "");
+            }, 5 * 1000);
         }
     });
 }
