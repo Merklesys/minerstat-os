@@ -27,3 +27,8 @@ export HSA_ENABLE_SDMA=0
 # Hugepages (XMR) [Need more test, this required or not]
 sudo su -c "echo 128 > /proc/sys/vm/nr_hugepages"
 sudo su -c "sysctl -w vm.nr_hugepages=128"
+# Fix ERROR Messages
+export LC_CTYPE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+# OpenCL
+export OpenCL_ROOT=/opt/amdgpu-pro/lib/x86_64-linux-gnu
