@@ -167,6 +167,13 @@ const MINER_JSON = {
         "apiType": "tcp",
         "apiCArg": "summary+pools+devs"
     },
+    "phoenix-eth": {
+        "args": "",
+        "execFile": "PhoenixMiner",
+        "apiPort": 3333,
+        "apiType": "tcp",
+        "apiCArg": "{\"id\":0, \"jsonrpc\":\"2.0\", \"method\":\"miner_getstat2\"}\n"
+    },
     "zm-zec": {
         "args": "auto",
         "execFile": "zm",
@@ -341,6 +348,7 @@ module.exports = {
                 fkill('xmrig').then(() => {}); // yes twice
                 fkill('xmrig-amd').then(() => {});
                 fkill('z-enemy').then(() => {});
+                fkill('PhoenixMiner').then(() => {});
                 var killQuery = require('child_process').exec,
                     killQueryProc = killQuery("sudo kill $(sudo lsof -t -i:42000)", function(error, stdout, stderr) {}),
                     killQueryProcPort = killQuery("sudo ufw allow 42000", function(error, stdout, stderr) {});
@@ -398,7 +406,7 @@ module.exports = {
             if (MINER_JSON[gpuMiner]["apiType"] === "curl") {
                 var curlQuery = require('child_process').exec;
                 var querylolMiner = curlQuery("curl http://127.0.0.1:" + MINER_JSON[gpuMiner]["apiPort"], function(error, stdout, stderr) {
-                    if (stderr.indexOf("Failed") == -1) {
+                    if (stderr.toString().includes("Failed") == -1) {
                         res_data = '';
                         global.res_data = "{ " + stdout;
                         gpuSyncDone = true;

@@ -39,7 +39,7 @@ process.on('SIGINT', function() {
 process.on('uncaughtException', function(err) {
     console.log(err);
     var log = err + "";
-    if (log.indexOf("ECONNREFUSED") > -1) {
+    if (log.toString().includes("ECONNREFUSED") > -1) {
         clearInterval(global.timeout);
         clearInterval(global.hwmonitor);
         tools.restart();
@@ -367,6 +367,7 @@ module.exports = {
                 "xmrig": "config.json",
                 "xmrig-amd": "start.bash",
                 "lolminer": "user_config.json",
+                "phoenix-eth": "config.txt",
                 "sgminer-gm": "sgminer.conf",
                 "sgminer-avermore": "sgminer.conf",
                 "zm-zec": "start.bash",
@@ -380,12 +381,12 @@ module.exports = {
                     } else {
                         global.chunk = response.body;
                     }
-                    if (miner != "ewbf-zec" && miner != "bminer" && miner != "xmrig-amd" && miner != "ewbf-zhash" && miner != "ethminer" && miner != "zm-zec" && miner != "z-enemy" && miner != "cryptodredge" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
+                    if (miner != "ewbf-zec" && miner != "bminer" && miner != "xmrig-amd" && miner != "ewbf-zhash" && miner != "ethminer" && miner != "zm-zec" && miner != "z-enemy" && miner != "cryptodredge" && miner.toString().includes("ccminer") === -1 && miner.toString().includes("cpu") === -1) {
                         var writeStream = fs.createWriteStream(global.path + "/" + global.file);
                         // This ARRAY only need to fill if the miner using JSON config.
                         var str = response.body,
                             stringifyArray = ["sgminer", "sgminer-gm", "sgminer-avermore", "trex", "lolminer", "xmrig"];
-                        if (stringifyArray.indexOf(miner) > -1) {
+                        if (stringifyArray.toString().includes(miner) > -1) {
                             str = JSON.stringify(str);
                         }
                         writeStream.write("" + str);
