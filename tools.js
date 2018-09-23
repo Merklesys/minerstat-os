@@ -406,7 +406,7 @@ module.exports = {
             if (MINER_JSON[gpuMiner]["apiType"] === "curl") {
                 var curlQuery = require('child_process').exec;
                 var querylolMiner = curlQuery("curl http://127.0.0.1:" + MINER_JSON[gpuMiner]["apiPort"], function(error, stdout, stderr) {
-                    if (stderr.toString().includes("Failed") == -1) {
+                    if (stderr.indexOf("Failed") == -1) {
                         res_data = '';
                         global.res_data = "{ " + stdout;
                         gpuSyncDone = true;
