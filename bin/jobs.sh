@@ -32,3 +32,5 @@ export LC_CTYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 # OpenCL
 export OpenCL_ROOT=/opt/amdgpu-pro/lib/x86_64-linux-gnu
+# FSCK
+sudo sed -i s/"#FSCKFIX=no"/"FSCKFIX=yes"/ /etc/default/rcS
