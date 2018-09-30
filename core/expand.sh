@@ -1,11 +1,11 @@
 DETECT="$(df -h | grep "20M" | grep "/dev/" | cut -f1 -d"2" | sed 's/dev//g' | sed 's/\///g')"
 PART=$DETECT"1"
-STR1="$(df -hm | grep $PART | awk '{print $4}')" 
-LIMIT=400 # MB
+STR1="$(df -hm | grep $PART | awk '{print $2}')" 
+DEFAULTSIZE=7200 # MB
 
 echo "-*- Expanding /dev/$DETECT Partition -*-"
 
-if [ "$STR1" -gt "$LIMIT" ]; then
+if [ "$STR1" -gt 7300 ]; then
   echo "=== ALREADY RESIZED ==="
 else
   echo "=== RESIZING ==="

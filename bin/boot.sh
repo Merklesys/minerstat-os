@@ -14,12 +14,12 @@ echo "Please wait.."
 sleep 1
 sudo update-grub
 sudo nvidia-xconfig -a --allow-empty-initial-configuration --cool-bits=28 --use-display-device="DFP-0" --connected-monitor="DFP-0" --enable-all-gpus
-sudo service gdm stop
+sudo service gdm stop >/dev/null
 #screen -A -m -d -S display sudo X
 sleep 5
 
 # FIX CTRL + ALT + F1
-sudo screen -A -m -d -S chvt sudo watch -n1 sudo chvt 1
+screen -A -m -d -S chvt sudo watch -n1 sudo chvt 1
 sudo chvt 1
 
 echo ""
@@ -77,6 +77,26 @@ echo ""
 
 cd /home/minerstat/minerstat-os/core
 sudo sh expand.sh
+
+
+if [ "$SSID" != "" ]
+then
+
+	cd /home/minerstat/minerstat-os/core
+	sudo sh wifi.sh
+
+else
+
+	if [ "$DHCP" != "NO" ]
+	then
+		cd /home/minerstat/minerstat-os/bin
+		sudo sh dhcp.sh
+	else
+		cd /home/minerstat/minerstat-os/bin
+		sudo sh static.sh
+	fi
+
+fi
 
 echo "-------- REBOOT IN 3 SEC -----------"
 sleep 2
