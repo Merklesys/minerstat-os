@@ -209,6 +209,13 @@ const MINER_JSON = {
         "apiPath": "/",
         "apiType": "http"
     },
+    "wildrig-multi": {
+        "args": "auto",
+        "execFile": "wildrig-multi",
+        "apiPort": 4028,
+        "apiPath": "/",
+        "apiType": "http"
+    },
     "cryptodredge": {
         "args": "auto",
         "execFile": "CryptoDredge",
@@ -254,9 +261,9 @@ module.exports = {
             var writeStream = fs.createWriteStream(global.path + "/" + "clients/" + miner + "/start.bash"),
                 str = "";
             if (args == "") {
-                str = "cd /home/minerstat/minerstat-os/clients/" + miner + "/; ./" + execFile + " ";
+                str = "export LD_LIBRARY_PATH=/home/minerstat/minerstat-os/clients/"+miner+"; cd /home/minerstat/minerstat-os/clients/" + miner + "/; ./" + execFile + " ";
             } else {
-                str = "cd /home/minerstat/minerstat-os/clients/" + miner + "/; ./" + execFile + " " + args;
+                str = "export LD_LIBRARY_PATH=/home/minerstat/minerstat-os/clients/"+miner+"; cd /home/minerstat/minerstat-os/clients/" + miner + "/; ./" + execFile + " " + args;
             }
             writeStream.write("" + str);
             writeStream.end();
@@ -349,6 +356,7 @@ module.exports = {
                 fkill('xmrig-amd').then(() => {});
                 fkill('z-enemy').then(() => {});
                 fkill('PhoenixMiner').then(() => {});
+                fkill('wildrig-multi').then(() => {});
                 var killQuery = require('child_process').exec,
                     killQueryProc = killQuery("sudo kill $(sudo lsof -t -i:42000)", function(error, stdout, stderr) {}),
                     killQueryProcPort = killQuery("sudo ufw allow 42000", function(error, stdout, stderr) {});
