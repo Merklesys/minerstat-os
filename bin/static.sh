@@ -19,6 +19,7 @@ echo iface $INTERFACE inet static  >> /etc/network/interfaces
 echo address $ADDRESS >> /etc/network/interfaces
 echo netmask $NETMASK >> /etc/network/interfaces
 echo gateway $GATEWAY >> /etc/network/interfaces
+echo dns-nameservers 1.1.1.1 >> /etc/network/interfaces
 /etc/init.d/networking restart
 
 echo ""

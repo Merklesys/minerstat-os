@@ -30,14 +30,12 @@ echo ""
 
 echo " "
 echo "-------- CONFIGURE NETWORK ADAPTERS --------------"
-SSID=$(cat /media/storage/network.txt | grep 'WIFISSID="' | sed 's/WIFISSID="//g' | sed 's/"//g')
+SSID=$(cat /media/storage/network.txt | grep 'WIFISSID="' | sed 's/WIFISSID="//g' | sed 's/"//g' | xargs | wc -L)
 DHCP=$(cat /media/storage/network.txt | grep 'DHCP="' | sed 's/DHCP="//g' | sed 's/"//g')
 
 #sudo screen -A -m -d -S restartnet sudo /etc/init.d/networking restart
 
-if [ "$SSID" != "" ]
-then
-
+if [ "$SSID" -gt 0 ]; then
 	cd /home/minerstat/minerstat-os/core
 	sudo sh wifi.sh
 
@@ -79,9 +77,7 @@ cd /home/minerstat/minerstat-os/core
 sudo sh expand.sh
 
 
-if [ "$SSID" != "" ]
-then
-
+if [ "$SSID" -gt 0 ]; then
 	cd /home/minerstat/minerstat-os/core
 	sudo sh wifi.sh
 
