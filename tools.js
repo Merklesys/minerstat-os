@@ -203,7 +203,7 @@ const MINER_JSON = {
         "apiType": "http"
     },
     "lolminer": {
-        "args": "-profile=MINERSTAT",
+        "args": "--profile MINERSTAT",
         "execFile": "lolMiner",
         "apiPort": 3333,
         "apiPath": "/",
