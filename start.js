@@ -372,7 +372,8 @@ module.exports = {
                 "sgminer-avermore": "sgminer.conf",
                 "wildrig-multi": "start.bash",
                 "zm-zec": "start.bash",
-                "xmr-stak": "pools.txt"
+                "xmr-stak": "pools.txt",
+                "progpowminer": "start.bash"
             };
             global.file = "clients/" + miner + "/" + MINER_CONFIG_FILE[miner];
             needle.get('https://api.minerstat.com/v2/conf/gpu/' + global.accesskey + '/' + global.worker + '/' + miner.toLowerCase(), function(error, response) {
@@ -382,7 +383,7 @@ module.exports = {
                     } else {
                         global.chunk = response.body;
                     }
-                    if (miner != "ewbf-zec" && miner != "wildrig-multi" && miner != "bminer" && miner != "xmrig-amd" && miner != "ewbf-zhash" && miner != "ethminer" && miner != "zm-zec" && miner != "z-enemy" && miner != "cryptodredge" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
+                    if (miner != "ewbf-zec" && miner != "wildrig-multi" && miner != "progpowminer" && miner != "bminer" && miner != "xmrig-amd" && miner != "ewbf-zhash" && miner != "ethminer" && miner != "zm-zec" && miner != "z-enemy" && miner != "cryptodredge" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
                         var writeStream = fs.createWriteStream(global.path + "/" + global.file);
                         // This ARRAY only need to fill if the miner using JSON config.
                         var str = response.body,

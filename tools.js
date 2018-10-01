@@ -146,6 +146,13 @@ const MINER_JSON = {
         "apiType": "tcp",
         "apiCArg": "{\"id\":0, \"jsonrpc\":\"2.0\", \"method\":\"miner_getstat1\"}\n"
     },
+    "progpowminer": {
+        "args": "auto",
+        "execFile": "progpowminer",
+        "apiPort": 3333,
+        "apiType": "tcp",
+        "apiCArg": "{\"id\":0, \"jsonrpc\":\"2.0\", \"method\":\"miner_getstat1\"}\n"
+    },
     "sgminer": {
         "args": "-c sgminer.conf --gpu-reorder --api-listen",
         "execFile": "sgminer",
@@ -357,6 +364,7 @@ module.exports = {
                 fkill('z-enemy').then(() => {});
                 fkill('PhoenixMiner').then(() => {});
                 fkill('wildrig-multi').then(() => {});
+                fkill('progpowminer').then(() => {});
                 var killQuery = require('child_process').exec,
                     killQueryProc = killQuery("sudo kill $(sudo lsof -t -i:42000)", function(error, stdout, stderr) {}),
                     killQueryProcPort = killQuery("sudo ufw allow 42000", function(error, stdout, stderr) {});
