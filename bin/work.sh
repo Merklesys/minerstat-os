@@ -9,7 +9,7 @@ screen -A -m -d -S chvt sudo watch -n1 sudo chvt 1
 sudo find /var/log -type f -delete
 
 cd /home/minerstat/shellinabox
-./shellinaboxd --port 4200 -b --css "/home/minerstat/shellinabox/shellinabox/white-on-black.css"
+./shellinaboxd --port 4200 -b --css "/home/minerstat/shellinabox/shellinabox/white-on-black.css" --disable-ssl
 
 # Fix Slow start bug
 sudo systemctl disable NetworkManager-wait-online.service
