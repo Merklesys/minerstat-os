@@ -15,11 +15,11 @@ STR1="$(df -hm | grep sda1 | awk '{print $4}')"
 #CPU USAGE
 STR2="$(mpstat | awk '$13 ~ /[0-9.]+/ { print 100 - $13 }')"
 
-#LOCAL IP ADDRESS
-STR3="$(ip route get 1 | awk '{print $NF;exit}')"
-
 #REMOTE IP ADDRESS
 STR4="$(wget -qO- http://ipecho.net/plain ; echo)"
+
+#LOCAL IP ADDRESS
+STR3="$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | grep -v $STR4)"
 
 #FREE MEMORY
 STR5="$(free -m | grep 'Mem' | awk '{print $4}')"
