@@ -15,7 +15,7 @@ sudo cp /home/minerstat/minerstat-os/core/environment /etc/environment
 export CUDA_DEVICE_ORDER=PCI_BUS_ID
 sudo su -c "export CUDA_DEVICE_ORDER=PCI_BUS_ID"
 # libc-ares2 && libuv1-dev
-sudo apt-get --yes --force-yes install libc-ares2 libuv1-dev | grep "install"
+sudo apt-get --yes --force-yes install libcurl3/bionic | grep "install"
 # Max performance
 #export GPU_FORCE_64BIT_PTR=1 #causes problems
 export GPU_USE_SYNC_OBJECTS=1
