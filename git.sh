@@ -33,4 +33,4 @@ sudo rm /home/minerstat/debug.txt
 sudo cp -fR /home/minerstat/minerstat-os/core/.bashrc /home/minerstat
 
 # NPM UPDATE
-npm update
+# npm update
