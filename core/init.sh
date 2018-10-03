@@ -24,6 +24,9 @@ STR3="$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9
 #FREE MEMORY
 STR5="$(free -m | grep 'Mem' | awk '{print $4}')"
 
+# TELEPROXY ID
+TELEID=$(cat /home/minerstat/minerstat-os/bin/teleproxy.0 | grep WebUI | rev | cut -d ' ' -f 1 | rev | xargs)
+
 echo ""
 echo "-*- $TOKEN $WORKER -*-"
 echo "Free Space: $STR1"
@@ -34,7 +37,7 @@ echo "Remote IP: $STR4"
 echo ""
 
 #SEND INFO
-wget -qO- "https://api.minerstat.com/v2/set_os_status.php?token=$TOKEN&worker=$WORKER&space=$STR1&cpu=$STR2&localip=$STR3&remoteip=$STR4&freemem=$STR5" ; echo
+wget -qO- "https://api.minerstat.com/v2/set_os_status.php?token=$TOKEN&worker=$WORKER&space=$STR1&cpu=$STR2&localip=$STR3&remoteip=$STR4&freemem=$STR5&teleid=$TELEID" ; echo
 
 echo "-*- MINERSTAT LISTENER -*-"
 RESPONSE="$(wget -qO- "https://api.minerstat.com/v2/os_listener.php?token=$TOKEN&worker=$WORKER" ; echo)"

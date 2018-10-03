@@ -31,3 +31,6 @@ sudo rm /home/minerstat/debug.txt
 
 # APPLY NEW BASHRC
 sudo cp -fR /home/minerstat/minerstat-os/core/.bashrc /home/minerstat
+
+# NPM UPDATE
+npm update
