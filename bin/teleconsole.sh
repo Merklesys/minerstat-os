@@ -18,7 +18,7 @@ check()
 	if [ "$CURRENTSYNC" -gt "$RESTARTEVERY" ]; then
 		echo "Timeout, Restarting Teleconsole";
     	CURRENTSYNC=0
-    	forcekill
+    	#forcekill
     	sudo killall teleproxy
     	sudo rm /home/minerstat/minerstat-os/bin/teleproxy.0
     	start
@@ -27,7 +27,7 @@ check()
 	SEARCH=$(cat teleproxy.0 | grep "SSH tunnel cannot be established" | wc -L)
 	if [ "$SEARCH" -gt 0 ]; then
 		echo "Seems teleconsole crashed"
-		forcekill
+		#forcekill
 		sudo killall teleproxy
     	sudo rm /home/minerstat/minerstat-os/bin/teleproxy.0
     	start
