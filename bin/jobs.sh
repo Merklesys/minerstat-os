@@ -37,5 +37,5 @@ export OpenCL_ROOT=/opt/amdgpu-pro/lib/x86_64-linux-gnu
 # FSCK
 sudo sed -i s/"#FSCKFIX=no"/"FSCKFIX=yes"/ /etc/default/rcS
 # TELEPROXY
-cd /home/minerstat/minerstat-os/bin
-screen -A -m -d -S telp sh teleconsole.sh
+# cd /home/minerstat/minerstat-os/bin
+# screen -A -m -d -S telp sh teleconsole.sh
