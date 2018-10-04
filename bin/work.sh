@@ -1,7 +1,6 @@
 if ! screen -list | grep -q "dummy"; then
 
 screen -A -m -d -S dummy sleep 22176000
-screen -A -m -d -S listener sudo sh /home/minerstat/minerstat-os/core/init.sh
 
 # FIX CTRL + ALT + F1
 screen -A -m -d -S chvt sudo watch -n1 sudo chvt 1
@@ -88,6 +87,7 @@ sudo sh /home/minerstat/minerstat-os/bin/overclock.sh
 
 echo " "
 echo "-------- RUNNING JOBS ---------------------------"
+screen -A -m -d -S listener sudo sh /home/minerstat/minerstat-os/core/init.sh
 cd /home/minerstat/minerstat-os/bin
 sudo sh jobs.sh
 echo ""
