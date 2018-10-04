@@ -25,7 +25,7 @@ STR3="$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9
 STR5="$(free -m | grep 'Mem' | awk '{print $4}')"
 
 # TELEPROXY ID
-TELEID=$(cat /home/minerstat/minerstat-os/bin/teleproxy.0 | grep WebUI | rev | cut -d ' ' -f 1 | rev | xargs)
+TELEID=$(cat /home/minerstat/minerstat-os/bin/screenlog.0 | grep WebUI | rev | cut -d ' ' -f 1 | rev | xargs)
 
 echo ""
 echo "-*- $TOKEN $WORKER -*-"
