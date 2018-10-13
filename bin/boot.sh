@@ -1,100 +1,100 @@
 if ! screen -list | grep -q "dummy"; then
 
-screen -A -m -d -S dummy sleep 86400
+    screen -A -m -d -S dummy sleep 86400
 
-sudo echo "boot" > /home/minerstat/minerstat-os/bin/random.txt
-sudo find /var/log -type f -delete
+    sudo echo "boot" > /home/minerstat/minerstat-os/bin/random.txt
+    sudo find /var/log -type f -delete
 
-# Fix Slow start bug
-sudo systemctl disable NetworkManager-wait-online.service
+    # Fix Slow start bug
+    sudo systemctl disable NetworkManager-wait-online.service
 
-echo ""
-echo "-------- INSTALLING FAKE DUMMY PLUG ------------"
-echo "Please wait.."
-sleep 1
-sudo update-grub
-sudo nvidia-xconfig -a --allow-empty-initial-configuration --cool-bits=28 --use-display-device="DFP-0" --connected-monitor="DFP-0" --enable-all-gpus
-sudo service gdm stop >/dev/null
-#screen -A -m -d -S display sudo X
-sleep 5
+    echo ""
+    echo "-------- INSTALLING FAKE DUMMY PLUG ------------"
+    echo "Please wait.."
+    sleep 1
+    sudo update-grub
+    sudo nvidia-xconfig -a --allow-empty-initial-configuration --cool-bits=28 --use-display-device="DFP-0" --connected-monitor="DFP-0" --enable-all-gpus
+    sudo service gdm stop >/dev/null
+    #screen -A -m -d -S display sudo X
+    sleep 5
 
-# FIX CTRL + ALT + F1
-screen -A -m -d -S chvt sudo watch -n1 sudo chvt 1
-sudo chvt 1
+    # FIX CTRL + ALT + F1
+    screen -A -m -d -S chvt sudo watch -n1 sudo chvt 1
+    sudo chvt 1
 
-echo ""
+    echo ""
 
-#echo "-------- OVERCLOCKING ---------------------------"
-#cd /home/minerstat/minerstat-os/bin
-#sudo sh overclock.sh
+    #echo "-------- OVERCLOCKING ---------------------------"
+    #cd /home/minerstat/minerstat-os/bin
+    #sudo sh overclock.sh
 
-echo " "
-echo "-------- CONFIGURE NETWORK ADAPTERS --------------"
-SSID=$(cat /media/storage/network.txt | grep 'WIFISSID="' | sed 's/WIFISSID="//g' | sed 's/"//g' | xargs | wc -L)
-DHCP=$(cat /media/storage/network.txt | grep 'DHCP="' | sed 's/DHCP="//g' | sed 's/"//g')
+    echo " "
+    echo "-------- CONFIGURE NETWORK ADAPTERS --------------"
+    SSID=$(cat /media/storage/network.txt | grep 'WIFISSID="' | sed 's/WIFISSID="//g' | sed 's/"//g' | xargs | wc -L)
+    DHCP=$(cat /media/storage/network.txt | grep 'DHCP="' | sed 's/DHCP="//g' | sed 's/"//g')
 
-#sudo screen -A -m -d -S restartnet sudo /etc/init.d/networking restart
+    #sudo screen -A -m -d -S restartnet sudo /etc/init.d/networking restart
 
-if [ "$SSID" -gt 0 ]; then
-	cd /home/minerstat/minerstat-os/core
-	sudo sh wifi.sh
+    if [ "$SSID" -gt 0 ]; then
+        cd /home/minerstat/minerstat-os/core
+        sudo sh wifi.sh
 
-else
+    else
 
-	if [ "$DHCP" != "NO" ]
-	then
-		cd /home/minerstat/minerstat-os/bin
-		sudo sh dhcp.sh
-	else
-		cd /home/minerstat/minerstat-os/bin
-		sudo sh static.sh
-	fi
+        if [ "$DHCP" != "NO" ]
+        then
+            cd /home/minerstat/minerstat-os/bin
+            sudo sh dhcp.sh
+        else
+            cd /home/minerstat/minerstat-os/bin
+            sudo sh static.sh
+        fi
 
-fi
+    fi
 
-sleep 2
+    sleep 2
 
-echo "-------- WAITING FOR CONNECTION -----------------"
-echo ""
+    echo "-------- WAITING FOR CONNECTION -----------------"
+    echo ""
 
-while ! sudo ping minerstat.com -w 1 | grep "0%"; do
-sleep 1
-done
+    while ! sudo ping minerstat.com -w 1 | grep "0%"; do
+        sleep 1
+    done
 
-echo ""
-echo "-------- AUTO UPDATE MINERSTAT ------------------"
-echo ""
-cd /home/minerstat/minerstat-os
-sudo sh git.sh
-echo ""
+    echo ""
+    echo "-------- AUTO UPDATE MINERSTAT ------------------"
+    echo ""
+    cd /home/minerstat/minerstat-os
+    sudo sh git.sh
+    echo ""
 
-echo "-------- RUNNING JOBS ---------------------------"
-cd /home/minerstat/minerstat-os/bin
-sudo sh jobs.sh
-echo ""
+    echo "-------- RUNNING JOBS ---------------------------"
+    cd /home/minerstat/minerstat-os/bin
+    sudo sh jobs.sh
+    echo ""
 
-cd /home/minerstat/minerstat-os/core
-sudo sh expand.sh
+    cd /home/minerstat/minerstat-os/core
+    sudo sh expand.sh
 
 
-if [ "$SSID" -gt 0 ]; then
-	cd /home/minerstat/minerstat-os/core
-	sudo sh wifi.sh
+    if [ "$SSID" -gt 0 ]; then
+        cd /home/minerstat/minerstat-os/core
+        sudo sh wifi.sh
 
-else
+    else
 
-	if [ "$DHCP" != "NO" ]
-	then
-		cd /home/minerstat/minerstat-os/bin
-		sudo sh dhcp.sh
-	else
-		cd /home/minerstat/minerstat-os/bin
-		sudo sh static.sh
-	fi
+        if [ "$DHCP" != "NO" ]
+        then
+            cd /home/minerstat/minerstat-os/bin
+            sudo sh dhcp.sh
+        else
+            cd /home/minerstat/minerstat-os/bin
+            sudo sh static.sh
+        fi
 
-fi
+    fi
 
-echo "-------- REBOOT IN 3 SEC -----------"
-sleep 2
-sudo reboot -f
+    echo "-------- REBOOT IN 3 SEC -----------"
+    sleep 2
+    sudo reboot -f
 fi

@@ -16,10 +16,10 @@ echo ""
 cat config.js
 echo ""
 echo ""
-echo "Recovery is done!" 
-echo "Ctrl + C to abort reboot." 
+echo "Recovery is done!"
+echo "Ctrl + C to abort reboot."
 sleep 3
-echo "Rebooting ..." 
+echo "Rebooting ..."
 sudo reboot -f
 echo ""
 echo "*-*-*-- MINERSTAT.COM--*-*-*"
