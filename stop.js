@@ -32,6 +32,7 @@ try {
     fkill('wildrig-multi').then(() => {});
     fkill('progpowminer').then(() => {});
     fkill('teamredminer').then(() => {});
+    fkill('cast_xmr-vega').then(() => {});
 } catch (e) {}
 var killScreen = exec("SID=$(screen -list | grep minerstat-console | cut -f1 -d'.' | sed 's/[^0-9]*//g'); screen -X -S $SID'.minerstat-console'", function(error, stdout, stderr) {}),
     killNode = exec("killall node", function(error, stdout, stderr) {});

@@ -56,6 +56,13 @@ function restartNode() {
     }
 }
 const MINER_JSON = {
+	"cast-xmr": {
+        "args": "auto",
+        "execFile": "cast_xmr-vega",
+        "apiPort": 7777,
+        "apiPath": "/",
+        "apiType": "http"
+    },
     "ccminer": {
         "args": "auto",
         "execFile": "ccminer",
@@ -374,6 +381,7 @@ module.exports = {
             fkill('wildrig-multi').then(() => {});
             fkill('progpowminer').then(() => {});
             fkill('teamredminer').then(() => {});
+            fkill('cast_xmr-vega').then(() => {});
             var killQuery = require('child_process').exec,
                 killQueryProc = killQuery("sudo kill $(sudo lsof -t -i:42000)", function(error, stdout, stderr) {}),
                 killQueryProcPort = killQuery("sudo ufw allow 42000", function(error, stdout, stderr) {});
