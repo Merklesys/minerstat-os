@@ -350,30 +350,31 @@ module.exports = {
             // IF START ARGS start.bash if external config then use that.
             const MINER_CONFIG_FILE = {
                 "bminer": "start.bash",
-                "ewbf-zec": "start.bash",
-                "ewbf-zhash": "start.bash",
-                "ethminer": "start.bash",
                 "ccminer-alexis": "start.bash",
                 "ccminer-djm34": "start.bash",
                 "ccminer-krnlx": "start.bash",
                 "ccminer-tpruvot": "start.bash",
                 "ccminer-x16r": "start.bash",
-                "z-enemy": "start.bash",
-                "cryptodredge": "start.bash",
                 "claymore-eth": "config.txt",
-                "claymore-zec": "config.txt",
                 "claymore-xmr": "config.txt",
-                "trex": "config.json",
-                "xmrig": "config.json",
-                "xmrig-amd": "start.bash",
+                "claymore-zec": "config.txt",
+                "cryptodredge": "start.bash",
+                "ethminer": "start.bash",
+                "ewbf-zec": "start.bash",
+                "ewbf-zhash": "start.bash",
                 "lolminer": "user_config.json",
                 "phoenix-eth": "config.txt",
-                "sgminer-gm": "sgminer.conf",
+                "progpowminer": "start.bash",
                 "sgminer-avermore": "sgminer.conf",
+                "sgminer-gm": "sgminer.conf",
+                "teamredminer": "start.bash",
+                "trex": "config.json",
                 "wildrig-multi": "start.bash",
-                "zm-zec": "start.bash",
                 "xmr-stak": "pools.txt",
-                "progpowminer": "start.bash"
+                "xmrig": "config.json",
+                "xmrig-amd": "start.bash",
+                "z-enemy": "start.bash",
+                "zm-zec": "start.bash"
             };
             global.file = "clients/" + miner + "/" + MINER_CONFIG_FILE[miner];
             needle.get('https://api.minerstat.com/v2/conf/gpu/' + global.accesskey + '/' + global.worker + '/' + miner.toLowerCase(), function(error, response) {
@@ -383,7 +384,7 @@ module.exports = {
                     } else {
                         global.chunk = response.body;
                     }
-                    if (miner != "ewbf-zec" && miner != "wildrig-multi" && miner != "progpowminer" && miner != "bminer" && miner != "xmrig-amd" && miner != "ewbf-zhash" && miner != "ethminer" && miner != "zm-zec" && miner != "z-enemy" && miner != "cryptodredge" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
+                    if (miner != "ewbf-zec" && miner != "wildrig-multi" && miner != "teamredminer" && miner != "progpowminer" && miner != "bminer" && miner != "xmrig-amd" && miner != "ewbf-zhash" && miner != "ethminer" && miner != "zm-zec" && miner != "z-enemy" && miner != "cryptodredge" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
                         var writeStream = fs.createWriteStream(global.path + "/" + global.file);
                         // This ARRAY only need to fill if the miner using JSON config.
                         var str = response.body,
@@ -412,12 +413,12 @@ module.exports = {
                         global.dlCpuFinished = true;
                     }
                 } else {
-                // Error (Restart)
-                console.log("ERROR => " + error);
-                clearInterval(global.timeout);
-                clearInterval(global.hwmonitor);
-                sleep.sleep(10);
-                tools.restart();
+                    // Error (Restart)
+                    console.log("ERROR => " + error);
+                    clearInterval(global.timeout);
+                    clearInterval(global.hwmonitor);
+                    sleep.sleep(10);
+                    tools.restart();
                 }
             });
         }
