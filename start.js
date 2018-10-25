@@ -375,6 +375,7 @@ module.exports = {
                 "xmrig": "config.json",
                 "xmrig-amd": "start.bash",
                 "z-enemy": "start.bash",
+                "zjazz-x22i": "start.bash",
                 "zm-zec": "start.bash"
             };
             global.file = "clients/" + miner + "/" + MINER_CONFIG_FILE[miner];
@@ -385,7 +386,7 @@ module.exports = {
                     } else {
                         global.chunk = response.body;
                     }
-                    if (miner != "ewbf-zec" && miner != "cast-xmr" && miner != "wildrig-multi" && miner != "teamredminer" && miner != "progpowminer" && miner != "bminer" && miner != "xmrig-amd" && miner != "ewbf-zhash" && miner != "ethminer" && miner != "zm-zec" && miner != "z-enemy" && miner != "cryptodredge" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
+                    if (miner != "ewbf-zec" && miner != "cast-xmr" && miner != "wildrig-multi" && miner != "zjazz-x22i" && miner != "teamredminer" && miner != "progpowminer" && miner != "bminer" && miner != "xmrig-amd" && miner != "ewbf-zhash" && miner != "ethminer" && miner != "zm-zec" && miner != "z-enemy" && miner != "cryptodredge" && miner.indexOf("ccminer") === -1 && miner.indexOf("cpu") === -1) {
                         var writeStream = fs.createWriteStream(global.path + "/" + global.file);
                         // This ARRAY only need to fill if the miner using JSON config.
                         var str = response.body,
