@@ -14,7 +14,7 @@ if ! screen -list | grep -q "dummy"; then
     sudo systemctl disable NetworkManager-wait-online.service
 
     NVIDIA="$(nvidia-smi -L)"
-
+        
     echo ""
     echo "-------- INITIALIZING FAKE DUMMY PLUG -------------"
     echo "Please wait.."
@@ -32,6 +32,11 @@ if ! screen -list | grep -q "dummy"; then
     echo "FOUND AMD    :  $AMDDEVICE"
     echo "FOUND NVIDIA :  $NVIDIADEVICE"
     echo ""
+
+    # Change hostname
+    WNAME=$(cat /media/storage/config.js | grep 'global.worker' | sed 's/global.worker =/"/g' | sed 's/"//g' | sed 's/;//g' | xargs)
+    sudo su -c "echo '$WNAME' > /etc/hostname"      
+    sudo hostname -F /etc/hostname
 
     echo " "
     echo "-------- CONFIGURE NETWORK ADAPTERS --------------"
