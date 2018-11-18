@@ -34,9 +34,9 @@ if ! screen -list | grep -q "dummy"; then
     echo ""
 
     # Change hostname
-    WNAME=$(cat /media/storage/config.js | grep 'global.worker' | sed 's/global.worker =/"/g' | sed 's/"//g' | sed 's/;//g' | xargs)
-    sudo su -c "echo '$WNAME' > /etc/hostname"      
-    sudo hostname -F /etc/hostname
+    #WNAME=$(cat /media/storage/config.js | grep 'global.worker' | sed 's/global.worker =/"/g' | sed 's/"//g' | sed 's/;//g' | xargs)
+    #sudo su -c "echo '$WNAME' > /etc/hostname"      
+    #sudo hostname -F /etc/hostname
 
     echo " "
     echo "-------- CONFIGURE NETWORK ADAPTERS --------------"
