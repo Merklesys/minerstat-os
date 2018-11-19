@@ -9,7 +9,7 @@ CURRENTSYNC=0
 echo "*-*-* Teleconsole *-*-*"
 
 run() {
-    screen -L -A -m -d -S teleproxy ./teleproxy -f gravitational.com:80
+    screen -L -A -m -d -S teleproxy ./teleproxy -f minerstat.com:3022
 }
 
 
@@ -35,7 +35,7 @@ forcekill() {
 check()
 {
     echo "-- Checking health on Teleconsole --"
-    CURRENTSYNC=$(($CURRENTSYNC + 30))
+    CURRENTSYNC=$(($CURRENTSYNC + 60))
     if [ "$CURRENTSYNC" -gt "$RESTARTEVERY" ]; then
         echo "Timeout, Restarting Teleconsole";
         CURRENTSYNC=0
