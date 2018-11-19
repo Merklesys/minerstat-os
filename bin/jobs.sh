@@ -40,7 +40,8 @@ sudo sed -i s/"#FSCKFIX=no"/"FSCKFIX=yes"/ /etc/default/rcS
 cd /home/minerstat/minerstat-os/bin
 sudo su minerstat -c "screen -A -m -d -S telp sh teleconsole.sh"
 # Change hostname
-#WNAME=$(cat /media/storage/config.js | grep 'global.worker' | sed 's/global.worker =/"/g' | sed 's/"//g' | sed 's/;//g' | xargs)
-#sudo sed -i s/"minerstat"/"$WNAME"/ /etc/hosts    
+WNAME=$(cat /media/storage/config.js | grep 'global.worker' | sed 's/global.worker =/"/g' | sed 's/"//g' | sed 's/;//g' | xargs)
+sudo sed -i s/"$WNAME"/"minerstat"/ /etc/hosts    
 #sudo su -c "echo '$WNAME' > /etc/hostname"      
-#sudo hostname -F /etc/hostname
+sudo su -c "echo 'minerstat' > /etc/hostname"
+sudo hostname -F /etc/hostname
