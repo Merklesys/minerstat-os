@@ -33,12 +33,6 @@ if ! screen -list | grep -q "dummy"; then
     echo "FOUND NVIDIA :  $NVIDIADEVICE"
     echo ""
 
-    # Change hostname
-    WNAME=$(cat /media/storage/config.js | grep 'global.worker' | sed 's/global.worker =/"/g' | sed 's/"//g' | sed 's/;//g' | xargs)
-    sudo sed -i s/"minerstat"/"$WNAME"/ /etc/hosts    
-    sudo su -c "echo '$WNAME' > /etc/hostname"      
-    sudo hostname -F /etc/hostname
-
     echo " "
     echo "-------- CONFIGURE NETWORK ADAPTERS --------------"
     SSID=$(cat /media/storage/network.txt | grep 'WIFISSID="' | sed 's/WIFISSID="//g' | sed 's/"//g' | xargs | wc -L)
