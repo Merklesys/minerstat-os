@@ -224,7 +224,9 @@ if [ $1 ]; then
     else
 
         # R9 starts with 0 (zero)
-        GPUID=$(($GPUID - 1))
+        # GPUID=$(($GPUID - 1))
+
+        # Need new FUNC if GPU ID 1, apply to 0 too
 
         echo "== SETTING GPU$GPUID ==="
 
