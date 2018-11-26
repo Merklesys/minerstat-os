@@ -231,6 +231,13 @@ const MINER_JSON = {
         "apiPath": "/",
         "apiType": "curl"
     },
+	"mkxminer": {
+        "args": "auto",
+        "execFile": "mkxminer",
+        "apiPort": 5008,
+        "apiType": "tcp",
+        "apiCArg": "statistics"
+    },
     "xmrig-amd": {
         "args": "auto",
         "execFile": "xmrig-amd",
@@ -384,6 +391,7 @@ module.exports = {
             fkill('t-rex').then(() => {});
             fkill('CryptoDredge').then(() => {});
             fkill('lolMiner').then(() => {});
+			fkill('mkxminer').then(() => {});
             fkill('xmrig').then(() => {});
             fkill('xmrig').then(() => {}); // yes twice
             fkill('xmrig-amd').then(() => {});

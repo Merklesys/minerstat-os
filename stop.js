@@ -24,6 +24,7 @@ try {
     fkill('t-rex').then(() => {});
     fkill('CryptoDredge').then(() => {});
     fkill('lolMiner').then(() => {});
+	fkill('mkxminer').then(() => {});
     fkill('xmrig').then(() => {});
     fkill('xmrig').then(() => {}); // yes twice
     fkill('xmrig-amd').then(() => {});
