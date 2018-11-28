@@ -224,9 +224,14 @@ if [ $1 ]; then
     else
 
         # R9 starts with 0 (zero)
-        # GPUID=$(($GPUID - 1))
-
         # Need new FUNC if GPU ID 1, apply to 0 too
+        if [ "$GPUID" != "1" ]
+        then
+            echo "--------"
+        else
+            echo "-------- ID: 1 ---> Apply to ID: 0 also to make sure -----"
+            sudo sh overclock_amd.sh 0 $MEMCLOCK $CORECOCK $FANSPEED $VDDC $VDDCI
+        fi
 
         echo "== SETTING GPU$GPUID ==="
 
