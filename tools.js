@@ -231,12 +231,12 @@ const MINER_JSON = {
         "apiPath": "/",
         "apiType": "curl"
     },
-	"mkxminer": {
-        "args": "auto",
+    "mkxminer": {
+	"args": "auto",
         "execFile": "mkxminer",
         "apiPort": 5008,
-        "apiType": "tcp",
-        "apiCArg": "statistics"
+        "apiPath": "/statistics",
+        "apiType": "http"
     },
     "xmrig-amd": {
         "args": "auto",
